@@ -1,11 +1,354 @@
-* {
+
+:root {
+    --farbe-hintergrund:  #0a1f5c; /* Seitenhintergrund – dunkelblau */
+    --farbe-dunkelblau:   #051540; /* Navbar + Karte */
+    --farbe-gelb:         #f5c842; /* Akzentfarbe – Titel & Zahlen */
+    --farbe-weiss:        #ffffff;
+    --farbe-rand:         rgba(255, 255, 255, 0.15); /* halbtransparenter Rand */
+    --farbe-rand-hell:    rgba(255, 255, 255, 0.50); /* Input-Rand */
+    --farbe-gruen:        #22c55e; /* Ausgewählt-Rahmen */
+    --schrift-titel:      'Anton', sans-serif;       /* für grosse Überschriften */
+    --schrift-text:       'Montserrat', sans-serif;  /* für Fliesstext */
+}
+
+/* ----------------------------------------------------------
+   RESET & BASIS
+   ---------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box; /* Padding/Border werden zum Element gezählt */
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
-
 
 body {
-    background-color: pink;
+    background-color: var(--farbe-hintergrund);
+    color: var(--farbe-weiss);
+    font-family: var(--schrift-text);
+    min-height: 100vh;
 }
 
+/* ----------------------------------------------------------
+   CHROME / NAVIGATIONSLEISTE (oben)
+   ---------------------------------------------------------- */
+.chrome {
+    background-color: var(--farbe-dunkelblau);
+    border-bottom: 1px solid var(--farbe-rand);
+    height: 64px;
+    position: fixed;  /* bleibt beim Scrollen oben */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.chrome__inner {
+    /* zentriert den Inhalt und bringt ihn auf die richtige Breite */
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 0 128px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+/* Logo-Bereich: Punkt + "CHAMPIONS QUIZ" */
+.chrome__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0; /* Logo darf nicht kleiner werden */
+}
+
+/* Der kleine gelbe Punkt vor dem Logo */
+.chrome__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%; /* macht das Element rund */
+    background-color: var(--farbe-gelb);
+    display: block;
+}
+
+.chrome__title {
+    font-family: var(--schrift-titel);
+    font-size: 18px;
+    color: var(--farbe-weiss);
+    letter-spacing: 0.5px;
+}
+
+/* ----------------------------------------------------------
+   SCHRITTE-NAVIGATION
+   "Setup > Turnierbaum > Vorschau > Spiel > Abpfiff"
+   ---------------------------------------------------------- */
+.steps {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.steps__item {
+    font-size: 16px;
+    letter-spacing: 0.8px;
+    color: var(--farbe-weiss);
+    opacity: 0.6; /* inaktive Schritte sind leicht transparent */
+}
+
+/* Der aktive Schritt ist gelb und nicht transparent */
+.steps__item--active {
+    color: var(--farbe-gelb);
+    opacity: 1;
+    font-weight: 600;
+}
+
+/* ----------------------------------------------------------
+   HAUPTINHALT: zweispaltig
+   Links = Hero, Rechts = Setup-Karte
+   ---------------------------------------------------------- */
+.landing {
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 168px 128px 80px; /* 168px oben = Abstand zur Navbar */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* zwei gleich breite Spalten */
+    gap: 64px;
+    align-items: start;
+}
+
+/* ----------------------------------------------------------
+   HERO (linke Seite)
+   ---------------------------------------------------------- */
+.hero {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* "Saison 25/26 · Champions QUIZ" */
+.hero__label {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+}
+
+/* Grosser Titel "DEIN WEG ZUM TITEL." */
+.hero__title {
+    font-family: var(--schrift-titel);
+    font-size: 88px;
+    line-height: 1;
+    letter-spacing: -1.5px;
+    color: var(--farbe-weiss);
+    font-weight: 400; /* Anton hat kein bold, deshalb 400 */
+}
+
+/* "TITEL." in gelb */
+.hero__highlight {
+    color: var(--farbe-gelb);
+}
+
+/* Beschreibungstext */
+.hero__description {
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 489px;
+    color: var(--farbe-weiss);
+    opacity: 0.9;
+}
+
+/* ----------------------------------------------------------
+   STATS: 16 VEREINE / 04 RUNDEN / 90:00 PRO SPIEL
+   ---------------------------------------------------------- */
+.stats {
+    display: flex;
+    gap: 80px;
+    margin-top: 16px;
+}
+
+.stats__item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Grosse gelbe Zahl */
+.stats__number {
+    font-family: var(--schrift-titel);
+    font-size: 48px;
+    color: var(--farbe-gelb);
+    line-height: 1;
+}
+
+/* Beschriftung unter der Zahl */
+.stats__label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+}
+
+/* ----------------------------------------------------------
+   SETUP-KARTE (rechte Seite)
+   ---------------------------------------------------------- */
+.setup-card {
+    background-color: var(--farbe-dunkelblau);
+    border: 1px solid var(--farbe-rand);
+    border-radius: 6px;
+    padding: 32px 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Labels: "Dein Name" / "Dein Verein" */
+.setup-card__label {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Name-Eingabefeld */
+.setup-card__input {
+    width: 100%;
+    height: 46px;
+    background-color: var(--farbe-dunkelblau);
+    border: 1px solid var(--farbe-rand-hell);
+    border-radius: 3px;
+    padding: 0 16px;
+    font-family: var(--schrift-text);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+    outline: none; /* kein blauer Rand beim Klick */
+    transition: border-color 0.2s; /* weicher Übergang beim Fokus */
+}
+
+/* Input-Feld: Platzhalter-Farbe */
+.setup-card__input::placeholder {
+    color: #3d5a99; /* blaue Platzhalterfarbe aus Figma */
+}
+
+/* Input-Feld: beim Klick wird der Rand heller */
+.setup-card__input:focus {
+    border-color: var(--farbe-gelb);
+}
+
+/* ----------------------------------------------------------
+   TEAM-SELECTOR
+   Links Pfeil ◀  |  Logo + Name  |  Pfeil ▶ rechts
+   ---------------------------------------------------------- */
+.team-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--farbe-rand-hell);
+    border-radius: 3px;
+    padding: 24px 16px;
+    min-height: 300px;
+    position: relative;
+}
+
+/* Pfeile links/rechts */
+.team-selector__arrow {
+    background: none;
+    border: none;
+    color: var(--farbe-gelb);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.team-selector__arrow:hover {
+    opacity: 0.7;
+}
+
+/* Mittlerer Bereich: Logo + Name */
+.team-selector__display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    cursor: pointer; /* zeigt dem User, dass er klicken kann */
+}
+
+/* Grüner Rahmen wenn ein Verein ausgewählt wurde */
+.team-selector--ausgewaehlt {
+    border-color: var(--farbe-gruen);
+    transition: border-color 0.2s;
+}
+
+/* Vereinswappen */
+.team-selector__logo {
+    width: 160px;
+    height: 160px;
+    object-fit: contain; /* Bild nicht verzerren */
+}
+
+/* Vereinsname unter dem Logo */
+.team-selector__name {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+    text-transform: uppercase; /* z.B. "REAL MADRID" */
+    text-align: center;
+}
+
+/* ----------------------------------------------------------
+   START-BUTTON "Turnier starten →"
+   ---------------------------------------------------------- */
+.btn-start {
+    width: 100%;
+    height: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    font-family: var(--schrift-text);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 8px;
+}
+
+/* Aktiver Button: gelb mit dunklem Text */
+.btn-start--active {
+    background-color: var(--farbe-gelb);
+    color: var(--farbe-dunkelblau);
+}
+
+.btn-start--active:hover {
+    opacity: 0.9;
+    transform: translateY(-1px); /* kleiner Hover-Effekt */
+}
+
+/* Inaktiver Button (disabled): grau/transparent, kein Klick möglich */
+.btn-start--disabled {
+    background-color: rgba(245, 200, 66, 0.3); /* gedimmtes Gelb */
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE: Tablet/Mobile
+   ---------------------------------------------------------- */
+@media (max-width: 1024px) {
+    .landing {
+        grid-template-columns: 1fr; /* eine Spalte */
+        padding: 100px 32px 80px;
+    }
+
+    .hero__title {
+        font-size: 56px;
+    }
+
+    .chrome__inner {
+        padding: 0 32px;
+    }
+}

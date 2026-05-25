@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Champions Quiz</title>
+
+    <!-- Google Fonts: Anton  & Montserrat  -->
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <!-- Das ist die Navigationsleiste oben, zeigt den aktuellen Schritt im Quiz -->
+    <header class="chrome">
+      <div class="chrome__inner">
+        <!-- Quiz Name: Champions Quiz + Punkt davor-->
+        <div class="chrome__logo">
+          <span class="chrome__dot"></span>
+          <span class="chrome__title">CHAMPIONS QUIZ</span>
+        </div>
+
+        <!-- Schritte in der Navigation: Setup ist gelb weil es der aktueller Schritt ist -->
+        <nav class="steps">
+          <!-- Jeder Schritt ist ein <span>. "active" = aktueller Schritt (gelb) -->
+          <span class="steps__item steps__item--active">Setup &gt;</span>
+          <span class="steps__item">Turnierbaum &gt;</span>
+          <span class="steps__item">Vorschau &gt;</span>
+          <span class="steps__item">Spiel &gt;</span>
+          <span class="steps__item">Abpfiff</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hauptinhalt also Main -->
+
+    <main class="landing">
+      <!-- links = Hero-Bereich -->
+
+      <section class="hero">
+        <p class="hero__label">Saison 25/26 · Champions QUIZ</p>
+
+        <!-- Grosser Titel -->
+        <!-- "TITEL." ist gelb  -->
+
+        <h1 class="hero__title">
+          DEIN WEG<br />
+          ZUM <span class="hero__highlight">TITEL.</span>
+        </h1>
+
+        <!-- Beschreibungstext -->
+        <p class="hero__description">
+          Vier Runden. Sechzehn Vereine. Eine Frage nach der anderen.<br />
+          Schiess fünf Tore, ehe du fünf kassierst und du stehst eine Runde
+          weiter.
+        </p>
+
+        <!-- Stats: 3 Zahlen nebeneinander -->
+        <div class="stats">
+          <!-- Jede Stat hat eine grosse Zahl (gelb) und eine Beschriftung (weiss) -->
+          <div class="stats__item">
+            <span class="stats__number">16</span>
+            <span class="stats__label">VEREINE</span>
+          </div>
+          <div class="stats__item">
+            <span class="stats__number">04</span>
+            <span class="stats__label">RUNDEN</span>
+          </div>
+          <div class="stats__item">
+            <span class="stats__number">90:00</span>
+            <span class="stats__label">PRO SPIEL</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- RECHTE SEITE: Setup-Karte ---- -->
+      <aside class="setup-card">
+        <!-- Name Eingabefeld -->
+        <label class="setup-card__label" for="player-name">Dein Name</label>
+        <input
+          type="text"
+          id="player-name"
+          class="setup-card__input"
+          placeholder="z.B. André"
+        />
+
+        <!-- Vereins Auswahl -->
+        <p class="setup-card__label">Dein Verein</p>
+
+        <!-- Team auswählen-->
+
+        <div class="team-selector">
+          <!-- links pfeil  -->
+          <button
+            class="team-selector__arrow"
+            id="btn-prev"
+            aria-label="Vorheriger Verein"
+          >
+            &#9664;
+            <!-- ◀ Dreieck links -->
+          </button>
+
+          <!-- Vereinslogo und Name werden per JavaScript befüllt -->
+          <div class="team-selector__display">
+            <!-- team-logo wird per JS mit dem Wappen Bild gefüllt -->
+            <img
+              id="team-logo"
+              src=""
+              alt="Vereinswappen"
+              class="team-selector__logo"
+            />
+            <!-- id="team-name" → wird per JS mit dem Vereinsnamen befüllt -->
+            <p id="team-name" class="team-selector__name">Laden...</p>
+          </div>
+
+          <!-- Pfeil nach rechts: nächster Verein -->
+          <button
+            class="team-selector__arrow"
+            id="btn-next"
+            aria-label="Nächster Verein"
+          >
+            &#9654;
+            <!-- ▶ Dreieck rechts -->
+          </button>
+        </div>
+
+        <!-- Start-Button ist disabled bis Name eingegeben wird -->
+        <button id="btn-start" class="btn-start btn-start--disabled" disabled>
+          Turnier starten &nbsp;→
+        </button>
+      </aside>
+    </main>
+
+    <script src="../js/script.js" type="module"></script>
+  </body>
+</html>
