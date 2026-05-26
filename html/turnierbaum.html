@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Champions Quiz – Turnierbaum</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <!-- Gleiche Navbar  -->
+    <header class="chrome">
+      <div class="chrome__inner">
+        <div class="chrome__logo">
+          <span class="chrome__dot"></span>
+          <span class="chrome__title">CHAMPIONS QUIZ</span>
+        </div>
+
+        <!-- "Turnierbaum" ist jetzt gelb weil aktiver Schritt -->
+        <nav class="steps">
+          <span class="steps__item">Setup &gt;</span>
+          <span class="steps__item steps__item--active">Turnierbaum &gt;</span>
+          <span class="steps__item">Vorschau &gt;</span>
+          <span class="steps__item">Spiel &gt;</span>
+          <span class="steps__item">Abpfiff</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Turnierbaum Seite  -->
+    <main class="turnierbaum-page">
+      <!-- Achtelfinale, Viertelfinale etc. -->
+      <div class="bracket-header">
+        <div class="bracket-header__inner">
+          <span>ACHTELFINALE</span>
+          <span>VIERTELFINALE</span>
+          <span>HALBFINALE</span>
+          <span class="bracket-header__finale">FINALE</span>
+          <span>HALBFINALE</span>
+          <span>VIERTELFINALE</span>
+          <span>ACHTELFINALE</span>
+        </div>
+        <!-- Trennlinie unter den Labels (weisse Linie aus dem Figma) -->
+        <div class="bracket-header__line"></div>
+      </div>
+
+      <!--  BRACKET (Turnierbaum) -->
+
+      <div class="bracket">
+        <!-- linke Seite -->
+
+        <!-- Spalte 1: Achtelfinale Links 4 Spiele -->
+        <div class="bracket__col bracket__col--af-links">
+          <!-- Diese 4 Match-Karten werden per JS befüllt (turnierbaum.js) -->
+          <div class="match-card" id="match-af1">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="af1-heim">Laden...</span>
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="af1-gast"
+                >Laden...</span
+              >
+            </div>
+          </div>
+
+          <div class="match-card" id="match-af2">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="af2-heim">Laden...</span>
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="af2-gast"
+                >Laden...</span
+              >
+            </div>
+          </div>
+
+          <div class="match-card" id="match-af3">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="af3-heim">Laden...</span>
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="af3-gast"
+                >Laden...</span
+              >
+            </div>
+          </div>
+
+          <div class="match-card" id="match-af4">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="af4-heim">Laden...</span>
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="af4-gast"
+                >Laden...</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- SPALTE 2: Viertelfinale Links (2 Spiele) -->
+        <div class="bracket__col bracket__col--vf-links">
+          <div class="match-card match-card--platzhalter" id="match-vf1">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="vf1-heim"
+                >Gewinner AF1</span
+              >
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="vf1-gast"
+                >Gewinner AF2</span
+              >
+            </div>
+          </div>
+
+          <div class="match-card match-card--platzhalter" id="match-vf2">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="vf2-heim"
+                >Gewinner AF3</span
+              >
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="vf2-gast"
+                >Gewinner AF4</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!--  Halbfinale Links  -->
+        <div class="bracket__col bracket__col--hf-links">
+          <div class="match-card match-card--platzhalter" id="match-hf1">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="hf1-heim"
+                >Gewinner VF1</span
+              >
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="hf1-gast"
+                >Gewinner VF2</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Finale -->
+        <div class="bracket__col bracket__col--finale">
+          <!-- Champions Badge oben -->
+          <div class="champions-badge">★ CHAMPIONS ★</div>
+
+          <!-- Finale-Karte -->
+          <div class="match-card match-card--platzhalter" id="match-finale">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="finale-heim"
+                >Gewinner HF1</span
+              >
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="finale-gast"
+                >Gewinner HF2</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- rechte Seite-->
+
+        <!--  Halbfinale Rechts -->
+        <div class="bracket__col bracket__col--hf-rechts">
+          <div class="match-card match-card--platzhalter" id="match-hf2">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="hf2-heim"
+                >Gewinner VF3</span
+              >
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="hf2-gast"
+                >Gewinner VF4</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Viertelfinale Rechts -->
+        <div class="bracket__col bracket__col--vf-rechts">
+          <div class="match-card match-card--platzhalter" id="match-vf3">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="vf3-heim"
+                >Gewinner AF5</span
+              >
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="vf3-gast"
+                >Gewinner AF6</span
+              >
+            </div>
+          </div>
+
+          <div class="match-card match-card--platzhalter" id="match-vf4">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="vf4-heim"
+                >Gewinner AF7</span
+              >
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="vf4-gast"
+                >Gewinner AF8</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!--  Achtelfinale Rechts -->
+        <div class="bracket__col bracket__col--af-rechts">
+          <div class="match-card" id="match-af5">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="af5-heim">Laden...</span>
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="af5-gast"
+                >Laden...</span
+              >
+            </div>
+          </div>
+
+          <div class="match-card" id="match-af6">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="af6-heim">Laden...</span>
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="af6-gast"
+                >Laden...</span
+              >
+            </div>
+          </div>
+
+          <div class="match-card" id="match-af7">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="af7-heim">Laden...</span>
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="af7-gast"
+                >Laden...</span
+              >
+            </div>
+          </div>
+
+          <div class="match-card" id="match-af8">
+            <div class="match-card__heim">
+              <div class="match-card__streifen match-card__streifen--rot"></div>
+              <span class="match-card__teamname" id="af8-heim">Laden...</span>
+            </div>
+            <div class="match-card__gast">
+              <div
+                class="match-card__streifen match-card__streifen--gelb"
+              ></div>
+              <span
+                class="match-card__teamname match-card__teamname--gast"
+                id="af8-gast"
+                >Laden...</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ende bracket -->
+
+      <!-- ---- BOTTOM BUTTONS ---- -->
+      <div class="bracket-buttons">
+        <!-- Zurück zu index.html -->
+        <button class="btn-zurueck" id="btn-zurueck">← Zurück</button>
+
+        <!-- Weiter zum nächsten Spiel (Vorschau-Seite) -->
+        <button class="btn-weiter" id="btn-weiter">
+          Zum nächsten Spiel &nbsp;→
+        </button>
+      </div>
+    </main>
+
+    <script src="../js/script.js" type="module"></script>
+  </body>
+</html>

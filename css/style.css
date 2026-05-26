@@ -334,3 +334,230 @@ body {
         padding: 0 32px;
     }
 }
+
+/* ============================================================
+   TURNIERBAUM – Neue Klassen für turnierbaum.html
+   ============================================================ */
+
+/* Die ganze Turnierbaum-Seite */
+.turnierbaum-page {
+    padding-top: 80px;   /* 64px Navbar + 16px Abstand */
+    padding-bottom: 40px;
+    min-height: 100vh;
+    overflow-x: auto;    /* bei kleinen Screens scrollbar */
+}
+
+/* SPALTEN-BESCHRIFTUNGEN oben ("ACHTELFINALE" etc.) */
+.bracket-header {
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 0 128px;
+}
+
+.bracket-header__inner {
+    display: grid;
+    /* 7 Inhalts-Spalten (168px) + 6 Lücken (16px) = 13 Grid-Spalten total */
+    grid-template-columns: 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px;
+    padding-bottom: 12px;
+}
+
+/* Jede Beschriftung landet in der richtigen Spalte */
+.bracket-header__inner span { font-size: 14px; font-weight: 600; letter-spacing: 1.2px; color: var(--farbe-weiss); }
+.bracket-header__inner span:nth-child(1) { grid-column: 1; }  /* ACHTELFINALE links */
+.bracket-header__inner span:nth-child(2) { grid-column: 3; }  /* VIERTELFINALE links */
+.bracket-header__inner span:nth-child(3) { grid-column: 5; }  /* HALBFINALE links */
+.bracket-header__inner span:nth-child(4) { grid-column: 7; text-align: center; } /* FINALE */
+.bracket-header__inner span:nth-child(5) { grid-column: 9; }  /* HALBFINALE rechts */
+.bracket-header__inner span:nth-child(6) { grid-column: 11; } /* VIERTELFINALE rechts */
+.bracket-header__inner span:nth-child(7) { grid-column: 13; } /* ACHTELFINALE rechts */
+
+/* Weisse Trennlinie unter den Labels */
+.bracket-header__line {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.4);
+    margin-top: 8px;
+}
+
+/* DER BRACKET – 7-spaltiges Grid */
+.bracket {
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 0 128px;
+    display: grid;
+    /* 7 Inhalts-Spalten (168px) mit 16px Lücken als eigene Spalten */
+    grid-template-columns: 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px;
+    min-height: 700px;
+}
+
+/* Basis für alle Bracket-Spalten: flex nach unten */
+.bracket__col {
+    display: flex;
+    flex-direction: column;
+}
+
+/* SPALTE 1 – Achtelfinale Links */
+.bracket__col--af-links {
+    grid-column: 1;
+    padding-top: 33px; /* erstes Match: y=197-164=33px vom Inhalt-Anfang */
+}
+/* Abstände zwischen den 4 AF-Karten (aus Figma-Positionierung berechnet) */
+.bracket__col--af-links .match-card:nth-child(2) { margin-top: 153px; }
+.bracket__col--af-links .match-card:nth-child(3) { margin-top: 112px; }
+.bracket__col--af-links .match-card:nth-child(4) { margin-top: 153px; }
+
+/* SPALTE 2 – Viertelfinale Links */
+.bracket__col--vf-links {
+    grid-column: 3;
+    padding-top: 140px; /* VF1: y=304-164=140px */
+}
+.bracket__col--vf-links .match-card:nth-child(2) { margin-top: 321px; }
+
+/* SPALTE 3 – Halbfinale Links */
+.bracket__col--hf-links {
+    grid-column: 5;
+    padding-top: 327px; /* HF1: y=491-164=327px */
+}
+
+/* SPALTE 4 – Finale (Mitte) */
+.bracket__col--finale {
+    grid-column: 7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 60px;
+}
+
+/* SPALTE 5 – Halbfinale Rechts */
+.bracket__col--hf-rechts {
+    grid-column: 9;
+    padding-top: 327px;
+}
+
+/* SPALTE 6 – Viertelfinale Rechts */
+.bracket__col--vf-rechts {
+    grid-column: 11;
+    padding-top: 138px;
+}
+.bracket__col--vf-rechts .match-card:nth-child(2) { margin-top: 321px; }
+
+/* SPALTE 7 – Achtelfinale Rechts */
+.bracket__col--af-rechts {
+    grid-column: 13;
+    padding-top: 31px;
+}
+.bracket__col--af-rechts .match-card:nth-child(2) { margin-top: 153px; }
+.bracket__col--af-rechts .match-card:nth-child(3) { margin-top: 112px; }
+.bracket__col--af-rechts .match-card:nth-child(4) { margin-top: 153px; }
+
+/* MATCH-KARTE – einzelne Spiel-Karte mit 2 Teams */
+.match-card {
+    width: 168px;
+    height: 56px;
+    background-color: var(--farbe-dunkelblau);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+.match-card:hover { border-color: rgba(255, 255, 255, 0.3); }
+
+/* Aktive Karte: grüner Rahmen (Spiel des Spielers) */
+.match-card--aktiv { border: 2px solid #00ff88; }
+
+/* Platzhalter (zukünftige Runden): leicht durchsichtig */
+.match-card--platzhalter { opacity: 0.7; }
+
+/* Heim-Reihe (oben) */
+.match-card__heim {
+    height: 28px;
+    background-color: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+}
+
+/* Gast-Reihe (unten) */
+.match-card__gast {
+    height: 28px;
+    display: flex;
+    align-items: center;
+}
+
+/* Farbiger Streifen am linken Rand */
+.match-card__streifen { width: 3px; height: 28px; flex-shrink: 0; }
+.match-card__streifen--rot  { background-color: rgba(220, 5, 45, 0.8); }
+.match-card__streifen--gelb { background-color: #fde100; }
+
+/* Team-Name */
+.match-card__teamname {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: #f0f4ff;
+    padding-left: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* Gast-Name leicht gedimmt (blau-grau) */
+.match-card__teamname--gast { color: #8892b0; }
+
+/* CHAMPIONS BADGE – goldener Text in der Mitte */
+.champions-badge {
+    background-color: var(--farbe-dunkelblau);
+    color: var(--farbe-gelb);
+    font-family: var(--schrift-titel);
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 12px 24px;
+    border-radius: 3px;
+    margin-bottom: 32px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* BOTTOM BUTTONS */
+.bracket-buttons {
+    max-width: 1512px;
+    margin: 40px auto 0;
+    padding: 0 128px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* "← Zurück" */
+.btn-zurueck {
+    height: 44px;
+    width: 140px;
+    background-color: var(--farbe-dunkelblau);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    color: var(--farbe-weiss);
+    font-family: var(--schrift-text);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.btn-zurueck:hover { opacity: 0.7; }
+
+/* "Zum nächsten Spiel →" */
+.btn-weiter {
+    height: 44px;
+    padding: 0 20px;
+    background-color: var(--farbe-gelb);
+    border: none;
+    border-radius: 3px;
+    color: var(--farbe-dunkelblau);
+    font-family: var(--schrift-text);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+.btn-weiter:hover { opacity: 0.9; transform: translateY(-1px); }
