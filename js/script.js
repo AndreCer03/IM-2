@@ -48,7 +48,9 @@ if (document.querySelector('#player-name')) {
     const corsProxy = 'https://corsproxy.io/?url=';
     const apiAdresse = `${corsProxy}https://api.football-data.org/v4/competitions/CL/teams`;
 
-    // 16 Vereine die fix bleiben, da sie oft in der Champions League sind
+    // Bevorzugte Vereine – oft in der Champions League.
+    // Falls einige davon NICHT in der aktuellen CL-Saison sind,
+    // wird die Liste automatisch mit echten CL-Teams aufgefüllt (siehe ladeVereine).
     const vereinsIds = [57, 65, 66, 64, 81, 86, 5, 4, 108, 113, 109, 98, 1903, 503, 524, 516];
     //                  Arsenal ManCity ManUtd LFC Barca  RM Bayern BVB Inter Napoli Juve Milan Benfica Porto PSG Marseille
 
@@ -180,9 +182,20 @@ if (document.querySelector('#player-name')) {
             // Die Antwort in ein JavaScript-Objekt umwandeln
             const daten = await antwort.json();
 
-            vereine = daten.teams.filter(verein => vereinsIds.includes(verein.id));
+            // Erst bevorzugte Vereine filtern
+            const bevorzugte = daten.teams.filter(verein => vereinsIds.includes(verein.id));
 
-            console.log(`${vereine.length} Vereine geladen`); // sollte 16 sein
+            if (bevorzugte.length >= 16) {
+                // Genug bevorzugte Vereine gefunden → ersten 16 nehmen
+                vereine = bevorzugte.slice(0, 16);
+            } else {
+                // Zu wenige bevorzugte Vereine (manche sind diese Saison nicht in der CL)
+                // → mit anderen echten CL-Teams auffüllen bis wir 16 haben
+                const restliche = daten.teams.filter(verein => !vereinsIds.includes(verein.id));
+                vereine = bevorzugte.concat(restliche).slice(0, 16);
+            }
+
+            console.log(`${vereine.length} Vereine geladen (${bevorzugte.length} bevorzugte + ${vereine.length - bevorzugte.length} aufgefüllt)`);
 
             // Alle 16 Vereine in localStorage speichern
             // turnierbaum.html braucht diese Liste um den Bracket aufzubauen
@@ -419,8 +432,9 @@ if (document.querySelector('#match-af1')) {
 
         if (heimElement && gastElement) {
             // shortName ist der Kurzname z.B. "Bayern" statt "Bayern München"
-            heimElement.innerText = spiel.heim.shortName || spiel.heim.name;
-            gastElement.innerText = spiel.gast.shortName || spiel.gast.name;
+            // Null-Check: falls ein Verein undefined ist (Sicherheitsnetz)
+            heimElement.innerText = spiel.heim ? (spiel.heim.shortName || spiel.heim.name) : '---';
+            gastElement.innerText = spiel.gast ? (spiel.gast.shortName || spiel.gast.name) : '---';
         }
     }
 
