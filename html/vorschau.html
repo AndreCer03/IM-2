@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Champions Quiz – Match Vorschau</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <!-- ==================== NAVIGATION / CHROME ==================== -->
+    <!-- "Vorschau >" ist jetzt gelb = aktiver Schritt -->
+    <header class="chrome">
+      <div class="chrome__inner">
+        <div class="chrome__logo">
+          <span class="chrome__dot"></span>
+          <span class="chrome__title">CHAMPIONS QUIZ</span>
+        </div>
+        <nav class="steps">
+          <span class="steps__item">Setup &gt;</span>
+          <span class="steps__item">Turnierbaum &gt;</span>
+          <span class="steps__item steps__item--active">Vorschau &gt;</span>
+          <span class="steps__item">Spiel &gt;</span>
+          <span class="steps__item">Abpfiff</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ==================== MATCH VORSCHAU SEITE ==================== -->
+    <!--
+      class="vorschau-page" ist wichtig!
+      script.js erkennt daran, dass dies die Vorschau-Seite ist
+      und führt nur den richtigen Code aus.
+    -->
+    <main class="vorschau-page">
+      <!-- Titel oben links -->
+      <h1 class="vorschau__title">MATCH VORSCHAU</h1>
+
+      <!-- Drei-Spalten-Layout: Spieler | VS | Gegner -->
+      <div class="vorschau__content">
+        <!-- ---- LINKE SPALTE: Spieler-Team ---- -->
+        <div class="vorschau__team">
+          <!-- Label oben: "DU SPIELST ALS" -->
+          <p class="vorschau__team-label">DU SPIELST ALS</p>
+
+          <!-- Logo: wird per JS befüllt (setAttribute 'src') -->
+          <img
+            id="spieler-logo"
+            src=""
+            alt="Dein Vereinswappen"
+            class="vorschau__logo"
+          />
+
+          <!-- Team-Name in GELB: wird per JS gesetzt (innerText) -->
+          <p
+            id="spieler-name"
+            class="vorschau__team-name vorschau__team-name--gelb"
+          >
+            Laden...
+          </p>
+
+          <!-- Liga-Info: wird per JS gesetzt -->
+          <p id="spieler-liga" class="vorschau__liga">Laden...</p>
+        </div>
+
+        <!-- ---- MITTLERE SPALTE: VS + Buttons ---- -->
+        <div class="vorschau__mitte">
+          <!-- Runden-Name: "ACHTELFINALE" – wird per JS gesetzt -->
+          <p id="runden-name" class="vorschau__runde">ACHTELFINALE</p>
+
+          <!-- Grosses "VS" -->
+          <p class="vorschau__vs">VS</p>
+
+          <!-- Schwierigkeit: 3 Punkte, ausgefüllt je nach Runde -->
+          <div class="vorschau__schwierigkeit">
+            <p class="vorschau__schwierigkeit-label">Schwierigkeit</p>
+            <div class="vorschau__dots">
+              <!-- id="dot-1/2/3" → per JS aktiv oder inaktiv -->
+              <span class="vorschau__dot" id="dot-1"></span>
+              <span class="vorschau__dot" id="dot-2"></span>
+              <span class="vorschau__dot" id="dot-3"></span>
+            </div>
+          </div>
+
+          <!-- "Anpfiff →" Button – rot, navigiert zum Quiz -->
+          <button class="btn-anpfiff" id="btn-anpfiff">Anpfiff &nbsp;→</button>
+
+          <!-- "← Zurück" Button – zurück zum Turnierbaum -->
+          <button class="btn-zurueck" id="btn-zurueck-vorschau">
+            ← Zurück
+          </button>
+        </div>
+
+        <!-- ---- RECHTE SPALTE: Gegner-Team ---- -->
+        <div class="vorschau__team">
+          <!-- Label oben: "GEGNER" -->
+          <p class="vorschau__team-label">GEGNER</p>
+
+          <!-- Logo: wird per JS befüllt -->
+          <img
+            id="gegner-logo"
+            src=""
+            alt="Gegner Vereinswappen"
+            class="vorschau__logo"
+          />
+
+          <!-- Team-Name in WEISS: wird per JS gesetzt -->
+          <p id="gegner-name" class="vorschau__team-name">Laden...</p>
+
+          <!-- Liga-Info: wird per JS gesetzt -->
+          <p id="gegner-liga" class="vorschau__liga">Laden...</p>
+        </div>
+      </div>
+      <!-- Ende vorschau__content -->
+    </main>
+
+    <!--
+      Wichtig: script.js (type="module" für async/await)
+      Das gleiche script.js wie auf allen anderen Seiten!
+    -->
+    <script src="../js/script.js" type="module"></script>
+  </body>
+</html>

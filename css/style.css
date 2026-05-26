@@ -341,9 +341,8 @@ body {
 
 /* Die ganze Turnierbaum-Seite */
 .turnierbaum-page {
-    padding-top: 80px;   /* 64px Navbar + 16px Abstand */
-    padding-bottom: 40px;
-    min-height: 100vh;
+    padding-top: 68px;   /* 64px Navbar + 4px Abstand */
+    padding-bottom: 8px;
     overflow-x: auto;    /* bei kleinen Screens scrollbar */
 }
 
@@ -358,7 +357,7 @@ body {
     display: grid;
     /* 7 Inhalts-Spalten (168px) + 6 Lücken (16px) = 13 Grid-Spalten total */
     grid-template-columns: 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px;
-    padding-bottom: 12px;
+    padding-bottom: 8px;
 }
 
 /* Jede Beschriftung landet in der richtigen Spalte */
@@ -386,7 +385,7 @@ body {
     display: grid;
     /* 7 Inhalts-Spalten (168px) mit 16px Lücken als eigene Spalten */
     grid-template-columns: 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px;
-    min-height: 700px;
+    min-height: 640px;
 }
 
 /* Basis für alle Bracket-Spalten: flex nach unten */
@@ -398,24 +397,24 @@ body {
 /* SPALTE 1 – Achtelfinale Links */
 .bracket__col--af-links {
     grid-column: 1;
-    padding-top: 33px; /* erstes Match: y=197-164=33px vom Inhalt-Anfang */
+    padding-top: 30px;
 }
-/* Abstände zwischen den 4 AF-Karten (aus Figma-Positionierung berechnet) */
-.bracket__col--af-links .match-card:nth-child(2) { margin-top: 153px; }
-.bracket__col--af-links .match-card:nth-child(3) { margin-top: 112px; }
-.bracket__col--af-links .match-card:nth-child(4) { margin-top: 153px; }
+/* Abstände zwischen den 4 AF-Karten – skaliert auf ~637px Gesamthöhe */
+.bracket__col--af-links .match-card:nth-child(2) { margin-top: 140px; }
+.bracket__col--af-links .match-card:nth-child(3) { margin-top: 103px; }
+.bracket__col--af-links .match-card:nth-child(4) { margin-top: 140px; }
 
 /* SPALTE 2 – Viertelfinale Links */
 .bracket__col--vf-links {
     grid-column: 3;
-    padding-top: 140px; /* VF1: y=304-164=140px */
+    padding-top: 132px;
 }
-.bracket__col--vf-links .match-card:nth-child(2) { margin-top: 321px; }
+.bracket__col--vf-links .match-card:nth-child(2) { margin-top: 303px; }
 
 /* SPALTE 3 – Halbfinale Links */
 .bracket__col--hf-links {
     grid-column: 5;
-    padding-top: 327px; /* HF1: y=491-164=327px */
+    padding-top: 309px;
 }
 
 /* SPALTE 4 – Finale (Mitte) */
@@ -425,30 +424,30 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-top: 60px;
+    padding-top: 56px;
 }
 
 /* SPALTE 5 – Halbfinale Rechts */
 .bracket__col--hf-rechts {
     grid-column: 9;
-    padding-top: 327px;
+    padding-top: 309px;
 }
 
 /* SPALTE 6 – Viertelfinale Rechts */
 .bracket__col--vf-rechts {
     grid-column: 11;
-    padding-top: 138px;
+    padding-top: 130px;
 }
-.bracket__col--vf-rechts .match-card:nth-child(2) { margin-top: 321px; }
+.bracket__col--vf-rechts .match-card:nth-child(2) { margin-top: 303px; }
 
 /* SPALTE 7 – Achtelfinale Rechts */
 .bracket__col--af-rechts {
     grid-column: 13;
-    padding-top: 31px;
+    padding-top: 28px;
 }
-.bracket__col--af-rechts .match-card:nth-child(2) { margin-top: 153px; }
-.bracket__col--af-rechts .match-card:nth-child(3) { margin-top: 112px; }
-.bracket__col--af-rechts .match-card:nth-child(4) { margin-top: 153px; }
+.bracket__col--af-rechts .match-card:nth-child(2) { margin-top: 140px; }
+.bracket__col--af-rechts .match-card:nth-child(3) { margin-top: 103px; }
+.bracket__col--af-rechts .match-card:nth-child(4) { margin-top: 140px; }
 
 /* MATCH-KARTE – einzelne Spiel-Karte mit 2 Teams */
 .match-card {
@@ -521,7 +520,7 @@ body {
 /* BOTTOM BUTTONS */
 .bracket-buttons {
     max-width: 1512px;
-    margin: 40px auto 0;
+    margin: 12px auto 0;
     padding: 0 128px;
     display: flex;
     justify-content: space-between;
@@ -561,3 +560,169 @@ body {
     transition: opacity 0.2s, transform 0.1s;
 }
 .btn-weiter:hover { opacity: 0.9; transform: translateY(-1px); }
+
+
+/* ============================================================
+   MATCH VORSCHAU – Neue Klassen für vorschau.html
+   ============================================================ */
+
+/* Seiten-Container */
+.vorschau-page {
+    padding-top: 100px;   /* 64px Navbar + etwas Luft */
+    padding-bottom: 60px;
+    min-height: 100vh;
+    max-width: 1512px;
+    margin: 0 auto;
+    padding-left: 128px;
+    padding-right: 128px;
+}
+
+/* "MATCH VORSCHAU" – Titel oben links */
+.vorschau__title {
+    font-family: var(--schrift-titel);
+    font-size: 48px;
+    color: var(--farbe-weiss);
+    font-weight: 400;
+    margin-bottom: 40px;
+    margin-top: 60px;
+}
+
+/* Drei-Spalten-Layout: Spieler | VS-Bereich | Gegner */
+.vorschau__content {
+    display: grid;
+    grid-template-columns: 1fr 300px 1fr;  /* aussen gleich, Mitte fix */
+    gap: 40px;
+    align-items: center;
+    min-height: 500px;
+}
+
+/* Jede Team-Spalte: zentriert, vertikal gestapelt */
+.vorschau__team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+/* "DU SPIELST ALS" / "GEGNER" Label */
+.vorschau__team-label {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+}
+
+/* Team-Logo: gross, quadratisch, nicht verzerrt */
+.vorschau__logo {
+    width: 280px;
+    height: 280px;
+    object-fit: contain;
+}
+
+/* Team-Name in Anton-Font */
+.vorschau__team-name {
+    font-family: var(--schrift-titel);
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--farbe-weiss);
+    line-height: 1.1;
+}
+
+/* Spieler-Team-Name: GELB */
+.vorschau__team-name--gelb {
+    color: var(--farbe-gelb);
+}
+
+/* Liga-Info: "Bundesliga · Deutschland" */
+.vorschau__liga {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+    opacity: 0.7;
+}
+
+/* MITTLERE SPALTE: Runde, VS, Schwierigkeit, Buttons */
+.vorschau__mitte {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+/* Runden-Name: "ACHTELFINALE" */
+.vorschau__runde {
+    font-family: var(--schrift-titel);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--farbe-weiss);
+    white-space: nowrap;
+}
+
+/* Grosses "VS" */
+.vorschau__vs {
+    font-family: var(--schrift-titel);
+    font-size: 96px;
+    font-weight: 400;
+    color: var(--farbe-weiss);
+    line-height: 1;
+}
+
+/* Schwierigkeits-Container */
+.vorschau__schwierigkeit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.vorschau__schwierigkeit-label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+}
+
+/* Die 3 Punkte nebeneinander */
+.vorschau__dots {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Einzelner Punkt: standardmässig leer/grau */
+.vorschau__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;   /* rund */
+    background-color: rgba(255, 255, 255, 0.25);
+    display: block;
+}
+
+/* Aktiver Punkt: gelb ausgefüllt */
+.vorschau__dot--aktiv {
+    background-color: var(--farbe-gelb);
+}
+
+/* "Anpfiff →" Button – roter Hintergrund aus Figma (#ff4e6a) */
+.btn-anpfiff {
+    height: 56px;
+    width: 220px;
+    background-color: #ff4e6a;  /* Farbe direkt aus Figma */
+    border: none;
+    border-radius: 3px;
+    color: var(--farbe-weiss);
+    font-family: var(--schrift-titel);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-anpfiff:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
