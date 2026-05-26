@@ -11,9 +11,7 @@
     --schrift-text:       'Montserrat', sans-serif;  /* für Fliesstext */
 }
 
-/* ----------------------------------------------------------
-   RESET & BASIS
-   ---------------------------------------------------------- */
+/* RESET & BASIS */
 *, *::before, *::after {
     box-sizing: border-box; /* Padding/Border werden zum Element gezählt */
     margin: 0;
@@ -27,9 +25,7 @@ body {
     min-height: 100vh;
 }
 
-/* ----------------------------------------------------------
-   CHROME / NAVIGATIONSLEISTE (oben)
-   ---------------------------------------------------------- */
+/* CHROME / NAVIGATIONSLEISte */
 .chrome {
     background-color: var(--farbe-dunkelblau);
     border-bottom: 1px solid var(--farbe-rand);
@@ -57,10 +53,10 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-shrink: 0; /* Logo darf nicht kleiner werden */
+    flex-shrink: 0; /* Schrift Logo darf nicht kleiner werden */
 }
 
-/* Der kleine gelbe Punkt vor dem Logo */
+/* Der kleine gelbe Punkt vor dem "Logo" */
 .chrome__dot {
     width: 8px;
     height: 8px;
@@ -76,10 +72,8 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* ----------------------------------------------------------
-   SCHRITTE-NAVIGATION
-   "Setup > Turnierbaum > Vorschau > Spiel > Abpfiff"
-   ---------------------------------------------------------- */
+/* Schritt Navigation
+   "Setup > Turnierbaum > Vorschau > Spiel > Abpfiff"*/
 .steps {
     display: flex;
     gap: 16px;
@@ -93,17 +87,15 @@ body {
     opacity: 0.6; /* inaktive Schritte sind leicht transparent */
 }
 
-/* Der aktive Schritt ist gelb und nicht transparent */
+/* Der aktive Schritt ist gelb  */
 .steps__item--active {
     color: var(--farbe-gelb);
     opacity: 1;
     font-weight: 600;
 }
 
-/* ----------------------------------------------------------
-   HAUPTINHALT: zweispaltig
-   Links = Hero, Rechts = Setup-Karte
-   ---------------------------------------------------------- */
+/* Hautinhalt: zweispaltig
+   Links = Hero, Rechts = Setup-Karte */
 .landing {
     max-width: 1512px;
     margin: 0 auto;
@@ -114,9 +106,7 @@ body {
     align-items: start;
 }
 
-/* ----------------------------------------------------------
-   HERO (linke Seite)
-   ---------------------------------------------------------- */
+/* HERO (linke Seite) */
 .hero {
     display: flex;
     flex-direction: column;
@@ -131,7 +121,7 @@ body {
     color: var(--farbe-weiss);
 }
 
-/* Grosser Titel "DEIN WEG ZUM TITEL." */
+/* Grosser Titel "DEIN WEG ZUM" */
 .hero__title {
     font-family: var(--schrift-titel);
     font-size: 88px;
@@ -155,9 +145,7 @@ body {
     opacity: 0.9;
 }
 
-/* ----------------------------------------------------------
-   STATS: 16 VEREINE / 04 RUNDEN / 90:00 PRO SPIEL
-   ---------------------------------------------------------- */
+/* grosse gelbe Zahlen */
 .stats {
     display: flex;
     gap: 80px;
@@ -170,7 +158,7 @@ body {
     gap: 6px;
 }
 
-/* Grosse gelbe Zahl */
+/* Grosse gelbe Zahlen */
 .stats__number {
     font-family: var(--schrift-titel);
     font-size: 48px;
@@ -186,9 +174,7 @@ body {
     color: var(--farbe-weiss);
 }
 
-/* ----------------------------------------------------------
-   SETUP-KARTE (rechte Seite)
-   ---------------------------------------------------------- */
+/* Setup Karte rechts */
 .setup-card {
     background-color: var(--farbe-dunkelblau);
     border: 1px solid var(--farbe-rand);
@@ -222,8 +208,8 @@ body {
     font-weight: 600;
     letter-spacing: 1.2px;
     color: var(--farbe-weiss);
-    outline: none; /* kein blauer Rand beim Klick */
-    transition: border-color 0.2s; /* weicher Übergang beim Fokus */
+    outline: none; 
+    transition: border-color 0.2s; /* weicher Übergang  */
 }
 
 /* Input-Feld: Platzhalter-Farbe */
@@ -236,10 +222,7 @@ body {
     border-color: var(--farbe-gelb);
 }
 
-/* ----------------------------------------------------------
-   TEAM-SELECTOR
-   Links Pfeil ◀  |  Logo + Name  |  Pfeil ▶ rechts
-   ---------------------------------------------------------- */
+/*  Team auswählen */
 .team-selector {
     display: flex;
     align-items: center;
@@ -251,7 +234,7 @@ body {
     position: relative;
 }
 
-/* Pfeile links/rechts */
+/* Pfeile links und rechts */
 .team-selector__arrow {
     background: none;
     border: none;
@@ -287,22 +270,21 @@ body {
 .team-selector__logo {
     width: 160px;
     height: 160px;
-    object-fit: contain; /* Bild nicht verzerren */
+    object-fit: contain; /* nicht verzerren */
 }
 
-/* Vereinsname unter dem Logo */
+/* Vereinsname unter dem Wappen */
 .team-selector__name {
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 1.2px;
     color: var(--farbe-weiss);
-    text-transform: uppercase; /* z.B. "REAL MADRID" */
+    text-transform: uppercase; 
     text-align: center;
 }
 
-/* ----------------------------------------------------------
-   START-BUTTON "Turnier starten →"
-   ---------------------------------------------------------- */
+/* Turnier starten Button */
+
 .btn-start {
     width: 100%;
     height: 50px;
