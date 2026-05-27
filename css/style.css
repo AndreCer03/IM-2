@@ -726,3 +726,451 @@ body {
     opacity: 0.9;
     transform: translateY(-1px);
 }
+
+
+/* ============================================================
+   SPIEL – Neue Klassen für spiel.html
+   Basierend auf Figma: Match 1/2 Screens + Abpfiff Screens
+   ============================================================ */
+
+/* Seiten-Container – beginnt direkt unter der Navbar */
+.spiel-page {
+    padding-top: 64px;  /* Exakt die Navbar-Höhe */
+    min-height: 100vh;
+}
+
+/* ============================================================
+   SCOREBOARD (aus Figma "Component 2 / Scoreboard")
+   Breite Leiste direkt unter der Navbar
+   ============================================================ */
+.scoreboard {
+    display: flex;
+    align-items: center;
+    background-color: var(--farbe-dunkelblau);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    margin: 0 128px;
+    height: 105px;
+    position: relative;
+    overflow: hidden;  /* damit Farbverläufe nicht aus der Box laufen */
+}
+
+/* Linke Spieler-Seite: roter Gradient (aus Figma) */
+.scoreboard__seite--heim {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px;
+    /* Roter Farbverlauf: links stark, rechts transparent */
+    background: linear-gradient(to right, rgba(220, 5, 45, 0.45), rgba(220, 5, 45, 0));
+    height: 100%;
+}
+
+/* Rechte Gegner-Seite: gelber Gradient (aus Figma) */
+.scoreboard__seite--gast {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 0 24px;
+    /* Gelber Farbverlauf: rechts stark, links transparent */
+    background: linear-gradient(to left, rgba(253, 225, 0, 0.3), rgba(253, 225, 0, 0));
+    height: 100%;
+}
+
+/* Team-Logo im Scoreboard (kleiner als auf Vorschau) */
+.scoreboard__logo {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* Team-Infos: Kürzel + Name */
+.scoreboard__teaminfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.scoreboard__teaminfo--rechts {
+    text-align: right;
+}
+
+/* Team-Kürzel: "FCB" gross in Anton */
+.scoreboard__kuerzel {
+    font-family: var(--schrift-titel);
+    font-size: 32px;
+    color: #f0f4ff;
+    line-height: 1;
+}
+
+/* Team-Name klein: "BAYERN" */
+.scoreboard__teamname-klein {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: #8892b0;
+}
+
+/* Mitte: Timer + Score */
+.scoreboard__mitte {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 140px;
+}
+
+/* Spielzeit: "32:18" in Montserrat */
+.scoreboard__zeit {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+}
+
+/* Score: "2 : 1" gross in Anton */
+.scoreboard__score {
+    font-family: var(--schrift-titel);
+    font-size: 38px;
+    color: #f0f4ff;
+    line-height: 1;
+}
+
+/* ============================================================
+   FRAGE-KARTE (aus Figma "Question Card")
+   ============================================================ */
+.question-card {
+    background-color: var(--farbe-dunkelblau);
+    border: 1px solid rgba(255, 255, 255, 1);
+    border-radius: 6px;
+    margin: 16px 128px 0;
+    padding: 24px 32px 32px;
+    position: relative;
+    min-height: 580px;
+}
+
+/* Grüner Balken ganz oben auf der Karte (4px, aus Figma) */
+.question-card__balken {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #00ff88;  /* Figma: #0f8 = #00ff88 */
+    border-radius: 6px 6px 0 0;
+}
+
+/* "Frage 3 · Achtelfinale" Label */
+.question-card__label {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+    margin-bottom: 16px;
+    margin-top: 8px;
+}
+
+/* Wrapper für das Bild zentriert */
+.question-card__bild-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 220px;
+    margin-bottom: 16px;
+}
+
+/* Das Vereinswappen / Bild in der Frage */
+.question-card__bild {
+    max-height: 200px;
+    max-width: 220px;
+    object-fit: contain;
+}
+
+/* Frage-Text in Anton (48px aus Figma) */
+.question-card__frage {
+    font-family: var(--schrift-titel);
+    font-size: 40px;
+    color: #f0f4ff;
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 32px;
+}
+
+/* 2×2 Raster für die Antwort-Buttons */
+.antworten-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* zwei gleich breite Spalten */
+    gap: 16px;
+}
+
+/* Einzelner Antwort-Button */
+.antwort-btn {
+    background-color: var(--farbe-dunkelblau);
+    border: 2px solid rgba(255, 255, 255, 0.26);
+    border-radius: 4px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+    text-align: left;
+}
+
+.antwort-btn:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Buchstaben-Badge (A/B/C/D) */
+.antwort-btn__badge {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 2px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+    flex-shrink: 0;
+}
+
+/* Antwort-Text */
+.antwort-btn__text {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+}
+
+/* Richtige Antwort: grüner Rahmen + grüner Hintergrund */
+.antwort-btn--richtig {
+    border-color: #00ff88;
+    background-color: rgba(0, 255, 136, 0.15);
+}
+
+/* Falsche Antwort: roter Rahmen + roter Hintergrund */
+.antwort-btn--falsch {
+    border-color: rgba(220, 5, 45, 0.8);
+    background-color: rgba(220, 5, 45, 0.15);
+}
+
+/* Antwort-Buttons deaktivieren nach Klick */
+.antwort-btn--deaktiviert {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ============================================================
+   OVERLAYS: TOR! und GEGENTOR! (aus Figma Toor/Gegentor Screens)
+   ============================================================ */
+
+/* Basis-Overlay: deckt die ganze Seite ab */
+.tor-overlay {
+    position: fixed;
+    inset: 0;             /* top/left/right/bottom = 0 */
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Grüner Hintergrund für TOR! */
+.tor-overlay--gruen {
+    background-color: #00a651;  /* Figma: grüner Toor-Screen */
+}
+
+/* Roter Hintergrund für GEGENTOR! */
+.tor-overlay--rot {
+    background-color: rgba(180, 0, 0, 0.95);
+}
+
+/* Inhalt des Overlays: zentriert */
+.tor-overlay__inhalt {
+    text-align: center;
+}
+
+/* "TOR!" oder "GEGENTOR!" Text */
+.tor-overlay__text {
+    font-family: var(--schrift-titel);
+    font-size: 96px;
+    color: var(--farbe-weiss);
+    line-height: 1;
+}
+
+.tor-overlay__emoji {
+    font-size: 64px;
+    margin-top: 16px;
+}
+
+/* ============================================================
+   OVERLAY SICHTBARKEIT (Cheatsheet 05: classList)
+   .overlay--versteckt macht ein Element unsichtbar.
+   Per JS: element.classList.remove('overlay--versteckt') = zeigen
+           element.classList.add('overlay--versteckt')    = verstecken
+   ============================================================ */
+.overlay--versteckt {
+    display: none !important;
+}
+
+/* ============================================================
+   ABPFIFF SCREEN (aus Figma "Abpfiff Sieg / Niederlage")
+   ============================================================ */
+.abpfiff {
+    position: fixed;
+    inset: 0;
+    background-color: var(--farbe-hintergrund);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 128px;
+}
+
+/* "ABPFIFF 90:00" grosser Titel oben */
+.abpfiff__titel {
+    font-family: var(--schrift-titel);
+    font-size: 64px;
+    color: var(--farbe-weiss);
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+/* Weisse Ergebnis-Karte in der Mitte */
+.abpfiff__karte {
+    background-color: var(--farbe-dunkelblau);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 32px 48px;
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* "SIEG!" oder "NIEDERLAGE" */
+.abpfiff__ergebnis {
+    font-family: var(--schrift-titel);
+    font-size: 72px;
+    color: var(--farbe-gelb);  /* Gelb für Sieg */
+    line-height: 1;
+}
+
+/* Rotes "NIEDERLAGE" */
+.abpfiff__ergebnis--niederlage {
+    color: rgba(220, 5, 45, 0.9);
+}
+
+/* Logo + Score + Logo nebeneinander */
+.abpfiff__logos {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.abpfiff__logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+/* Endstand: "5 : 3" */
+.abpfiff__score {
+    font-family: var(--schrift-titel);
+    font-size: 56px;
+    color: var(--farbe-weiss);
+}
+
+/* Team-Namen unter den Logos */
+.abpfiff__namen {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+}
+
+.abpfiff__name {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+    text-align: center;
+    flex: 1;
+}
+
+/* Stats-Reihe: Runde | Richtig | Weiter */
+.abpfiff__stats {
+    display: flex;
+    gap: 48px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 16px;
+    width: 100%;
+    justify-content: center;
+}
+
+.abpfiff__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
+.abpfiff__stat-label {
+    font-size: 14px;
+    color: #8892b0;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+}
+
+.abpfiff__stat-wert {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+}
+
+/* Glückwunsch-Text */
+.abpfiff__meldung {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--farbe-weiss);
+    text-align: center;
+    max-width: 600px;
+}
+
+/* CTA Button im Abpfiff */
+.abpfiff__btn {
+    height: 56px;
+    padding: 0 32px;
+    background-color: var(--farbe-gelb);
+    border: none;
+    border-radius: 3px;
+    color: var(--farbe-dunkelblau);
+    font-family: var(--schrift-text);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 8px;
+}
+
+.abpfiff__btn:hover { opacity: 0.9; }
+
+/* Roter Button bei Niederlage (Nochmal spielen) */
+.abpfiff__btn--niederlage {
+    background-color: #ff4e6a;
+    color: var(--farbe-weiss);
+}

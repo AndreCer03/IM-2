@@ -609,3 +609,589 @@ if (aufVorschauSeite) {
     });
 
 } // Ende if (aufVorschauSeite)
+
+
+// ============================================================
+//  SEITE 4: SPIEL.HTML (Das Quiz-Spiel)
+// ============================================================
+
+if (document.querySelector('.spiel-page') !== null) {
+
+    // ----------------------------------------------------------
+    // VARIABLEN (Cheatsheet 01)
+    // ----------------------------------------------------------
+
+    // Spielstand
+    let spielerTore  = 0;    // Richtige Antworten = Tore des Spielers
+    let gegnerTore   = 0;    // Falsche Antworten = Gegentore
+    let frageNummer  = 0;    // Welche Frage ist aktuell? (0 = erste)
+    let spielZeit    = 60;   // Echte Sekunden (60 Sek = 90 Spielminuten)
+    let spielLaeuft  = true; // false wenn Spiel beendet
+    let richtigeAntworten = 0; // Für die Abpfiff-Stats
+
+    // Daten aus localStorage
+    let aktuellesSpiel = null;
+    let aktuelleRunde  = '';
+    let alleTeams      = [];
+
+    // Das Array mit allen generierten Fragen
+    let fragen = [];
+
+    // Der Interval-Timer
+    // ⚠️ NICHT im Cheatsheet: setInterval() – wiederholt eine Funktion jede X Millisekunden
+    let timerInterval = null;
+
+    // ----------------------------------------------------------
+    // DOM-ELEMENTE (Cheatsheet 05)
+    // ----------------------------------------------------------
+
+    // Scoreboard
+    const sbSpielerLogo  = document.querySelector('#sb-spieler-logo');
+    const sbSpielerKuerz = document.querySelector('#sb-spieler-kuerzel');
+    const sbSpielerName  = document.querySelector('#sb-spieler-name');
+    const sbGegnerLogo   = document.querySelector('#sb-gegner-logo');
+    const sbGegnerKuerz  = document.querySelector('#sb-gegner-kuerzel');
+    const sbGegnerName   = document.querySelector('#sb-gegner-name');
+    const spielZeitEl    = document.querySelector('#spiel-zeit');
+    const spielScoreEl   = document.querySelector('#spiel-score');
+
+    // Frage-Karte
+    const frageLabel    = document.querySelector('#frage-label');
+    const frageBild     = document.querySelector('#frage-bild');
+    const frageText     = document.querySelector('#frage-text');
+    const antwortBtns   = [
+        document.querySelector('#antwort-a'),
+        document.querySelector('#antwort-b'),
+        document.querySelector('#antwort-c'),
+        document.querySelector('#antwort-d'),
+    ];
+    const antwortTexte  = [
+        document.querySelector('#text-a'),
+        document.querySelector('#text-b'),
+        document.querySelector('#text-c'),
+        document.querySelector('#text-d'),
+    ];
+
+    // Overlays
+    const torOverlay     = document.querySelector('#tor-overlay');
+    const gegentorOverlay = document.querySelector('#gegentor-overlay');
+    const abpfiffEl      = document.querySelector('#abpfiff');
+
+    // Abpfiff-Elemente
+    const abpfiffErgebnis    = document.querySelector('#abpfiff-ergebnis');
+    const abpfiffSpielerLogo = document.querySelector('#abpfiff-spieler-logo');
+    const abpfiffGegnerLogo  = document.querySelector('#abpfiff-gegner-logo');
+    const abpfiffScore       = document.querySelector('#abpfiff-score');
+    const abpfiffSpielerName = document.querySelector('#abpfiff-spieler-name');
+    const abpfiffGegnerName  = document.querySelector('#abpfiff-gegner-name');
+    const abpfiffRunde       = document.querySelector('#abpfiff-runde');
+    const abpfiffRichtig     = document.querySelector('#abpfiff-richtig');
+    const abpfiffWeiter      = document.querySelector('#abpfiff-weiter');
+    const abpfiffMeldung     = document.querySelector('#abpfiff-meldung');
+    const abpfiffBtn         = document.querySelector('#abpfiff-btn');
+
+    // ----------------------------------------------------------
+    // FRAGEN-GENERIERUNG (Cheatsheet 09, 10, 11)
+    // Fragen werden aus den API-Daten der Teams generiert
+    // ----------------------------------------------------------
+
+    /**
+     * Gibt den Fragetyp je nach Runde zurück.
+     * Achtelfinale → einfache Typen
+     * Finale → alle Typen gemischt
+     *
+     * Cheatsheet 04: if/else
+     */
+    function getFrageTypen() {
+        // Cheatsheet 04: Bedingungen
+        if (aktuelleRunde === 'Achtelfinale') {
+            // Nur Wappen- und Land-Fragen (einfach)
+            return ['wappen', 'land', 'wappen', 'land'];
+        } else if (aktuelleRunde === 'Viertelfinale') {
+            return ['wappen', 'land', 'kuerzel', 'wappen'];
+        } else if (aktuelleRunde === 'Halbfinale') {
+            return ['wappen', 'kuerzel', 'land', 'kuerzel'];
+        } else {
+            // Finale: alle Typen
+            return ['wappen', 'kuerzel', 'land', 'wappen'];
+        }
+    }
+
+    /**
+     * Erstellt ein Frage-Objekt für ein bestimmtes Team und einen Typ.
+     *
+     * Cheatsheet 11: Objekte erstellen und lesen
+     * Cheatsheet 01: Template Literals
+     *
+     * ⚠️ NICHT im Cheatsheet: .slice(), Array-Destrukturierung
+     */
+    function erstelleFrage(richtigesTeam, typ) {
+        // 3 andere Teams für falsche Antworten wählen
+        // ⚠️ .filter() und .sort() nicht im Cheatsheet
+        let andereTeams = alleTeams.filter(function(t) {
+            return t.id !== richtigesTeam.id;
+        });
+        andereTeams.sort(function() { return Math.random() - 0.5; });
+        // ⚠️ .slice() nicht im Cheatsheet – gibt Teil eines Arrays zurück
+        let falsche3 = andereTeams.slice(0, 3);
+
+        // Cheatsheet 11: Objekte – wir bauen ein Frage-Objekt
+        let frage = {
+            typ: typ,
+            richtigesTeam: richtigesTeam,
+            bild: '',          // URL des Bildes (bei Wappen-Fragen)
+            frageText: '',     // Der Frage-Text
+            richtigeAntwort: '', // Die korrekte Antwort
+            optionen: [],      // Array mit 4 Antwort-Optionen
+        };
+
+        // Frage je nach Typ befüllen (Cheatsheet 04: if/else)
+        if (typ === 'wappen') {
+            // WAPPEN-FRAGE: Zeige Wappen, frage nach Vereinsname
+            frage.bild = richtigesTeam.crest;
+            frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+            frage.richtigeAntwort = richtigesTeam.name;
+
+            // 4 Optionen: Richtiger Name + 3 falsche Namen
+            // ⚠️ Spread-Operator ... nicht im Cheatsheet
+            let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+            alleOptionen.sort(function() { return Math.random() - 0.5; });
+            frage.optionen = alleOptionen;
+
+        } else if (typ === 'land') {
+            // LAND-FRAGE: Zeige Vereinsname, frage nach Land
+            frage.bild = richtigesTeam.crest;
+            // Cheatsheet 01: Template Literal
+            frage.frageText = `Aus welchem Land kommt ${richtigesTeam.shortName || richtigesTeam.name}?`;
+            frage.richtigeAntwort = richtigesTeam.area.name;
+
+            let alleOptionen = [
+                richtigesTeam.area.name,
+                falsche3[0].area.name,
+                falsche3[1].area.name,
+                falsche3[2].area.name,
+            ];
+            alleOptionen.sort(function() { return Math.random() - 0.5; });
+            frage.optionen = alleOptionen;
+
+        } else if (typ === 'kuerzel') {
+            // KÜRZEL-FRAGE: Zeige Vereinsname, frage nach TLA (z.B. "FCB")
+            frage.bild = richtigesTeam.crest;
+            frage.frageText = `Was ist die offizielle Abkürzung von ${richtigesTeam.name}?`;
+            frage.richtigeAntwort = richtigesTeam.tla;
+
+            let alleOptionen = [
+                richtigesTeam.tla,
+                falsche3[0].tla,
+                falsche3[1].tla,
+                falsche3[2].tla,
+            ];
+            alleOptionen.sort(function() { return Math.random() - 0.5; });
+            frage.optionen = alleOptionen;
+        }
+
+        return frage; // Cheatsheet 03: return-Wert
+    }
+
+    /**
+     * Generiert 10 Fragen für das Spiel.
+     * Cheatsheet 10: for-Schleife
+     * Cheatsheet 09: .push() – Element zum Array hinzufügen
+     */
+    function generiereFragen() {
+        fragen = []; // Array leeren (Cheatsheet 09)
+
+        // Fragetypen je nach Runde
+        let typen = getFrageTypen();
+
+        // 10 Fragen generieren (mehr als für Sieg/Niederlage nötig)
+        // Cheatsheet 10: for-Schleife
+        for (let i = 0; i < 10; i++) {
+            // Zufälliges Team aus allen Teams wählen
+            // ⚠️ Math.floor + Math.random nicht im Cheatsheet
+            let zufallsIndex = Math.floor(Math.random() * alleTeams.length);
+            let team = alleTeams[zufallsIndex];
+
+            // Fragetyp: wechselt durch die Typen-Liste
+            // ⚠️ Modulo-Operator % nicht im Cheatsheet
+            let typ = typen[i % typen.length];
+
+            let frage = erstelleFrage(team, typ);
+            fragen.push(frage); // Cheatsheet 09: .push()
+        }
+    }
+
+    // ----------------------------------------------------------
+    // ANZEIGE-FUNKTIONEN (Cheatsheet 05)
+    // ----------------------------------------------------------
+
+    /**
+     * Zeigt die aktuelle Frage an.
+     * Cheatsheet 05: innerText, setAttribute, classList
+     * Cheatsheet 09: Array-Zugriff per Index
+     * Cheatsheet 11: Objekt-Properties lesen
+     */
+    function zeigeFrage() {
+        // Sicherheits-Check: Gibt es noch Fragen?
+        if (frageNummer >= fragen.length) {
+            // Keine Fragen mehr → Spiel beenden
+            spielEnde();
+            return;
+        }
+
+        // Aktuelle Frage aus dem Array laden (Cheatsheet 09)
+        let frage = fragen[frageNummer];
+
+        // Frage-Label aktualisieren (Cheatsheet 01: Template Literal)
+        frageLabel.innerText = `Frage ${frageNummer + 1} · ${aktuelleRunde}`;
+
+        // Bild setzen (Cheatsheet 05: setAttribute)
+        frageBild.setAttribute('src', frage.bild);
+        frageBild.setAttribute('alt', 'Vereinswappen');
+
+        // Frage-Text setzen (Cheatsheet 05: innerText)
+        frageText.innerText = frage.frageText;
+
+        // Antwort-Buttons befüllen (Cheatsheet 10: forEach)
+        const buchstaben = ['A', 'B', 'C', 'D'];
+        antwortBtns.forEach(function(btn, index) {
+            // Text setzen
+            antwortTexte[index].innerText = frage.optionen[index];
+
+            // Klassen zurücksetzen (Cheatsheet 05: classList)
+            btn.classList.remove('antwort-btn--richtig', 'antwort-btn--falsch', 'antwort-btn--deaktiviert');
+            btn.disabled = false;
+
+            // Badge-Buchstabe setzen
+            btn.querySelector('.antwort-btn__badge').innerText = buchstaben[index];
+        });
+    }
+
+    /**
+     * Zeigt die aktuelle Spielzeit formatiert an.
+     * 60 echte Sekunden = 90 Spielminuten
+     *
+     * ⚠️ NICHT im Cheatsheet: Math.floor(), String.padStart()
+     */
+    function zeigeZeit() {
+        // Vergangene echte Zeit in Spielminuten umrechnen
+        // 60 Sek real → 90 Spielminuten → 1 Sek real = 1.5 Spielminuten
+        const vergangen = 60 - spielZeit;  // Wie viele echte Sekunden sind vergangen?
+        const spielMinuten = Math.floor(vergangen * 1.5);
+        const spielSekundenRest = Math.floor((vergangen * 1.5 - spielMinuten) * 60);
+
+        // Mit führenden Nullen formatieren (z.B. "04:08")
+        // ⚠️ .padStart() nicht im Cheatsheet – fügt Nullen vorne ein
+        const minStr = String(spielMinuten).padStart(2, '0');
+        const sekStr = String(spielSekundenRest).padStart(2, '0');
+
+        // Cheatsheet 05: innerText + Cheatsheet 01: Template Literal
+        spielZeitEl.innerText = `${minStr}:${sekStr}`;
+    }
+
+    /**
+     * Aktualisiert den Spielstand im Scoreboard.
+     * Cheatsheet 05: innerText
+     * Cheatsheet 01: Template Literal
+     */
+    function zeigeScore() {
+        spielScoreEl.innerText = `${spielerTore} : ${gegnerTore}`;
+    }
+
+    // ----------------------------------------------------------
+    // SPIEL-LOGIK
+    // ----------------------------------------------------------
+
+    /**
+     * Wird aufgerufen wenn ein Antwort-Button geklickt wird.
+     * Cheatsheet 04: if/else
+     * Cheatsheet 05: classList
+     *
+     * @param {number} index - 0=A, 1=B, 2=C, 3=D
+     */
+    function antwortKlick(index) {
+        // Nur reagieren wenn Spiel läuft (Cheatsheet 04)
+        if (!spielLaeuft) return;
+
+        let frage = fragen[frageNummer];
+        let gewaehlteAntwort = frage.optionen[index];
+
+        // ALLE Buttons deaktivieren (damit nicht nochmal geklickt werden kann)
+        // Cheatsheet 10: forEach
+        antwortBtns.forEach(function(btn) {
+            btn.classList.add('antwort-btn--deaktiviert');
+            btn.disabled = true;
+        });
+
+        // Richtige Antwort grün markieren
+        // Cheatsheet 09: indexOf – findet Position im Array
+        // ⚠️ .indexOf() nicht im Cheatsheet
+        let richtigePosition = frage.optionen.indexOf(frage.richtigeAntwort);
+        antwortBtns[richtigePosition].classList.add('antwort-btn--richtig');
+
+        // War die Antwort richtig oder falsch?
+        if (gewaehlteAntwort === frage.richtigeAntwort) {
+            // ✅ RICHTIG → TOR!
+            antwortBtns[index].classList.add('antwort-btn--richtig');
+            spielerTore = spielerTore + 1;
+            richtigeAntworten = richtigeAntworten + 1;
+            zeigeScore();
+            zeigeTorOverlay(true);
+
+        } else {
+            // ❌ FALSCH → GEGENTOR!
+            antwortBtns[index].classList.add('antwort-btn--falsch');
+            gegnerTore = gegnerTore + 1;
+            zeigeScore();
+            zeigeTorOverlay(false);
+        }
+
+        // Nach 1.5 Sekunden: prüfen ob Spiel weitergeht
+        // ⚠️ setTimeout nicht im Cheatsheet – führt Funktion nach X Millisekunden aus
+        setTimeout(function() {
+            versteckeOverlays();
+
+            // Gewonnen: 5 Tore des Spielers
+            if (spielerTore >= 5) {
+                spielEnde();
+                return;
+            }
+            // Verloren: 5 Gegentore
+            if (gegnerTore >= 5) {
+                spielEnde();
+                return;
+            }
+
+            // Weiter zur nächsten Frage
+            frageNummer = frageNummer + 1;
+            zeigeFrage();
+        }, 1500); // 1500ms = 1.5 Sekunden
+    }
+
+    /**
+     * Zeigt TOR! oder GEGENTOR! Overlay für 1.5 Sekunden.
+     * Cheatsheet 05: classList.remove (Overlay zeigen)
+     */
+    function zeigeTorOverlay(istTor) {
+        // Cheatsheet 04: if/else
+        if (istTor) {
+            // Cheatsheet 05: classList.remove = Element sichtbar machen
+            torOverlay.classList.remove('overlay--versteckt');
+        } else {
+            gegentorOverlay.classList.remove('overlay--versteckt');
+        }
+    }
+
+    /**
+     * Versteckt beide Overlays.
+     * Cheatsheet 05: classList.add
+     */
+    function versteckeOverlays() {
+        // Cheatsheet 05: classList.add = Element wieder verstecken
+        torOverlay.classList.add('overlay--versteckt');
+        gegentorOverlay.classList.add('overlay--versteckt');
+    }
+
+    /**
+     * Beendet das Spiel und zeigt den Abpfiff-Screen.
+     * Cheatsheet 04: if/else (Sieg oder Niederlage)
+     * Cheatsheet 08: localStorage (Spielstand speichern)
+     */
+    function spielEnde() {
+        spielLaeuft = false;
+
+        // Timer stoppen
+        // ⚠️ clearInterval nicht im Cheatsheet – stoppt einen setInterval
+        clearInterval(timerInterval);
+
+        // Sieg oder Niederlage? (Cheatsheet 04: Bedingungen)
+        // Sieg wenn: mehr Spielertore ODER genau 5 Spielertore (auch bei Gleichstand gewinnt Spieler)
+        const istSieg = spielerTore > gegnerTore || spielerTore >= 5;
+
+        // Nächste Runde bestimmen (Cheatsheet 04: if/else)
+        let naechsteRunde = '';
+        if (aktuelleRunde === 'Achtelfinale')  naechsteRunde = 'Viertelfinale';
+        if (aktuelleRunde === 'Viertelfinale') naechsteRunde = 'Halbfinale';
+        if (aktuelleRunde === 'Halbfinale')    naechsteRunde = 'Finale';
+        if (aktuelleRunde === 'Finale')        naechsteRunde = 'Champion!';
+
+        // Abpfiff-Screen befüllen (Cheatsheet 05: innerText, setAttribute)
+        abpfiffErgebnis.innerText   = istSieg ? 'SIEG!' : 'NIEDERLAGE';
+        abpfiffScore.innerText      = `${spielerTore} : ${gegnerTore}`;
+        abpfiffRunde.innerText      = aktuelleRunde;
+        abpfiffRichtig.innerText    = `${richtigeAntworten} / ${frageNummer + 1}`;
+        abpfiffWeiter.innerText     = istSieg ? naechsteRunde : '-';
+
+        // Logos (Cheatsheet 05: setAttribute)
+        abpfiffSpielerLogo.setAttribute('src', aktuellesSpiel.heim.crest);
+        abpfiffGegnerLogo.setAttribute('src',  aktuellesSpiel.gast.crest);
+
+        // Team-Namen (Cheatsheet 05: innerText)
+        abpfiffSpielerName.innerText = aktuellesSpiel.heim.shortName || aktuellesSpiel.heim.name;
+        abpfiffGegnerName.innerText  = aktuellesSpiel.gast.shortName || aktuellesSpiel.gast.name;
+
+        // Glückwunsch-Meldung (Cheatsheet 01: Template Literal)
+        const spielerName = localStorage.getItem('spielerName') || 'Spieler';
+        const vereinName  = aktuellesSpiel.heim.shortName || aktuellesSpiel.heim.name;
+        if (istSieg) {
+            if (naechsteRunde === 'Champion!') {
+                abpfiffMeldung.innerText = `Glückwunsch ${spielerName}! ${vereinName} ist CHAMPION!`;
+            } else {
+                abpfiffMeldung.innerText = `Glückwunsch ${spielerName}! ${vereinName} steht im ${naechsteRunde}!`;
+            }
+        } else {
+            abpfiffMeldung.innerText = `Schade ${spielerName}! Nächste Saison wieder angreifen!`;
+        }
+
+        // Niederlage → roter Text und Button
+        // Cheatsheet 05: classList
+        if (!istSieg) {
+            abpfiffErgebnis.classList.add('abpfiff__ergebnis--niederlage');
+            abpfiffBtn.classList.add('abpfiff__btn--niederlage');
+            abpfiffBtn.innerText = 'Nochmal spielen';
+        } else if (naechsteRunde === 'Champion!') {
+            abpfiffBtn.innerText = '🏆 Zum Abschluss';
+        } else {
+            // Cheatsheet 01: Template Literal
+            abpfiffBtn.innerText = `Weiter zum ${naechsteRunde} →`;
+        }
+
+        // Nächste Runde in localStorage speichern (für den nächsten Spielzug)
+        // Cheatsheet 08: localStorage.setItem
+        if (istSieg) {
+            localStorage.setItem('aktuelleRunde', naechsteRunde);
+        }
+        // Sieg/Niederlage speichern
+        localStorage.setItem('letzteErgebnis', JSON.stringify({
+            istSieg: istSieg,
+            spielerTore: spielerTore,
+            gegnerTore: gegnerTore,
+            runde: aktuelleRunde,
+        }));
+
+        // Abpfiff-Screen anzeigen (Cheatsheet 05: classList.remove)
+        abpfiffEl.classList.remove('overlay--versteckt');
+    }
+
+    // ----------------------------------------------------------
+    // SCOREBOARD BEFÜLLEN (Cheatsheet 05)
+    // ----------------------------------------------------------
+
+    /**
+     * Füllt das Scoreboard mit den Teamdaten.
+     * Cheatsheet 05: setAttribute, innerText
+     * Cheatsheet 11: Objekt-Properties lesen
+     */
+    function zeigeScoreboard() {
+        const heim = aktuellesSpiel.heim;
+        const gast = aktuellesSpiel.gast;
+
+        // Spieler-Team (Heim)
+        sbSpielerLogo.setAttribute('src', heim.crest);
+        sbSpielerLogo.setAttribute('alt', heim.name);
+        sbSpielerKuerz.innerText = heim.tla  || heim.shortName || 'FCB';
+        sbSpielerName.innerText  = (heim.shortName || heim.name).toUpperCase();
+
+        // Gegner-Team (Gast)
+        sbGegnerLogo.setAttribute('src', gast.crest);
+        sbGegnerLogo.setAttribute('alt', gast.name);
+        sbGegnerKuerz.innerText = gast.tla  || gast.shortName || 'BVB';
+        sbGegnerName.innerText  = (gast.shortName || gast.name).toUpperCase();
+    }
+
+    // ----------------------------------------------------------
+    // TIMER (Cheatsheet 06: window.addEventListener für load)
+    // ⚠️ setInterval NICHT im Cheatsheet
+    // ----------------------------------------------------------
+
+    /**
+     * Startet den Spieltimer.
+     * ⚠️ setInterval() nicht im Cheatsheet – ruft Funktion jede Sekunde auf.
+     */
+    function starteTimer() {
+        // ⚠️ NICHT im Cheatsheet: setInterval(funktion, millisekunden)
+        timerInterval = setInterval(function() {
+            spielZeit = spielZeit - 1;  // Eine Sekunde weniger
+            zeigeZeit();               // Anzeige aktualisieren
+
+            // Zeit abgelaufen?
+            if (spielZeit <= 0) {
+                spielEnde();
+            }
+        }, 1000); // 1000ms = 1 Sekunde
+    }
+
+    // ----------------------------------------------------------
+    // EVENT-LISTENER für Antwort-Buttons (Cheatsheet 06)
+    // ----------------------------------------------------------
+
+    // Für jeden der 4 Buttons einen Click-Listener setzen
+    // Cheatsheet 10: forEach
+    antwortBtns.forEach(function(btn, index) {
+        // Cheatsheet 06: addEventListener('click', function)
+        btn.addEventListener('click', function() {
+            antwortKlick(index);
+        });
+    });
+
+    // Abpfiff-Button: Weiter oder Nochmal
+    abpfiffBtn.addEventListener('click', function() {
+        const ergebnis = JSON.parse(localStorage.getItem('letzteErgebnis') || '{}');
+
+        if (ergebnis.istSieg) {
+            const naechsteRunde = localStorage.getItem('aktuelleRunde');
+            if (naechsteRunde === 'Champion!') {
+                // Spiel komplett gewonnen → zurück zur Startseite
+                window.location.href = 'index.html';
+            } else {
+                // Turnierbaum zeigen für nächste Runde
+                window.location.href = 'turnierbaum.html';
+            }
+        } else {
+            // Niederlage → Nochmal von vorne
+            window.location.href = 'index.html';
+        }
+    });
+
+    // ----------------------------------------------------------
+    // SEITE STARTEN (Cheatsheet 06: window.addEventListener)
+    // ----------------------------------------------------------
+
+    window.addEventListener('load', function() {
+        console.log('Spiel-Seite geladen');
+
+        // Daten aus localStorage laden (Cheatsheet 08)
+        const spielJson  = localStorage.getItem('aktuellesSpiel');
+        const rundeText  = localStorage.getItem('aktuelleRunde');
+        const teamsJson  = localStorage.getItem('alleVereine');
+
+        // Falls keine Daten: zurück zur Startseite (Cheatsheet 04)
+        if (!spielJson || !teamsJson) {
+            console.log('Keine Spieldaten – zurück zur Startseite');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // ⚠️ JSON.parse nicht im Cheatsheet
+        aktuellesSpiel = JSON.parse(spielJson);
+        aktuelleRunde  = rundeText || 'Achtelfinale';
+        alleTeams      = JSON.parse(teamsJson);
+
+        // 1. Scoreboard befüllen
+        zeigeScoreboard();
+
+        // 2. Fragen generieren (aus Team-Daten)
+        generiereFragen();
+
+        // 3. Erste Frage anzeigen
+        zeigeFrage();
+
+        // 4. Timer starten
+        starteTimer();
+
+        // 5. Initiale Zeitanzeige
+        zeigeZeit();
+        zeigeScore();
+    });
+
+} // Ende if (aufSpielSeite)

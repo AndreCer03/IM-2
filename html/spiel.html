@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Champions Quiz – Spiel</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <!-- ==================== NAVIGATION / CHROME ==================== -->
+    <!-- "Spiel >" ist jetzt gelb = aktiver Schritt -->
+    <header class="chrome">
+      <div class="chrome__inner">
+        <div class="chrome__logo">
+          <span class="chrome__dot"></span>
+          <span class="chrome__title">CHAMPIONS QUIZ</span>
+        </div>
+        <nav class="steps">
+          <span class="steps__item">Setup &gt;</span>
+          <span class="steps__item">Turnierbaum &gt;</span>
+          <span class="steps__item">Vorschau &gt;</span>
+          <span class="steps__item steps__item--active">Spiel &gt;</span>
+          <span class="steps__item">Abpfiff</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ==================== SPIEL-SEITE ==================== -->
+    <!--
+      class="spiel-page" → script.js erkennt daran diese Seite
+    -->
+    <main class="spiel-page">
+      <!-- ==================== SCOREBOARD ==================== -->
+      <!--
+        Zeigt: Spieler-Team | Timer + Score | Gegner-Team
+        Der linke Teil hat einen roten Farbverlauf (aus Figma)
+        Der rechte Teil hat einen gelben Farbverlauf (aus Figma)
+      -->
+      <div class="scoreboard">
+        <!-- Linke Seite: Spieler-Team -->
+        <div class="scoreboard__seite scoreboard__seite--heim">
+          <!-- Team-Logo -->
+          <img id="sb-spieler-logo" src="" alt="" class="scoreboard__logo" />
+          <!-- Kürzel + Vollname -->
+          <div class="scoreboard__teaminfo">
+            <p class="scoreboard__kuerzel" id="sb-spieler-kuerzel">FCB</p>
+            <p class="scoreboard__teamname-klein" id="sb-spieler-name">
+              LADEN...
+            </p>
+          </div>
+        </div>
+
+        <!-- Mitte: Timer + Score -->
+        <div class="scoreboard__mitte">
+          <!-- Spielzeit zählt hoch von 00:00 bis 90:00 -->
+          <p class="scoreboard__zeit" id="spiel-zeit">00:00</p>
+          <!-- Aktuelle Torstand: Spieler : Gegner -->
+          <p class="scoreboard__score" id="spiel-score">0 : 0</p>
+        </div>
+
+        <!-- Rechte Seite: Gegner-Team -->
+        <div class="scoreboard__seite scoreboard__seite--gast">
+          <div class="scoreboard__teaminfo scoreboard__teaminfo--rechts">
+            <p class="scoreboard__kuerzel" id="sb-gegner-kuerzel">BVB</p>
+            <p class="scoreboard__teamname-klein" id="sb-gegner-name">
+              LADEN...
+            </p>
+          </div>
+          <img id="sb-gegner-logo" src="" alt="" class="scoreboard__logo" />
+        </div>
+      </div>
+      <!-- Ende Scoreboard -->
+
+      <!-- ==================== FRAGE-KARTE ==================== -->
+      <!--
+        Das ist der Hauptbereich: zeigt die aktuelle Quiz-Frage.
+        Wird durch die JS-Funktion "zeigeFrage()" befüllt.
+      -->
+      <div class="question-card" id="question-card">
+        <!-- Grüner Balken oben (4px, aus Figma) -->
+        <div class="question-card__balken"></div>
+
+        <!-- Label: "Frage 3 · Achtelfinale" -->
+        <p class="question-card__label" id="frage-label">
+          Frage 1 · Achtelfinale
+        </p>
+
+        <!-- Vereinswappen oder Bild – wird per JS gesetzt -->
+        <div class="question-card__bild-wrapper">
+          <img
+            id="frage-bild"
+            class="question-card__bild"
+            src=""
+            alt="Vereinswappen"
+          />
+        </div>
+
+        <!-- Frage-Text – wird per JS gesetzt -->
+        <p class="question-card__frage" id="frage-text">Laden...</p>
+
+        <!-- 4 Antwort-Buttons im 2x2-Raster -->
+        <div class="antworten-grid">
+          <!-- Antwort A -->
+          <button class="antwort-btn" id="antwort-a">
+            <span class="antwort-btn__badge">A</span>
+            <span class="antwort-btn__text" id="text-a">...</span>
+          </button>
+
+          <!-- Antwort B -->
+          <button class="antwort-btn" id="antwort-b">
+            <span class="antwort-btn__badge">B</span>
+            <span class="antwort-btn__text" id="text-b">...</span>
+          </button>
+
+          <!-- Antwort C -->
+          <button class="antwort-btn" id="antwort-c">
+            <span class="antwort-btn__badge">C</span>
+            <span class="antwort-btn__text" id="text-c">...</span>
+          </button>
+
+          <!-- Antwort D -->
+          <button class="antwort-btn" id="antwort-d">
+            <span class="antwort-btn__badge">D</span>
+            <span class="antwort-btn__text" id="text-d">...</span>
+          </button>
+        </div>
+        <!-- Ende Antworten -->
+      </div>
+      <!-- Ende Frage-Karte -->
+
+      <!-- ==================== TOR! OVERLAY ==================== -->
+      <!--
+        Erscheint kurz (1.5 Sek) wenn der Spieler richtig antwortet.
+        Standardmässig versteckt via CSS-Klasse "overlay--versteckt".
+        script.js zeigt/versteckt es mit classList.
+      -->
+      <div
+        class="tor-overlay tor-overlay--gruen overlay--versteckt"
+        id="tor-overlay"
+      >
+        <div class="tor-overlay__inhalt">
+          <p class="tor-overlay__text">TOR!</p>
+          <!-- Kleines Tor-Symbol aus Unicode -->
+          <p class="tor-overlay__emoji">⚽</p>
+        </div>
+      </div>
+
+      <!-- ==================== GEGENTOR! OVERLAY ==================== -->
+      <!--
+        Erscheint kurz wenn der Spieler falsch antwortet.
+        Farbe: Rot (#dc052d) – aus Figma "Gegentor"-Screen
+      -->
+      <div
+        class="tor-overlay tor-overlay--rot overlay--versteckt"
+        id="gegentor-overlay"
+      >
+        <div class="tor-overlay__inhalt">
+          <p class="tor-overlay__text">GEGENTOR!</p>
+          <p class="tor-overlay__emoji">😬</p>
+        </div>
+      </div>
+
+      <!-- ==================== ABPFIFF SCREEN ==================== -->
+      <!--
+        Erscheint am Spielende (Zeit abgelaufen, 5 Tore oder 5 Gegentore).
+        Zeigt: "SIEG!" oder "NIEDERLAGE", Endstand, Stats.
+        Wird per JS mit Daten gefüllt und per classList eingeblendet.
+      -->
+      <div class="abpfiff overlay--versteckt" id="abpfiff">
+        <!-- Abpfiff-Überschrift: "ABPFIFF 90:00" -->
+        <p class="abpfiff__titel">ABPFIFF 90:00</p>
+
+        <!-- Ergebnis-Karte in der Mitte -->
+        <div class="abpfiff__karte">
+          <!-- "SIEG!" oder "NIEDERLAGE" -->
+          <p class="abpfiff__ergebnis" id="abpfiff-ergebnis">SIEG!</p>
+
+          <!-- Logos beider Teams nebeneinander -->
+          <div class="abpfiff__logos">
+            <img
+              id="abpfiff-spieler-logo"
+              src=""
+              alt=""
+              class="abpfiff__logo"
+            />
+            <!-- Endstand in der Mitte der Logos -->
+            <p class="abpfiff__score" id="abpfiff-score">5 : 2</p>
+            <img id="abpfiff-gegner-logo" src="" alt="" class="abpfiff__logo" />
+          </div>
+
+          <!-- Team-Namen unter den Logos -->
+          <div class="abpfiff__namen">
+            <p id="abpfiff-spieler-name" class="abpfiff__name">Bayern</p>
+            <p id="abpfiff-gegner-name" class="abpfiff__name">Dortmund</p>
+          </div>
+
+          <!-- Stats: Runde | Richtige | Nächste Runde -->
+          <div class="abpfiff__stats">
+            <div class="abpfiff__stat">
+              <p class="abpfiff__stat-label">Runde</p>
+              <p class="abpfiff__stat-wert" id="abpfiff-runde">Achtelfinale</p>
+            </div>
+            <div class="abpfiff__stat">
+              <p class="abpfiff__stat-label">Richtig</p>
+              <p class="abpfiff__stat-wert" id="abpfiff-richtig">5 / 8</p>
+            </div>
+            <div class="abpfiff__stat">
+              <p class="abpfiff__stat-label">Weiter</p>
+              <p class="abpfiff__stat-wert" id="abpfiff-weiter">
+                Viertelfinale
+              </p>
+            </div>
+          </div>
+
+          <!-- Glückwunsch-Meldung -->
+          <p class="abpfiff__meldung" id="abpfiff-meldung">
+            Glückwunsch! Du stehst in der nächsten Runde!
+          </p>
+
+          <!-- CTA Button: Weiter oder Nochmal -->
+          <button class="abpfiff__btn" id="abpfiff-btn">
+            Weiter zum Viertelfinale →
+          </button>
+        </div>
+        <!-- Ende Ergebnis-Karte -->
+      </div>
+      <!-- Ende Abpfiff Screen -->
+    </main>
+
+    <script src="../js/script.js" type="module"></script>
+  </body>
+</html>
