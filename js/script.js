@@ -261,6 +261,18 @@ if (aufIndexSeite) {
     // Cheatsheet 06: window.addEventListener('load', ...)
     window.addEventListener('load', async function() {
         console.log('Index-Seite geladen');
+
+        // Spielstand zurücksetzen: jedes Mal wenn die Setup-Seite geöffnet wird,
+        // beginnt das Turnier von vorne. Fortschritt bleibt nur erhalten wenn
+        // man direkt auf spiel.html oder turnierbaum.html neu lädt.
+        // Cheatsheet 08: localStorage.removeItem
+        localStorage.removeItem('spielplan');
+        localStorage.removeItem('spielplanTeamId');
+        localStorage.removeItem('aktuellesSpiel');
+        localStorage.removeItem('aktuelleRunde');
+        localStorage.removeItem('gegnerGespielt');
+        localStorage.removeItem('letzteErgebnis');
+
         ladeGespeicherteAuswahl();
         await ladeVereine();
     });
@@ -372,6 +384,8 @@ if (aufTurnierbaum) {
         localStorage.setItem('spielplanTeamId', String(spielerTeam.id));
         localStorage.setItem('aktuellesSpiel', JSON.stringify(spielplan[0]));
         localStorage.setItem('aktuelleRunde',  'Achtelfinale');
+        // Gegner-Liste zurücksetzen (wird nach jedem Sieg erweitert)
+        localStorage.setItem('gegnerGespielt', JSON.stringify([]));
     }
 
     /**
@@ -392,25 +406,62 @@ if (aufTurnierbaum) {
     }
 
     /**
-     * Zeigt alle 8 Spiele im Bracket an.
-     * Cheatsheet 10: forEach – geht durch jedes Element
-     * Cheatsheet 05: classList.add
+     * Zeigt den Bracket an – passt sich je nach aktueller Runde an.
+     * Achtelfinale:  af1 aktiv (grüner Rahmen)
+     * Viertelfinale: af1 gespielt (gedimmt), vf1 aktiv
+     * Halbfinale:    af1+vf1 gespielt, hf1 aktiv
+     * Finale:        af1+vf1+hf1 gespielt, finale aktiv
+     *
+     * Cheatsheet 04: if/else
+     * Cheatsheet 05: classList, querySelector
      */
     function zeigeBracket() {
-        // forEach: für jedes Spiel im spielplan
-        // Cheatsheet 10: forEach-Schleife
+        const aktuelleRunde    = localStorage.getItem('aktuelleRunde') || 'Achtelfinale';
+        const aktSpielJson     = localStorage.getItem('aktuellesSpiel');
+        const aktSpiel         = aktSpielJson ? JSON.parse(aktSpielJson) : (spielplan[0] || null);
+
+        // Runden-Reihenfolge zum Berechnen des Fortschritts
+        const rundenReihenfolge = ['Achtelfinale', 'Viertelfinale', 'Halbfinale', 'Finale'];
+        const aktuellerIndex    = rundenReihenfolge.indexOf(aktuelleRunde);
+
+        // Match-Karten-IDs auf dem Spielerpfad (immer links: af1 → vf1 → hf1 → finale)
+        const spielerKartenIds  = ['af1', 'vf1', 'hf1', 'finale'];
+
+        // 1. Alle AF-Karten mit Spielplan-Daten befüllen (Cheatsheet 10: forEach)
         spielplan.forEach(function(spiel) {
             befuelleKarte(spiel.id, spiel);
-
-            // Spieler-Spiel: grüner Rahmen
-            // Cheatsheet 04: if-Bedingung
-            if (spiel.istSpielerSpiel) {
-                const karte = document.querySelector(`#match-${spiel.id}`);
-                if (karte) {
-                    karte.classList.add('match-card--aktiv');
-                }
-            }
         });
+
+        // 2. Aktuelle Runden-Karte mit echtem Gegner befüllen und hervorheben
+        const aktiveKarteId = spielerKartenIds[aktuellerIndex];
+        if (aktiveKarteId && aktSpiel) {
+            // Für VF/HF/Finale: echten neuen Gegner eintragen
+            if (aktuelleRunde !== 'Achtelfinale') {
+                befuelleKarte(aktiveKarteId, aktSpiel);
+            }
+            const aktiveKarteEl = document.querySelector('#match-' + aktiveKarteId);
+            if (aktiveKarteEl) {
+                aktiveKarteEl.classList.remove('match-card--platzhalter');
+                aktiveKarteEl.classList.add('match-card--aktiv');
+            }
+        }
+
+        // 3. Vergangene Spieler-Runden als "gespielt" markieren (Cheatsheet 10: for)
+        for (let i = 0; i < aktuellerIndex; i++) {
+            const karteId = spielerKartenIds[i];
+            // VF/HF: Spieler vs "✓" anzeigen (AF hat bereits richtige Daten aus spielplan)
+            if (i > 0) {
+                befuelleKarte(karteId, {
+                    heim: spielerTeam,
+                    gast: { shortName: '✓', name: '✓' },
+                });
+            }
+            const karteEl = document.querySelector('#match-' + karteId);
+            if (karteEl) {
+                karteEl.classList.remove('match-card--platzhalter');
+                karteEl.classList.add('match-card--gespielt');
+            }
+        }
     }
 
     // ----------------------------------------------------------
@@ -1359,6 +1410,34 @@ if (document.querySelector('.spiel-page') !== null) {
         // Cheatsheet 08: localStorage.setItem
         if (istSieg) {
             localStorage.setItem('aktuelleRunde', naechsteRunde);
+
+            // Neuen Gegner für die nächste Runde wählen (kein Wiederholen!)
+            if (naechsteRunde !== 'Champion!') {
+                const clTeamsJson = localStorage.getItem('alleVereine');
+                if (clTeamsJson) {
+                    const clTeams  = JSON.parse(clTeamsJson);
+                    const gespielt = JSON.parse(localStorage.getItem('gegnerGespielt') || '[]');
+                    // Aktuellen Gegner in die "bereits gespielt"-Liste aufnehmen
+                    gespielt.push(String(aktuellesSpiel.gast.id));
+                    // Set mit allen ausgeschlossenen IDs (gespielt + eigenes Team)
+                    const gespielteSet = new Set(gespielt);
+                    gespielteSet.add(String(aktuellesSpiel.heim.id));
+                    // Alle CL-Teams die noch nicht gespielt wurden
+                    const verfuegbar = clTeams.filter(function(t) {
+                        return !gespielteSet.has(String(t.id));
+                    });
+                    if (verfuegbar.length > 0) {
+                        // Zufälligen neuen Gegner wählen
+                        const neuerGegner = verfuegbar[Math.floor(Math.random() * verfuegbar.length)];
+                        localStorage.setItem('aktuellesSpiel', JSON.stringify({
+                            heim: aktuellesSpiel.heim,
+                            gast: neuerGegner,
+                            istSpielerSpiel: true,
+                        }));
+                    }
+                    localStorage.setItem('gegnerGespielt', JSON.stringify(gespielt));
+                }
+            }
         }
         // Sieg/Niederlage speichern
         localStorage.setItem('letzteErgebnis', JSON.stringify({
