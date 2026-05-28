@@ -467,6 +467,7 @@ if (aufVorschauSeite) {
     const dot1         = document.querySelector('#dot-1');
     const dot2         = document.querySelector('#dot-2');
     const dot3         = document.querySelector('#dot-3');
+    const dot4         = document.querySelector('#dot-4');
 
     // Buttons
     const btnAnpfiff   = document.querySelector('#btn-anpfiff');
@@ -536,7 +537,7 @@ if (aufVorschauSeite) {
      *   Achtelfinale  → 1 Punkt aktiv
      *   Viertelfinale → 2 Punkte aktiv
      *   Halbfinale    → 3 Punkte aktiv
-     *   Finale        → 3 Punkte aktiv
+     *   Finale        → 4 Punkte aktiv
      *
      * Cheatsheet 04: if/else (Bedingungen)
      * Cheatsheet 05: innerText, classList
@@ -553,10 +554,15 @@ if (aufVorschauSeite) {
         } else if (aktuelleRunde === 'Viertelfinale') {
             dot1.classList.add('vorschau__dot--aktiv');      // 2 Punkte gelb
             dot2.classList.add('vorschau__dot--aktiv');
-        } else if (aktuelleRunde === 'Halbfinale' || aktuelleRunde === 'Finale') {
+        } else if (aktuelleRunde === 'Halbfinale') {
             dot1.classList.add('vorschau__dot--aktiv');      // 3 Punkte gelb
             dot2.classList.add('vorschau__dot--aktiv');
             dot3.classList.add('vorschau__dot--aktiv');
+        } else if (aktuelleRunde === 'Finale') {
+            dot1.classList.add('vorschau__dot--aktiv');      // 4 Punkte gelb
+            dot2.classList.add('vorschau__dot--aktiv');
+            dot3.classList.add('vorschau__dot--aktiv');
+            dot4.classList.add('vorschau__dot--aktiv');
         }
     }
 
