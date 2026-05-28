@@ -969,6 +969,14 @@ body {
     opacity: 0.6;
 }
 
+/* logoWahl-Fragen (Finale): Wappen-Bild im Antwort-Button */
+.antwort-btn__crest {
+    height: 48px;
+    width: 48px;
+    object-fit: contain;
+    display: block;
+}
+
 /* ============================================================
    OVERLAYS: TOR! und GEGENTOR! (aus Figma Toor/Gegentor Screens)
    ============================================================ */

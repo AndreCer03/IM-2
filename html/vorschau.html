@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <!-- ==================== NAVIGATION / CHROME ==================== -->
     <!-- "Vorschau >" ist jetzt gelb = aktiver Schritt -->
     <header class="chrome">
       <div class="chrome__inner">
@@ -29,13 +28,8 @@
       </div>
     </header>
 
-    <!-- ==================== MATCH VORSCHAU SEITE ==================== -->
-    <!--
-      class="vorschau-page" ist wichtig!
-      script.js erkennt daran, dass dies die Vorschau-Seite ist
-      und führt nur den richtigen Code aus.
-    -->
     <main class="vorschau-page">
+      <!-- script.js erkennt, dass die VorschauSeite ist und führt dann aus -->
       <!-- Titel oben links -->
       <h1 class="vorschau__title">MATCH VORSCHAU</h1>
 
@@ -46,7 +40,7 @@
           <!-- Label oben: "DU SPIELST ALS" -->
           <p class="vorschau__team-label">DU SPIELST ALS</p>
 
-          <!-- Logo: wird per JS befüllt (setAttribute 'src') -->
+          <!-- Logo: wird per JS befüllt -->
           <img
             id="spieler-logo"
             src=""
@@ -54,7 +48,7 @@
             class="vorschau__logo"
           />
 
-          <!-- Team-Name in GELB: wird per JS gesetzt (innerText) -->
+          <!-- Team-Name in GELB: wird per JS gesetzt -->
           <p
             id="spieler-name"
             class="vorschau__team-name vorschau__team-name--gelb"
@@ -78,14 +72,14 @@
           <div class="vorschau__schwierigkeit">
             <p class="vorschau__schwierigkeit-label">Schwierigkeit</p>
             <div class="vorschau__dots">
-              <!-- id="dot-1/2/3" → per JS aktiv oder inaktiv -->
+              <!--  per JS aktiv oder inaktiv -->
               <span class="vorschau__dot" id="dot-1"></span>
               <span class="vorschau__dot" id="dot-2"></span>
               <span class="vorschau__dot" id="dot-3"></span>
             </div>
           </div>
 
-          <!-- "Anpfiff →" Button – rot, navigiert zum Quiz -->
+          <!-- "Anpfiff →" Button – rot, geht zum quiz / Spiel  -->
           <button class="btn-anpfiff" id="btn-anpfiff">Anpfiff &nbsp;→</button>
 
           <!-- "← Zurück" Button – zurück zum Turnierbaum -->
@@ -94,12 +88,12 @@
           </button>
         </div>
 
-        <!-- ---- RECHTE SPALTE: Gegner-Team ---- -->
+        <!-- rechts Gegner-Team -->
         <div class="vorschau__team">
           <!-- Label oben: "GEGNER" -->
           <p class="vorschau__team-label">GEGNER</p>
 
-          <!-- Logo: wird per JS befüllt -->
+          <!-- Wappen: wird per JS befüllt -->
           <img
             id="gegner-logo"
             src=""
@@ -107,20 +101,14 @@
             class="vorschau__logo"
           />
 
-          <!-- Team-Name in WEISS: wird per JS gesetzt -->
+          <!-- Team-Name in weiss wird per JS gesetzt -->
           <p id="gegner-name" class="vorschau__team-name">Laden...</p>
 
-          <!-- Liga-Info: wird per JS gesetzt -->
+          <!-- Liga-Info wird per JS gesetzt -->
           <p id="gegner-liga" class="vorschau__liga">Laden...</p>
         </div>
       </div>
-      <!-- Ende vorschau__content -->
     </main>
-
-    <!--
-      Wichtig: script.js (type="module" für async/await)
-      Das gleiche script.js wie auf allen anderen Seiten!
-    -->
     <script src="../js/script.js" type="module"></script>
   </body>
 </html>

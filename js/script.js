@@ -1,21 +1,7 @@
-/*
- * ============================================================
- * CHAMPIONS QUIZ – script.js
- * Eine Datei für ALLE Seiten:
- *   index.html      → Setup-Seite
- *   turnierbaum.html → Turnierbaum
- *   vorschau.html   → Match-Vorschau
- *
- * Die Seiten-Erkennung läuft über querySelector:
- * Wenn ein Element existiert → richtige Seite → Code ausführen
- * ============================================================
- */
 
 
-// ============================================================
-// GLOBALE VARIABLEN – werden auf allen Seiten gebraucht
-// (Cheatsheet 01 – Variablen)
-// ============================================================
+
+
 
 // API-Schlüssel von football-data.org
 const apiSchluessel = '25d1021df1ca4a8cafe6c9b9e3088f24';
@@ -226,9 +212,6 @@ if (aufIndexSeite) {
         }
     }
 
-    // ----------------------------------------------------------
-    // EVENT-LISTENER (Cheatsheet 06)
-    // ----------------------------------------------------------
 
     // Pfeil LINKS ◀ – vorheriger Verein
     knopfZurueck.addEventListener('click', function() {
@@ -695,6 +678,61 @@ if (document.querySelector('.spiel-page') !== null) {
     // Fragen werden aus den API-Daten der Teams generiert
     // ----------------------------------------------------------
 
+    // Hilfsfunktion: prüft ob ein Teamname einen Schlüsselbegriff enthält (accent-tolerant)
+    function matchTeamName(teamName, vereinKey) {
+        const clean = function(s) {
+            return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        };
+        return clean(teamName).includes(clean(vereinKey));
+    }
+
+    // Bekannte Spieler mit ihrem aktuellen Verein (Schlüsselwort für matchTeamName)
+    const SPIELER_FRAGEN = [
+        { spieler: 'Kylian Mbappé',       vereinKey: 'real madrid' },
+        { spieler: 'Erling Haaland',       vereinKey: 'manchester city' },
+        { spieler: 'Jude Bellingham',      vereinKey: 'real madrid' },
+        { spieler: 'Mohamed Salah',        vereinKey: 'liverpool' },
+        { spieler: 'Harry Kane',           vereinKey: 'münchen' },
+        { spieler: 'Vinicius Jr.',         vereinKey: 'real madrid' },
+        { spieler: 'Lamine Yamal',         vereinKey: 'barcelona' },
+        { spieler: 'Pedri',                vereinKey: 'barcelona' },
+        { spieler: 'Bukayo Saka',          vereinKey: 'arsenal' },
+        { spieler: 'Martin Ødegaard',      vereinKey: 'arsenal' },
+        { spieler: 'Phil Foden',           vereinKey: 'manchester city' },
+        { spieler: 'Kevin De Bruyne',      vereinKey: 'napoli' },
+        { spieler: 'Bruno Fernandes',      vereinKey: 'manchester united' },
+        { spieler: 'Cole Palmer',          vereinKey: 'chelsea' },
+        { spieler: 'Virgil van Dijk',      vereinKey: 'liverpool' },
+        { spieler: 'Joshua Kimmich',       vereinKey: 'münchen' },
+        { spieler: 'Jamal Musiala',        vereinKey: 'münchen' },
+        { spieler: 'Declan Rice',          vereinKey: 'arsenal' },
+        { spieler: 'Rodri',                vereinKey: 'manchester city' },
+        { spieler: 'Dominik Szoboszlai',   vereinKey: 'liverpool' },
+        { spieler: 'Florian Wirtz',        vereinKey: 'liverpool' },
+        { spieler: 'Granit Xhaka',         vereinKey: 'sunderland' },
+        { spieler: 'Raphinha',             vereinKey: 'barcelona' },
+        { spieler: 'Robert Lewandowski',   vereinKey: 'barcelona' },
+        { spieler: 'Antoine Griezmann',    vereinKey: 'atletico' },
+        { spieler: 'Lautaro Martinez',     vereinKey: 'inter' },
+        { spieler: 'Dusan Vlahovic',       vereinKey: 'juventus' },
+        { spieler: 'Federico Valverde',    vereinKey: 'real madrid' },
+        { spieler: 'Leroy Sane',           vereinKey: 'galatasaray' },
+    ];
+
+    // Bekannte Trainer mit ihrem aktuellen Verein
+    const TRAINER_FRAGEN = [
+        { trainer: 'Pep Guardiola',    vereinKey: 'manchester city' },
+        { trainer: 'Mikel Arteta',     vereinKey: 'arsenal' },
+        { trainer: 'Jose Mourinho',    vereinKey: 'real madrid' },
+        { trainer: 'Arne Slot',        vereinKey: 'liverpool' },
+        { trainer: 'Hansi Flick',      vereinKey: 'barcelona' },
+        { trainer: 'Vincent Kompany',  vereinKey: 'münchen' },
+        { trainer: 'Enzo Maresca',     vereinKey: 'chelsea' },
+        { trainer: 'Diego Simeone',    vereinKey: 'atletico' },
+        { trainer: 'Thiago Motta',     vereinKey: 'juventus' },
+        { trainer: 'Simone Inzaghi',   vereinKey: 'inter' },
+    ];
+
     /**
      * Gibt den Fragetyp je nach Runde zurück.
      * Achtelfinale → einfache Typen
@@ -703,17 +741,18 @@ if (document.querySelector('.spiel-page') !== null) {
      * Cheatsheet 04: if/else
      */
     function getFrageTypen() {
-        // Cheatsheet 04: Bedingungen
         if (aktuelleRunde === 'Achtelfinale') {
-            // Nur Wappen- und Land-Fragen (einfach)
-            return ['wappen', 'land', 'wappen', 'land'];
+            // Leicht: fast nur Wappen erkennen
+            return ['wappen', 'wappen', 'wappen', 'land'];
         } else if (aktuelleRunde === 'Viertelfinale') {
-            return ['wappen', 'land', 'kuerzel', 'wappen'];
+            // Mittel: Wappen + Spieler- und Fakten-Fragen
+            return ['wappen', 'spieler', 'land', 'stadion'];
         } else if (aktuelleRunde === 'Halbfinale') {
-            return ['wappen', 'kuerzel', 'land', 'kuerzel'];
+            // Schwer: Trainer, Spieler, Fakten – kaum reines Wappen
+            return ['trainer', 'stadion', 'spieler', 'gruendungsjahr'];
         } else {
-            // Finale: alle Typen
-            return ['wappen', 'kuerzel', 'land', 'wappen'];
+            // Finale: kein reines Wappen – Logo-Auswahl + Trainer + Spieler
+            return ['logoWahl', 'trainer', 'gruendungsjahr', 'spieler'];
         }
     }
 
@@ -735,14 +774,14 @@ if (document.querySelector('.spiel-page') !== null) {
         // ⚠️ .slice() nicht im Cheatsheet – gibt Teil eines Arrays zurück
         let falsche3 = andereTeams.slice(0, 3);
 
-        // Cheatsheet 11: Objekte – wir bauen ein Frage-Objekt
         let frage = {
             typ: typ,
             richtigesTeam: richtigesTeam,
-            bild: '',          // URL des Bildes (bei Wappen-Fragen)
-            frageText: '',     // Der Frage-Text
-            richtigeAntwort: '', // Die korrekte Antwort
-            optionen: [],      // Array mit 4 Antwort-Optionen
+            bild: '',
+            frageText: '',
+            richtigeAntwort: '',
+            optionen: [],
+            optionenCrests: null,  // nur für logoWahl: Wappen-URLs der Optionen
         };
 
         // Frage je nach Typ befüllen (Cheatsheet 04: if/else)
@@ -759,35 +798,279 @@ if (document.querySelector('.spiel-page') !== null) {
             frage.optionen = alleOptionen;
 
         } else if (typ === 'land') {
-            // LAND-FRAGE: Zeige Vereinsname, frage nach Land
             frage.bild = richtigesTeam.crest;
-            // Cheatsheet 01: Template Literal
             frage.frageText = `Aus welchem Land kommt ${richtigesTeam.shortName || richtigesTeam.name}?`;
             frage.richtigeAntwort = richtigesTeam.area.name;
 
-            let alleOptionen = [
-                richtigesTeam.area.name,
-                falsche3[0].area.name,
-                falsche3[1].area.name,
-                falsche3[2].area.name,
-            ];
-            alleOptionen.sort(function() { return Math.random() - 0.5; });
-            frage.optionen = alleOptionen;
+            // Nur Teams mit ANDEREM Land wählen – verhindert doppelte Ländernamen als Optionen
+            // (z.B. Bayern + Dortmund wären beide "Germany" → würde doppelt erscheinen)
+            let laenderGesehen = new Set([richtigesTeam.area.name]);
+            let falscheLandTeams = [];
+            for (let t of andereTeams) {
+                if (t.area && !laenderGesehen.has(t.area.name)) {
+                    laenderGesehen.add(t.area.name);
+                    falscheLandTeams.push(t);
+                    if (falscheLandTeams.length === 3) break;
+                }
+            }
+
+            if (falscheLandTeams.length < 3) {
+                // Fallback: zu wenige verschiedene Länder → Wappen-Frage stellen
+                frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                frage.richtigeAntwort = richtigesTeam.name;
+                let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                alleOptionen.sort(function() { return Math.random() - 0.5; });
+                frage.optionen = alleOptionen;
+            } else {
+                let alleOptionen = [
+                    richtigesTeam.area.name,
+                    falscheLandTeams[0].area.name,
+                    falscheLandTeams[1].area.name,
+                    falscheLandTeams[2].area.name,
+                ];
+                alleOptionen.sort(function() { return Math.random() - 0.5; });
+                frage.optionen = alleOptionen;
+            }
 
         } else if (typ === 'kuerzel') {
-            // KÜRZEL-FRAGE: Zeige Vereinsname, frage nach TLA (z.B. "FCB")
-            frage.bild = richtigesTeam.crest;
-            frage.frageText = `Was ist die offizielle Abkürzung von ${richtigesTeam.name}?`;
-            frage.richtigeAntwort = richtigesTeam.tla;
+            // TheSportsDB-Teams haben kein TLA → sofort Wappen-Frage
+            if (!richtigesTeam.tla) {
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                frage.richtigeAntwort = richtigesTeam.name;
+                let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                alleOptionen.sort(function() { return Math.random() - 0.5; });
+                frage.optionen = alleOptionen;
+            } else {
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = `Was ist die offizielle Abkürzung von ${richtigesTeam.name}?`;
+                frage.richtigeAntwort = richtigesTeam.tla;
 
-            let alleOptionen = [
-                richtigesTeam.tla,
-                falsche3[0].tla,
-                falsche3[1].tla,
-                falsche3[2].tla,
-            ];
-            alleOptionen.sort(function() { return Math.random() - 0.5; });
-            frage.optionen = alleOptionen;
+                // Eindeutige TLAs sicherstellen – kein Kürzel darf doppelt vorkommen
+                let tlaGesehen = new Set([richtigesTeam.tla]);
+                let falscheTlaTeams = [];
+                for (let t of andereTeams) {
+                    if (t.tla && !tlaGesehen.has(t.tla)) {
+                        tlaGesehen.add(t.tla);
+                        falscheTlaTeams.push(t);
+                        if (falscheTlaTeams.length === 3) break;
+                    }
+                }
+
+                if (falscheTlaTeams.length < 3) {
+                    // Fallback: Wappen-Frage
+                    frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                    frage.richtigeAntwort = richtigesTeam.name;
+                    let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                    alleOptionen.sort(function() { return Math.random() - 0.5; });
+                    frage.optionen = alleOptionen;
+                } else {
+                    let alleOptionen = [
+                        richtigesTeam.tla,
+                        falscheTlaTeams[0].tla,
+                        falscheTlaTeams[1].tla,
+                        falscheTlaTeams[2].tla,
+                    ];
+                    alleOptionen.sort(function() { return Math.random() - 0.5; });
+                    frage.optionen = alleOptionen;
+                }
+            }
+
+        } else if (typ === 'stadion') {
+            // STADION-FRAGE: Wappen zeigen – Stadion des Teams wählen
+            const richtigesStadion = richtigesTeam.venue;
+
+            if (!richtigesStadion) {
+                // Fallback: Wappen-Frage wenn kein Stadion bekannt
+                frage.typ = 'wappen';
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                frage.richtigeAntwort = richtigesTeam.name;
+                let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                alleOptionen.sort(function() { return Math.random() - 0.5; });
+                frage.optionen = alleOptionen;
+            } else {
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = `In welchem Stadion spielt ${richtigesTeam.shortName || richtigesTeam.name}?`;
+                frage.richtigeAntwort = richtigesStadion;
+
+                // Andere Teams mit einem anderen Stadion als falsche Antworten
+                let stadionGesehen = new Set([richtigesStadion]);
+                let falscheStadionTeams = [];
+                for (let t of andereTeams) {
+                    if (t.venue && !stadionGesehen.has(t.venue)) {
+                        stadionGesehen.add(t.venue);
+                        falscheStadionTeams.push(t);
+                        if (falscheStadionTeams.length === 3) break;
+                    }
+                }
+
+                if (falscheStadionTeams.length < 3) {
+                    frage.typ = 'wappen';
+                    frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                    frage.richtigeAntwort = richtigesTeam.name;
+                    let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                    alleOptionen.sort(function() { return Math.random() - 0.5; });
+                    frage.optionen = alleOptionen;
+                } else {
+                    let alleOptionen = [
+                        richtigesStadion,
+                        falscheStadionTeams[0].venue,
+                        falscheStadionTeams[1].venue,
+                        falscheStadionTeams[2].venue,
+                    ];
+                    alleOptionen.sort(function() { return Math.random() - 0.5; });
+                    frage.optionen = alleOptionen;
+                }
+            }
+
+        } else if (typ === 'gruendungsjahr') {
+            // GRÜNDUNGSJAHR-FRAGE: Wappen zeigen – Gründungsjahr wählen
+            const richtigesJahr = richtigesTeam.founded;
+
+            if (!richtigesJahr) {
+                frage.typ = 'wappen';
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                frage.richtigeAntwort = richtigesTeam.name;
+                let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                alleOptionen.sort(function() { return Math.random() - 0.5; });
+                frage.optionen = alleOptionen;
+            } else {
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = `In welchem Jahr wurde ${richtigesTeam.shortName || richtigesTeam.name} gegründet?`;
+                frage.richtigeAntwort = String(richtigesJahr);
+
+                // Andere Teams mit anderem Gründungsjahr als falsche Antworten
+                let jahreGesehen = new Set([richtigesJahr]);
+                let falscheJahrTeams = [];
+                for (let t of andereTeams) {
+                    if (t.founded && !jahreGesehen.has(t.founded)) {
+                        jahreGesehen.add(t.founded);
+                        falscheJahrTeams.push(t);
+                        if (falscheJahrTeams.length === 3) break;
+                    }
+                }
+
+                if (falscheJahrTeams.length < 3) {
+                    frage.typ = 'wappen';
+                    frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                    frage.richtigeAntwort = richtigesTeam.name;
+                    let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                    alleOptionen.sort(function() { return Math.random() - 0.5; });
+                    frage.optionen = alleOptionen;
+                } else {
+                    let alleOptionen = [
+                        String(richtigesJahr),
+                        String(falscheJahrTeams[0].founded),
+                        String(falscheJahrTeams[1].founded),
+                        String(falscheJahrTeams[2].founded),
+                    ];
+                    alleOptionen.sort(function() { return Math.random() - 0.5; });
+                    frage.optionen = alleOptionen;
+                }
+            }
+
+        } else if (typ === 'logoWahl') {
+            // LOGO-WAHL-FRAGE (umgekehrt / Finale): Team-Name zeigen – richtiges Wappen wählen
+            // Kein Wappen in der Fragekarte – der Spieler muss das Logo aus 4 Optionen erkennen
+            frage.bild = '';
+            frage.frageText = `Welches Wappen gehört zu ${richtigesTeam.shortName || richtigesTeam.name}?`;
+            frage.richtigeAntwort = richtigesTeam.name;
+
+            const optionenTeams = [richtigesTeam, falsche3[0], falsche3[1], falsche3[2]]
+                .sort(function() { return Math.random() - 0.5; });
+
+            frage.optionen = optionenTeams.map(function(t) { return t.name; });
+            frage.optionenCrests = optionenTeams.map(function(t) { return t.crest; });
+
+        } else if (typ === 'spieler') {
+            // SPIELER-FRAGE: Spieler nennen – in welchem Verein spielt er?
+            // Zufälligen Spieler wählen, dann dessen Team in alleTeams suchen
+            let gemischteEintraege = [...SPIELER_FRAGEN].sort(function() { return Math.random() - 0.5; });
+            let gewaehlterEintrag = null;
+            let spielerTeam = null;
+            for (let eintrag of gemischteEintraege) {
+                const gefunden = alleTeams.find(function(t) {
+                    return matchTeamName(t.name, eintrag.vereinKey);
+                });
+                if (gefunden) {
+                    gewaehlterEintrag = eintrag;
+                    spielerTeam = gefunden;
+                    break;
+                }
+            }
+
+            if (!gewaehlterEintrag || !spielerTeam) {
+                // Fallback: Wappen-Frage wenn kein passender Verein geladen
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                frage.richtigeAntwort = richtigesTeam.name;
+                let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                alleOptionen.sort(function() { return Math.random() - 0.5; });
+                frage.optionen = alleOptionen;
+            } else {
+                // Die Frage dreht sich um den Spieler, nicht um richtigesTeam
+                frage.richtigesTeam = spielerTeam;
+                frage.bild = '';
+                frage.frageText = `In welchem Verein spielt ${gewaehlterEintrag.spieler}?`;
+                frage.richtigeAntwort = spielerTeam.name;
+
+                // 3 andere Teams als falsche Antworten (darf nicht der Spielerverein sein)
+                let andereNamen = new Set([spielerTeam.name]);
+                let falscheOptionen = [];
+                let gemischteAndere = [...alleTeams].sort(function() { return Math.random() - 0.5; });
+                for (let t of gemischteAndere) {
+                    if (!andereNamen.has(t.name)) {
+                        andereNamen.add(t.name);
+                        falscheOptionen.push(t.name);
+                        if (falscheOptionen.length === 3) break;
+                    }
+                }
+                let alleOptionen = [spielerTeam.name, ...falscheOptionen];
+                alleOptionen.sort(function() { return Math.random() - 0.5; });
+                frage.optionen = alleOptionen;
+            }
+
+        } else if (typ === 'trainer') {
+            // TRAINER-FRAGE: Wappen zeigen – wer ist der Cheftrainer?
+            const trainerEintrag = TRAINER_FRAGEN.find(function(t) {
+                return matchTeamName(richtigesTeam.name, t.vereinKey);
+            });
+
+            if (!trainerEintrag) {
+                // Fallback: Wappen-Frage wenn kein Trainer-Eintrag vorhanden
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                frage.richtigeAntwort = richtigesTeam.name;
+                let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                alleOptionen.sort(function() { return Math.random() - 0.5; });
+                frage.optionen = alleOptionen;
+            } else {
+                frage.bild = richtigesTeam.crest;
+                frage.frageText = `Wer ist der Cheftrainer von ${richtigesTeam.shortName || richtigesTeam.name}?`;
+                frage.richtigeAntwort = trainerEintrag.trainer;
+
+                // 3 andere Trainer aus der Liste als falsche Antworten
+                let andereTrainer = TRAINER_FRAGEN
+                    .filter(function(t) { return t.trainer !== trainerEintrag.trainer; })
+                    .sort(function() { return Math.random() - 0.5; })
+                    .slice(0, 3)
+                    .map(function(t) { return t.trainer; });
+
+                if (andereTrainer.length < 3) {
+                    // Fallback
+                    frage.frageText = 'Welchem Verein gehört dieses Wappen?';
+                    frage.richtigeAntwort = richtigesTeam.name;
+                    let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
+                    alleOptionen.sort(function() { return Math.random() - 0.5; });
+                    frage.optionen = alleOptionen;
+                } else {
+                    let alleOptionen = [trainerEintrag.trainer, ...andereTrainer];
+                    alleOptionen.sort(function() { return Math.random() - 0.5; });
+                    frage.optionen = alleOptionen;
+                }
+            }
         }
 
         return frage; // Cheatsheet 03: return-Wert
@@ -799,25 +1082,21 @@ if (document.querySelector('.spiel-page') !== null) {
      * Cheatsheet 09: .push() – Element zum Array hinzufügen
      */
     function generiereFragen() {
-        fragen = []; // Array leeren (Cheatsheet 09)
+        fragen = [];
 
-        // Fragetypen je nach Runde
         let typen = getFrageTypen();
 
-        // 10 Fragen generieren (mehr als für Sieg/Niederlage nötig)
+        // Teams mischen: so kommt jedes Team nur einmal vor bevor es sich wiederholt
+        // ⚠️ Spread-Operator + .sort() nicht im Cheatsheet
+        let gemischteTeams = [...alleTeams].sort(function() { return Math.random() - 0.5; });
+
+        // 20 Fragen generieren – mehr als genug für 5+5-Abbruch
         // Cheatsheet 10: for-Schleife
-        for (let i = 0; i < 10; i++) {
-            // Zufälliges Team aus allen Teams wählen
-            // ⚠️ Math.floor + Math.random nicht im Cheatsheet
-            let zufallsIndex = Math.floor(Math.random() * alleTeams.length);
-            let team = alleTeams[zufallsIndex];
-
-            // Fragetyp: wechselt durch die Typen-Liste
-            // ⚠️ Modulo-Operator % nicht im Cheatsheet
+        for (let i = 0; i < 20; i++) {
+            // Modulo: nach einem Durchlauf aller Teams wieder von vorne (Cheatsheet ⚠️ %)
+            let team = gemischteTeams[i % gemischteTeams.length];
             let typ = typen[i % typen.length];
-
-            let frage = erstelleFrage(team, typ);
-            fragen.push(frage); // Cheatsheet 09: .push()
+            fragen.push(erstelleFrage(team, typ));
         }
     }
 
@@ -845,9 +1124,14 @@ if (document.querySelector('.spiel-page') !== null) {
         // Frage-Label aktualisieren (Cheatsheet 01: Template Literal)
         frageLabel.innerText = `Frage ${frageNummer + 1} · ${aktuelleRunde}`;
 
-        // Bild setzen (Cheatsheet 05: setAttribute)
-        frageBild.setAttribute('src', frage.bild);
-        frageBild.setAttribute('alt', 'Vereinswappen');
+        // Wappen anzeigen oder verstecken (logoWahl hat kein Wappen in der Fragekarte)
+        if (frage.bild) {
+            frageBild.setAttribute('src', frage.bild);
+            frageBild.setAttribute('alt', 'Vereinswappen');
+            frageBild.parentElement.style.display = '';
+        } else {
+            frageBild.parentElement.style.display = 'none';
+        }
 
         // Frage-Text setzen (Cheatsheet 05: innerText)
         frageText.innerText = frage.frageText;
@@ -855,8 +1139,17 @@ if (document.querySelector('.spiel-page') !== null) {
         // Antwort-Buttons befüllen (Cheatsheet 10: forEach)
         const buchstaben = ['A', 'B', 'C', 'D'];
         antwortBtns.forEach(function(btn, index) {
-            // Text setzen
-            antwortTexte[index].innerText = frage.optionen[index];
+            // logoWahl: Wappen-Bild im Button zeigen statt Text
+            if (frage.typ === 'logoWahl' && frage.optionenCrests) {
+                antwortTexte[index].innerHTML = '';
+                const img = document.createElement('img');
+                img.src = frage.optionenCrests[index];
+                img.alt = frage.optionen[index];
+                img.className = 'antwort-btn__crest';
+                antwortTexte[index].appendChild(img);
+            } else {
+                antwortTexte[index].innerText = frage.optionen[index];
+            }
 
             // Klassen zurücksetzen (Cheatsheet 05: classList)
             btn.classList.remove('antwort-btn--richtig', 'antwort-btn--falsch', 'antwort-btn--deaktiviert');
@@ -1122,6 +1415,61 @@ if (document.querySelector('.spiel-page') !== null) {
     }
 
     // ----------------------------------------------------------
+    // ERWEITERTE TEAMDATENBANK – TheSportsDB (kein API-Key nötig)
+    // Lädt ~80 zusätzliche europäische Teams damit Fragen schwerer werden.
+    // TheSportsDB-Felder werden auf das football-data.org Format gemappt.
+    // ----------------------------------------------------------
+
+    const TSDB_LIGEN = [
+        'English Premier League',
+        'German Bundesliga',
+        'Spanish La Liga',
+        'Italian Serie A',
+        'French Ligue 1',
+        'Dutch Eredivisie',
+        'Portuguese Primeira Liga',
+    ];
+
+    function normalisiereTheSportsDBTeam(team) {
+        return {
+            id: 'tsdb_' + team.idTeam,
+            name: team.strTeam,
+            shortName: team.strTeam,
+            crest: team.strBadge,
+            tla: null,
+            area: { name: team.strCountry || '' },
+            founded: team.intFormedYear ? Number(team.intFormedYear) : null,
+            venue: team.strStadium || null,
+        };
+    }
+
+    async function ladeZusatzteams() {
+        let gesamtTeams = [];
+        for (const liga of TSDB_LIGEN) {
+            try {
+                const url = `https://www.thesportsdb.com/api/v1/json/3/search_all_teams.php?l=${encodeURIComponent(liga)}`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                if (data.teams) {
+                    gesamtTeams.push(...data.teams.filter(function(t) { return t.strBadge; }));
+                }
+            } catch (e) {
+                console.error('TheSportsDB Ladefehler:', liga);
+            }
+        }
+
+        // Duplikate nach idTeam entfernen
+        const gesehen = new Set();
+        return gesamtTeams
+            .filter(function(t) {
+                if (gesehen.has(t.idTeam)) return false;
+                gesehen.add(t.idTeam);
+                return true;
+            })
+            .map(normalisiereTheSportsDBTeam);
+    }
+
+    // ----------------------------------------------------------
     // EVENT-LISTENER für Antwort-Buttons (Cheatsheet 06)
     // ----------------------------------------------------------
 
@@ -1157,7 +1505,7 @@ if (document.querySelector('.spiel-page') !== null) {
     // SEITE STARTEN (Cheatsheet 06: window.addEventListener)
     // ----------------------------------------------------------
 
-    window.addEventListener('load', function() {
+    window.addEventListener('load', async function() {
         console.log('Spiel-Seite geladen');
 
         // Daten aus localStorage laden (Cheatsheet 08)
@@ -1177,21 +1525,31 @@ if (document.querySelector('.spiel-page') !== null) {
         aktuelleRunde  = rundeText || 'Achtelfinale';
         alleTeams      = JSON.parse(teamsJson);
 
-        // 1. Scoreboard befüllen
+        // Scoreboard und Anzeigetafel schon befüllen während Teams laden
         zeigeScoreboard();
-
-        // 2. Fragen generieren (aus Team-Daten)
-        generiereFragen();
-
-        // 3. Erste Frage anzeigen
-        zeigeFrage();
-
-        // 4. Timer starten
-        starteTimer();
-
-        // 5. Initiale Zeitanzeige
-        zeigeZeit();
         zeigeScore();
+        zeigeZeit();
+
+        // Lade-Hinweis in der Fragekarte
+        frageLabel.innerText = 'Teams werden geladen...';
+        frageText.innerText  = 'Erweiterte Teamdatenbank wird geladen...';
+        frageBild.removeAttribute('src');
+        antwortBtns.forEach(function(btn) { btn.disabled = true; });
+
+        // Zusätzliche Teams von TheSportsDB laden (Cheatsheet 13: async/await)
+        const zusatzTeams = await ladeZusatzteams();
+
+        // CL-Teams und europäische Teams zusammenführen – Duplikate nach Name entfernen
+        const clNamen = new Set(alleTeams.map(function(t) { return t.name.toLowerCase(); }));
+        const neueTeams = zusatzTeams.filter(function(t) { return !clNamen.has(t.name.toLowerCase()); });
+        alleTeams = alleTeams.concat(neueTeams);
+
+        console.log('Teampool: ' + alleTeams.length + ' Teams (' + JSON.parse(teamsJson).length + ' CL + ' + neueTeams.length + ' weitere)');
+
+        // Fragen generieren und Spiel starten
+        generiereFragen();
+        zeigeFrage();
+        starteTimer();
     });
 
 } // Ende if (aufSpielSeite)
