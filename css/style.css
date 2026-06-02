@@ -343,7 +343,7 @@ body {
 
 /* Die ganze Turnierbaum-Seite */
 .turnierbaum-page {
-    padding-top: 68px;   /* 64px Navbar + 4px Abstand */
+    padding-top: 96px;   /* 64px Navbar + 32px Abstand */
     padding-bottom: 8px;
     overflow-x: auto;    /* bei kleinen Screens scrollbar */
 }
@@ -525,8 +525,8 @@ body {
 /* BOTTOM BUTTONS */
 .bracket-buttons {
     max-width: 1512px;
-    margin: 12px auto 0;
-    padding: 0 128px;
+    margin: 28px auto 0;
+    padding: 0 112px 0 128px;
     display: flex;
     justify-content: space-between;
     align-items: center;

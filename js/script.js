@@ -272,6 +272,8 @@ if (aufIndexSeite) {
         localStorage.removeItem('aktuelleRunde');
         localStorage.removeItem('gegnerGespielt');
         localStorage.removeItem('letzteErgebnis');
+        localStorage.removeItem('gegnerGeschlagen');
+        localStorage.removeItem('simMatches');
 
         ladeGespeicherteAuswahl();
         await ladeVereine();
@@ -417,6 +419,35 @@ if (aufTurnierbaum) {
      */
     function zeigeBracket() {
         const aktuelleRunde    = localStorage.getItem('aktuelleRunde') || 'Achtelfinale';
+
+        // Simulierte Ergebnisse für fiktive Mätche laden oder erstellen
+        let simMatches = {};
+        const simMatchesJson = localStorage.getItem('simMatches');
+        if (simMatchesJson) {
+            simMatches = JSON.parse(simMatchesJson);
+        }
+        // Neu generieren wenn leer oder alte Version ohne Bracket-Gegner
+        if (!simMatches.vf1Gegner && spielplan.length >= 8) {
+            const simGew = {};
+            for (let k = 2; k <= 8; k++) {
+                const m = spielplan.find(function(s) { return s.id === 'af' + k; });
+                if (m) simGew['af' + k] = Math.random() < 0.5 ? m.heim : m.gast;
+            }
+            const vf2Gew = Math.random() < 0.5 ? simGew.af3 : simGew.af4;
+            const vf3Gew = Math.random() < 0.5 ? simGew.af5 : simGew.af6;
+            const vf4Gew = Math.random() < 0.5 ? simGew.af7 : simGew.af8;
+            const hf2Gew = Math.random() < 0.5 ? vf3Gew : vf4Gew;
+            simMatches = {
+                vf1Gegner:   simGew.af2,  // Spieler trifft Gewinner AF2 im VF
+                hf1Gegner:   vf2Gew,      // Spieler trifft Gewinner VF2 im HF
+                finalGegner: hf2Gew,      // Spieler trifft Gewinner HF2 im Finale
+                vf2: { heim: simGew.af3, gast: simGew.af4 },
+                vf3: { heim: simGew.af5, gast: simGew.af6 },
+                vf4: { heim: simGew.af7, gast: simGew.af8 },
+                hf2: { heim: vf3Gew,     gast: vf4Gew     },
+            };
+            localStorage.setItem('simMatches', JSON.stringify(simMatches));
+        }
         const aktSpielJson     = localStorage.getItem('aktuellesSpiel');
         const aktSpiel         = aktSpielJson ? JSON.parse(aktSpielJson) : (spielplan[0] || null);
 
@@ -432,13 +463,36 @@ if (aufTurnierbaum) {
             befuelleKarte(spiel.id, spiel);
         });
 
+        // 1b. Fiktive VF/HF-Karten mit simulierten Gewinnern befüllen
+        ['vf2', 'vf3', 'vf4', 'hf2'].forEach(function(matchId) {
+            if (simMatches[matchId]) {
+                befuelleKarte(matchId, simMatches[matchId]);
+                const karteEl = document.querySelector('#match-' + matchId);
+                if (karteEl) karteEl.classList.remove('match-card--platzhalter');
+            }
+        });
+
+        // 1c. Spieler-Pfad: nur befüllen wenn diese Runde bereits erreicht wurde
+        if (aktuellerIndex >= 1 && simMatches.vf1Gegner) {
+            befuelleKarte('vf1', { heim: spielerTeam, gast: simMatches.vf1Gegner });
+            const vf1El = document.querySelector('#match-vf1');
+            if (vf1El) vf1El.classList.remove('match-card--platzhalter');
+        }
+        if (aktuellerIndex >= 2 && simMatches.hf1Gegner) {
+            befuelleKarte('hf1', { heim: spielerTeam, gast: simMatches.hf1Gegner });
+            const hf1El = document.querySelector('#match-hf1');
+            if (hf1El) hf1El.classList.remove('match-card--platzhalter');
+        }
+        if (aktuellerIndex >= 3 && simMatches.finalGegner) {
+            befuelleKarte('finale', { heim: spielerTeam, gast: simMatches.finalGegner });
+            const finalEl = document.querySelector('#match-finale');
+            if (finalEl) finalEl.classList.remove('match-card--platzhalter');
+        }
+
         // 2. Aktuelle Runden-Karte mit echtem Gegner befüllen und hervorheben
         const aktiveKarteId = spielerKartenIds[aktuellerIndex];
         if (aktiveKarteId && aktSpiel) {
-            // Für VF/HF/Finale: echten neuen Gegner eintragen
-            if (aktuelleRunde !== 'Achtelfinale') {
-                befuelleKarte(aktiveKarteId, aktSpiel);
-            }
+            befuelleKarte(aktiveKarteId, aktSpiel);
             const aktiveKarteEl = document.querySelector('#match-' + aktiveKarteId);
             if (aktiveKarteEl) {
                 aktiveKarteEl.classList.remove('match-card--platzhalter');
@@ -447,13 +501,16 @@ if (aufTurnierbaum) {
         }
 
         // 3. Vergangene Spieler-Runden als "gespielt" markieren (Cheatsheet 10: for)
+        const geSchlagen = JSON.parse(localStorage.getItem('gegnerGeschlagen') || '[]');
+        const rundenNamen = ['Achtelfinale', 'Viertelfinale', 'Halbfinale', 'Finale'];
         for (let i = 0; i < aktuellerIndex; i++) {
             const karteId = spielerKartenIds[i];
-            // VF/HF: Spieler vs "✓" anzeigen (AF hat bereits richtige Daten aus spielplan)
             if (i > 0) {
+                const eintrag = geSchlagen.find(function(e) { return e.runde === rundenNamen[i]; });
+                const geschlagenerGegner = eintrag ? eintrag.team : { shortName: '?', name: '?' };
                 befuelleKarte(karteId, {
                     heim: spielerTeam,
-                    gast: { shortName: '✓', name: '✓' },
+                    gast: geschlagenerGegner,
                 });
             }
             const karteEl = document.querySelector('#match-' + karteId);
@@ -1409,33 +1466,27 @@ if (document.querySelector('.spiel-page') !== null) {
         // Nächste Runde in localStorage speichern (für den nächsten Spielzug)
         // Cheatsheet 08: localStorage.setItem
         if (istSieg) {
+            // Geschlagenen Gegner für Turnierbaum-Anzeige speichern
+            const geSchlagen = JSON.parse(localStorage.getItem('gegnerGeschlagen') || '[]');
+            geSchlagen.push({ runde: aktuelleRunde, team: aktuellesSpiel.gast });
+            localStorage.setItem('gegnerGeschlagen', JSON.stringify(geSchlagen));
+
             localStorage.setItem('aktuelleRunde', naechsteRunde);
 
-            // Neuen Gegner für die nächste Runde wählen (kein Wiederholen!)
+            // Nächsten Gegner aus dem Bracket bestimmen (nicht zufällig)
             if (naechsteRunde !== 'Champion!') {
-                const clTeamsJson = localStorage.getItem('alleVereine');
-                if (clTeamsJson) {
-                    const clTeams  = JSON.parse(clTeamsJson);
-                    const gespielt = JSON.parse(localStorage.getItem('gegnerGespielt') || '[]');
-                    // Aktuellen Gegner in die "bereits gespielt"-Liste aufnehmen
-                    gespielt.push(String(aktuellesSpiel.gast.id));
-                    // Set mit allen ausgeschlossenen IDs (gespielt + eigenes Team)
-                    const gespielteSet = new Set(gespielt);
-                    gespielteSet.add(String(aktuellesSpiel.heim.id));
-                    // Alle CL-Teams die noch nicht gespielt wurden
-                    const verfuegbar = clTeams.filter(function(t) {
-                        return !gespielteSet.has(String(t.id));
-                    });
-                    if (verfuegbar.length > 0) {
-                        // Zufälligen neuen Gegner wählen
-                        const neuerGegner = verfuegbar[Math.floor(Math.random() * verfuegbar.length)];
-                        localStorage.setItem('aktuellesSpiel', JSON.stringify({
-                            heim: aktuellesSpiel.heim,
-                            gast: neuerGegner,
-                            istSpielerSpiel: true,
-                        }));
-                    }
-                    localStorage.setItem('gegnerGespielt', JSON.stringify(gespielt));
+                const simData = JSON.parse(localStorage.getItem('simMatches') || '{}');
+                let neuerGegner = null;
+                if (naechsteRunde === 'Viertelfinale') neuerGegner = simData.vf1Gegner;
+                else if (naechsteRunde === 'Halbfinale') neuerGegner = simData.hf1Gegner;
+                else if (naechsteRunde === 'Finale')     neuerGegner = simData.finalGegner;
+
+                if (neuerGegner) {
+                    localStorage.setItem('aktuellesSpiel', JSON.stringify({
+                        heim: aktuellesSpiel.heim,
+                        gast: neuerGegner,
+                        istSpielerSpiel: true,
+                    }));
                 }
             }
         }
