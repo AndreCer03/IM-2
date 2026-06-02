@@ -103,7 +103,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr; /* zwei gleich breite Spalten */
     gap: 64px;
-    align-items: start;
+    align-items: stretch;
 }
 
 /* HERO (linke Seite) */
@@ -138,18 +138,19 @@ body {
 
 /* Beschreibungstext */
 .hero__description {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.7;
     max-width: 489px;
     color: var(--farbe-weiss);
     opacity: 0.9;
+    margin-top: auto;
 }
 
 /* grosse gelbe Zahlen */
 .stats {
     display: flex;
     gap: 80px;
-    margin-top: 16px;
+    margin-top: auto;
 }
 
 .stats__item {
@@ -220,6 +221,7 @@ body {
 /* Input-Feld: beim Klick wird der Rand heller */
 .setup-card__input:focus {
     border-color: var(--farbe-gelb);
+    border-width: 3px;
 }
 
 /*  Team auswählen */
@@ -262,7 +264,7 @@ body {
 
 /* Grüner Rahmen wenn ein Verein ausgewählt wurde */
 .team-selector--ausgewaehlt {
-    border-color: var(--farbe-gruen);
+    border: 3px solid var(--farbe-gruen);
     transition: border-color 0.2s;
 }
 
