@@ -119,14 +119,11 @@
       </div>
       <!-- Ende Frage-Karte -->
 
-      <!-- Wenn Tor passiert-->
-      <div
-        class="tor-overlay tor-overlay--gruen overlay--versteckt"
-        id="tor-overlay"
-      >
-        <div class="tor-overlay__inhalt">
-          <p class="tor-overlay__text">TOR!</p>
-          <p class="tor-overlay__emoji">⚽</p>
+      <!-- Wenn Tor passiert (Figma: Toor Screen) -->
+      <div class="tor-overlay tor-overlay--gruen overlay--versteckt" id="tor-overlay">
+        <div class="tor-goal-frame">
+          <p class="tor-goal-text">TOR!</p>
+          <p class="tor-goal-subtitle">RICHTIGE ANTWORT — <span id="tor-team-name">Bayern</span> trifft!</p>
         </div>
       </div>
 
@@ -135,9 +132,9 @@
         class="tor-overlay tor-overlay--rot overlay--versteckt"
         id="gegentor-overlay"
       >
-        <div class="tor-overlay__inhalt">
-          <p class="tor-overlay__text">GEGENTOR!</p>
-          <p class="tor-overlay__emoji">😬</p>
+        <div class="tor-goal-frame tor-goal-frame--rot">
+          <p class="tor-goal-text tor-goal-text--rot">GEGENTOR!</p>
+          <p class="tor-goal-subtitle tor-goal-subtitle--rot">FALSCHE ANTWORT — <span id="gegentor-team-name">Gegner</span> trifft!</p>
         </div>
       </div>
 
@@ -220,15 +217,20 @@
           </div>
         </header>
 
-        <!-- Konfetti-Streifen oben links + rechts -->
-        <div class="champion__konfetti" aria-hidden="true">
-          <div class="champion__konfetti-strip"></div>
-          <div class="champion__konfetti-strip"></div>
-          <div class="champion__konfetti-strip"></div>
-          <div class="champion__konfetti-strip"></div>
-          <div class="champion__konfetti-strip"></div>
-          <div class="champion__konfetti-strip"></div>
+        <!-- Celebrate GIFs: 3× links + 3× rechts, direkt unter der Navigation -->
+        <div class="champion__celebrate" aria-hidden="true">
+          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--1" />
+          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--2" />
+          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--3" />
+          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--4" />
+          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--5" />
+          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--6" />
         </div>
+
+        <!-- Party GIFs: links und rechts vom Champion-Logo -->
+        <img src="../img/party.gif" alt="" class="champion__party-gif champion__party-gif--links" aria-hidden="true" />
+        <img src="../img/party.gif" alt="" class="champion__party-gif champion__party-gif--rechts" aria-hidden="true" />
+
 
         <!-- Hauptinhalt -->
         <div class="champion__inhalt">

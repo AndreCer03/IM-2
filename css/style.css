@@ -983,45 +983,112 @@ body {
 }
 
 /* ============================================================
-   OVERLAYS: TOR! und GEGENTOR! (aus Figma Toor/Gegentor Screens)
+   OVERLAYS: TOR! und GEGENTOR!
    ============================================================ */
 
 /* Basis-Overlay: deckt die ganze Seite ab */
 .tor-overlay {
     position: fixed;
-    inset: 0;             /* top/left/right/bottom = 0 */
+    inset: 0;
     z-index: 200;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Grüner Hintergrund für TOR! */
+/* TOR! – grünes Overlay (Figma: Toor Screen) */
 .tor-overlay--gruen {
-    background-color: #00a651;  /* Figma: grüner Toor-Screen */
+    background-color: #1a7c3c;
+    animation: torOverlayEin 0.2s ease-out both;
 }
 
-/* Roter Hintergrund für GEGENTOR! */
-.tor-overlay--rot {
-    background-color: rgba(180, 0, 0, 0.95);
+/* Tornetz-Rahmen (einfache Linien wie im Figma) */
+.tor-goal-frame {
+    position: relative;
+    width: min(600px, 85vw);
+    aspect-ratio: 600 / 380;
+    border: 5px solid rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Netz: vertikale Linien alle 70px, horizontale alle 40px */
+    background-image:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 1px, transparent 1px, transparent 70px),
+        repeating-linear-gradient(0deg,  rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 1px, transparent 1px, transparent 40px);
+    animation: torFrameEin 0.3s ease-out both;
 }
 
-/* Inhalt des Overlays: zentriert */
-.tor-overlay__inhalt {
-    text-align: center;
-}
-
-/* "TOR!" oder "GEGENTOR!" Text */
-.tor-overlay__text {
+/* "TOR!" – wächst von klein nach gross mit leichtem Bounce */
+.tor-goal-text {
     font-family: var(--schrift-titel);
-    font-size: 96px;
-    color: var(--farbe-weiss);
+    font-size: clamp(56px, 9vw, 96px);
+    color: #00ff88;
+    letter-spacing: 20px;
     line-height: 1;
+    text-shadow:
+        0 0 60px  rgba(0, 255, 136, 0.7),
+        0 0 120px rgba(0, 255, 136, 0.3);
+    animation: torTextWaechst 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
 }
 
-.tor-overlay__emoji {
-    font-size: 64px;
-    margin-top: 16px;
+/* "RICHTIGE ANTWORT — Bayern trifft!" */
+.tor-goal-subtitle {
+    font-family: var(--schrift-text);
+    font-size: 14px;
+    font-weight: 800;
+    color: #00ff88;
+    letter-spacing: 3px;
+    margin-top: 36px;
+    text-align: center;
+    padding: 0 24px;
+    animation: torTextWaechst 0.5s ease-out 0.35s both;
+}
+
+/* GEGENTOR! – roter Hintergrund (Figma: Gegentor Screen) */
+.tor-overlay--rot {
+    background-color: #9b0b35;
+    animation: torOverlayEin 0.2s ease-out both;
+}
+
+/* Rote Variante des Tornetz-Rahmens */
+.tor-goal-frame--rot {
+    background-image:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0, rgba(255,255,255,0.12) 1px, transparent 1px, transparent 70px),
+        repeating-linear-gradient(0deg,  rgba(255,255,255,0.12) 0, rgba(255,255,255,0.12) 1px, transparent 1px, transparent 40px);
+}
+
+/* "GEGENTOR!" – leuchtendes Rot */
+.tor-goal-text--rot {
+    color: #ff3355;
+    text-shadow:
+        0 0 60px  rgba(255, 51, 85, 0.7),
+        0 0 120px rgba(255, 51, 85, 0.3);
+    letter-spacing: 12px;
+}
+
+/* Subtitle GEGENTOR */
+.tor-goal-subtitle--rot {
+    color: #ff3355;
+}
+
+/* Keyframes Toranimation */
+@keyframes torOverlayEin {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes torFrameEin {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes torTextWaechst {
+    0%   { transform: scale(0.05); opacity: 0; }
+    55%  { transform: scale(1.15); opacity: 1; }
+    70%  { transform: scale(0.95); }
+    85%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
 }
 
 /* ============================================================
@@ -1081,6 +1148,9 @@ body {
 }
 
 /* Rotes "NIEDERLAGE" */
+.abpfiff__karte--sieg       { border: 3px solid var(--farbe-gruen); }
+.abpfiff__karte--niederlage { border: 3px solid #e53e3e; }
+
 .abpfiff__ergebnis--niederlage {
     color: rgba(220, 5, 45, 0.9);
 }
@@ -1213,36 +1283,6 @@ body {
     align-items: center;
 }
 
-/* Konfetti-Streifen (6 animierte Bänder oben links + rechts) */
-@keyframes champion-weben {
-    0%, 100% { transform: translateY(0) rotate(-2deg) scaleX(1);    opacity: 0.85; }
-    50%       { transform: translateY(24px) rotate(2deg) scaleX(0.85); opacity: 0.6;  }
-}
-
-.champion__konfetti {
-    position: fixed;
-    top: 64px;
-    left: 0;
-    right: 0;
-    height: 270px;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.champion__konfetti-strip {
-    position: absolute;
-    width: 120px;
-    height: 200px;
-    border-radius: 8px;
-    animation: champion-weben 2.4s ease-in-out infinite;
-}
-
-.champion__konfetti-strip:nth-child(1) { left: 28px;   background: linear-gradient(to bottom, #f5c842, rgba(245,200,66,0.05)); animation-delay: 0s;    }
-.champion__konfetti-strip:nth-child(2) { left: 178px;  background: linear-gradient(to bottom, rgba(255,255,255,0.65), rgba(255,255,255,0.03)); animation-delay: 0.4s;  }
-.champion__konfetti-strip:nth-child(3) { left: 328px;  background: linear-gradient(to bottom, #f5c842, rgba(245,200,66,0.03)); animation-delay: 0.8s;  }
-.champion__konfetti-strip:nth-child(4) { left: 1032px; background: linear-gradient(to bottom, rgba(255,255,255,0.65), rgba(255,255,255,0.03)); animation-delay: 0.2s;  }
-.champion__konfetti-strip:nth-child(5) { left: 1182px; background: linear-gradient(to bottom, #f5c842, rgba(245,200,66,0.05)); animation-delay: 0.6s;  }
-.champion__konfetti-strip:nth-child(6) { left: 1343px; background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.03));  animation-delay: 1s;    }
 
 /* Hauptinhalt */
 .champion__inhalt {
@@ -1333,3 +1373,54 @@ body {
 }
 
 .champion__btn:hover { opacity: 0.9; }
+
+/* Celebrate GIFs: direkt unter der Navigation (gleiche x-Positionen wie Konfetti) */
+.champion__celebrate {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    height: 200px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.champion__celebrate-gif {
+    position: absolute;
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.champion__celebrate-gif--1 { left: 28px;   }
+.champion__celebrate-gif--2 { left: 178px;  }
+.champion__celebrate-gif--3 { left: 328px;  }
+.champion__celebrate-gif--4 { left: 1032px; }
+.champion__celebrate-gif--5 { left: 1182px; }
+.champion__celebrate-gif--6 { left: 1343px; }
+
+/* Party GIFs: links und rechts vom Champion-Logo */
+.champion__party-gif {
+    position: absolute;
+    width: 268px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.champion__party-gif--links  { left: 21%; top: 33%; }
+.champion__party-gif--rechts { left: 72%; top: 23%; }
+
+/* TOR-GIF CELEBRATION */
+.tor-gif {
+    position: fixed;
+    z-index: 9998;
+    pointer-events: none;
+    animation: torGifFade 3s ease-out forwards;
+}
+
+@keyframes torGifFade {
+    0%   { opacity: 1;   transform: scale(1)    rotate(var(--tor-rot)); }
+    75%  { opacity: 1; }
+    100% { opacity: 0;   transform: scale(1.05) rotate(var(--tor-rot)); }
+}
+

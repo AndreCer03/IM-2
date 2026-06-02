@@ -1365,8 +1365,8 @@ if (document.querySelector('.spiel-page') !== null) {
             zeigeTorOverlay(false);
         }
 
-        // Nach 1.5 Sekunden: prüfen ob Spiel weitergeht
-        // ⚠️ setTimeout nicht im Cheatsheet – führt Funktion nach X Millisekunden aus
+        // Bei Tor länger warten damit die GIFs vollständig ausgeblendet sind
+        const wartezeit = 3200;
         setTimeout(function() {
             versteckeOverlays();
 
@@ -1384,7 +1384,51 @@ if (document.querySelector('.spiel-page') !== null) {
             // Weiter zur nächsten Frage
             frageNummer = frageNummer + 1;
             zeigeFrage();
-        }, 1500); // 1500ms = 1.5 Sekunden
+        }, wartezeit);
+    }
+
+    /**
+     * Spawnt GIFs verteilt um das zentrale Tornetz herum.
+     * Die mittleren Zellen (Spalte 1+2, Zeile 1) werden ausgelassen,
+     * damit keine GIFs über dem Tornetz liegen.
+     */
+    function zeigeTorGifs() {
+        const spalten = 4;
+        const zeilen  = 3;
+
+        const zellen = [];
+        for (let z = 0; z < zeilen; z++) {
+            for (let s = 0; s < spalten; s++) {
+                // Mittlere Zellen überspringen (dort liegt das Tornetz)
+                if (z === 1 && (s === 1 || s === 2)) continue;
+                zellen.push({ z: z, s: s });
+            }
+        }
+        zellen.sort(function() { return Math.random() - 0.5; });
+
+        const zelleBreite = 100 / spalten;
+        const zelleHoehe  = 100 / zeilen;
+
+        zellen.forEach(function(zelle) {
+            const img = document.createElement('img');
+            img.src = '../img/tor.gif';
+            img.className = 'tor-gif';
+
+            const groesse = 110 + Math.random() * 30;
+            const jitterX = (Math.random() - 0.5) * 6;
+            const jitterY = (Math.random() - 0.5) * 6;
+            const left = zelle.s * zelleBreite + 6 + jitterX;
+            const top  = zelle.z * zelleHoehe  + 6 + jitterY;
+            const rot  = (Math.random() * 50) - 25;
+
+            img.style.left  = left + '%';
+            img.style.top   = top  + '%';
+            img.style.width = groesse + 'px';
+            img.style.setProperty('--tor-rot', rot + 'deg');
+
+            document.body.appendChild(img);
+            setTimeout(function() { img.remove(); }, 3300);
+        });
     }
 
     /**
@@ -1392,11 +1436,19 @@ if (document.querySelector('.spiel-page') !== null) {
      * Cheatsheet 05: classList.remove (Overlay zeigen)
      */
     function zeigeTorOverlay(istTor) {
-        // Cheatsheet 04: if/else
         if (istTor) {
-            // Cheatsheet 05: classList.remove = Element sichtbar machen
+            // Teamname dynamisch setzen
+            const torTeamEl = document.querySelector('#tor-team-name');
+            if (torTeamEl) {
+                torTeamEl.innerText = aktuellesSpiel.heim.shortName || aktuellesSpiel.heim.name;
+            }
+            zeigeTorGifs();
             torOverlay.classList.remove('overlay--versteckt');
         } else {
+            const gegnerNameEl = document.querySelector('#gegentor-team-name');
+            if (gegnerNameEl) {
+                gegnerNameEl.innerText = aktuellesSpiel.gast.shortName || aktuellesSpiel.gast.name;
+            }
             gegentorOverlay.classList.remove('overlay--versteckt');
         }
     }
@@ -1460,6 +1512,13 @@ if (document.querySelector('.spiel-page') !== null) {
             }
         } else {
             abpfiffMeldung.innerText = `Schade ${spielerName}! Nächste Saison wieder angreifen!`;
+        }
+
+        // Karte grün oder rot umranden je nach Ergebnis
+        const abpfiffKarte = document.querySelector('.abpfiff__karte');
+        if (abpfiffKarte) {
+            abpfiffKarte.classList.toggle('abpfiff__karte--sieg',       istSieg);
+            abpfiffKarte.classList.toggle('abpfiff__karte--niederlage', !istSieg);
         }
 
         // Niederlage → roter Text und Button
