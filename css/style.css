@@ -597,7 +597,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 300px 1fr;  /* aussen gleich, Mitte fix */
     gap: 40px;
-    align-items: center;
+    align-items: start;
     min-height: 500px;
 }
 
@@ -754,7 +754,7 @@ body {
     background-color: var(--farbe-dunkelblau);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 4px;
-    margin: 0 128px;
+    margin: 24px 128px 0;
     height: 105px;
     position: relative;
     overflow: hidden;  /* damit Farbverläufe nicht aus der Box laufen */
@@ -1187,3 +1187,149 @@ body {
     background-color: #ff4e6a;
     color: var(--farbe-weiss);
 }
+
+/* ============================================================
+   CHAMPION SCREEN
+   ============================================================ */
+.champion {
+    position: fixed;
+    inset: 0;
+    background-color: var(--farbe-hintergrund);
+    z-index: 400;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Nav-Leiste im Champion-Screen */
+.champion__nav {
+    width: 100%;
+    height: 64px;
+    background-color: var(--farbe-dunkelblau);
+    border-bottom: 1px solid var(--farbe-rand);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Konfetti-Streifen (6 animierte Bänder oben links + rechts) */
+@keyframes champion-weben {
+    0%, 100% { transform: translateY(0) rotate(-2deg) scaleX(1);    opacity: 0.85; }
+    50%       { transform: translateY(24px) rotate(2deg) scaleX(0.85); opacity: 0.6;  }
+}
+
+.champion__konfetti {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    height: 270px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.champion__konfetti-strip {
+    position: absolute;
+    width: 120px;
+    height: 200px;
+    border-radius: 8px;
+    animation: champion-weben 2.4s ease-in-out infinite;
+}
+
+.champion__konfetti-strip:nth-child(1) { left: 28px;   background: linear-gradient(to bottom, #f5c842, rgba(245,200,66,0.05)); animation-delay: 0s;    }
+.champion__konfetti-strip:nth-child(2) { left: 178px;  background: linear-gradient(to bottom, rgba(255,255,255,0.65), rgba(255,255,255,0.03)); animation-delay: 0.4s;  }
+.champion__konfetti-strip:nth-child(3) { left: 328px;  background: linear-gradient(to bottom, #f5c842, rgba(245,200,66,0.03)); animation-delay: 0.8s;  }
+.champion__konfetti-strip:nth-child(4) { left: 1032px; background: linear-gradient(to bottom, rgba(255,255,255,0.65), rgba(255,255,255,0.03)); animation-delay: 0.2s;  }
+.champion__konfetti-strip:nth-child(5) { left: 1182px; background: linear-gradient(to bottom, #f5c842, rgba(245,200,66,0.05)); animation-delay: 0.6s;  }
+.champion__konfetti-strip:nth-child(6) { left: 1343px; background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.03));  animation-delay: 1s;    }
+
+/* Hauptinhalt */
+.champion__inhalt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    padding: 24px 128px 48px;
+    position: relative;
+    z-index: 2;
+}
+
+/* "CHAMPION!" */
+.champion__titel {
+    font-family: var(--schrift-titel);
+    font-size: 120px;
+    color: var(--farbe-gelb);
+    line-height: 1;
+    font-weight: 400;
+}
+
+/* Grosses Team-Logo */
+.champion__logo {
+    width: 240px;
+    height: 240px;
+    object-fit: contain;
+}
+
+/* "[Team] gewinnt den Champions Quiz!" */
+.champion__text-haupt {
+    font-family: var(--schrift-titel);
+    font-size: 32px;
+    color: var(--farbe-weiss);
+    font-weight: 400;
+}
+
+/* "[Spieler] führt seine Mannschaft zum Titel..." */
+.champion__text-sub {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--farbe-weiss);
+    opacity: 0.85;
+}
+
+/* Finale-Ergebnis-Karte */
+.champion__finalstrip {
+    background-color: var(--farbe-dunkelblau);
+    border: 1px solid rgba(245, 200, 66, 0.4);
+    border-radius: 8px;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 4px;
+    justify-content: center;
+}
+
+.champion__strip-logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+}
+
+.champion__strip-score {
+    font-family: var(--schrift-titel);
+    font-size: 36px;
+    color: var(--farbe-weiss);
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+/* CTA-Button */
+.champion__btn {
+    height: 56px;
+    padding: 0 40px;
+    background-color: var(--farbe-gelb);
+    border: none;
+    border-radius: 4px;
+    color: var(--farbe-dunkelblau);
+    font-family: var(--schrift-text);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 8px;
+}
+
+.champion__btn:hover { opacity: 0.9; }

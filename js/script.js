@@ -751,6 +751,8 @@ if (document.querySelector('.spiel-page') !== null) {
     const sbGegnerName   = document.querySelector('#sb-gegner-name');
     const spielZeitEl    = document.querySelector('#spiel-zeit');
     const spielScoreEl   = document.querySelector('#spiel-score');
+    const sbSeiteHeim    = document.querySelector('.scoreboard__seite--heim');
+    const sbSeiteGast    = document.querySelector('.scoreboard__seite--gast');
 
     // Frage-Karte
     const frageLabel    = document.querySelector('#frage-label');
@@ -786,6 +788,16 @@ if (document.querySelector('.spiel-page') !== null) {
     const abpfiffWeiter      = document.querySelector('#abpfiff-weiter');
     const abpfiffMeldung     = document.querySelector('#abpfiff-meldung');
     const abpfiffBtn         = document.querySelector('#abpfiff-btn');
+
+    // Champion Screen
+    const championEl         = document.querySelector('#champion');
+    const championLogo       = document.querySelector('#champion-logo');
+    const championTextHaupt  = document.querySelector('#champion-text-haupt');
+    const championTextSub    = document.querySelector('#champion-text-sub');
+    const championStripScore = document.querySelector('#champion-strip-score');
+    const championHeimLogo   = document.querySelector('#champion-heim-logo');
+    const championGastLogo   = document.querySelector('#champion-gast-logo');
+    const championBtn        = document.querySelector('#champion-btn');
 
     // ----------------------------------------------------------
     // FRAGEN-GENERIERUNG (Cheatsheet 09, 10, 11)
@@ -1498,13 +1510,55 @@ if (document.querySelector('.spiel-page') !== null) {
             runde: aktuelleRunde,
         }));
 
-        // Abpfiff-Screen anzeigen (Cheatsheet 05: classList.remove)
-        abpfiffEl.classList.remove('overlay--versteckt');
+        // Champion- oder Abpfiff-Screen anzeigen
+        if (naechsteRunde === 'Champion!' && istSieg) {
+            const gastName = aktuellesSpiel.gast.shortName || aktuellesSpiel.gast.name;
+            championLogo.setAttribute('src', aktuellesSpiel.heim.crest);
+            championTextHaupt.innerText  = `${vereinName} gewinnt den Champions Quiz!`;
+            championTextSub.innerText    = `${spielerName} führt seine Mannschaft zum Titel. Eine unvergessliche Saison!`;
+            championStripScore.innerText = `${vereinName}  ${spielerTore} : ${gegnerTore}  ${gastName}`;
+            championHeimLogo.setAttribute('src', aktuellesSpiel.heim.crest);
+            championGastLogo.setAttribute('src', aktuellesSpiel.gast.crest);
+            championEl.classList.remove('overlay--versteckt');
+        } else {
+            abpfiffEl.classList.remove('overlay--versteckt');
+        }
     }
 
     // ----------------------------------------------------------
     // SCOREBOARD BEFÜLLEN (Cheatsheet 05)
     // ----------------------------------------------------------
+
+    // Hauptfarben der CL-Teams (ID → Hex)
+    const TEAM_FARBEN = {
+        57:   '#DB0007',  // Arsenal
+        65:   '#6CABDD',  // Man City
+        66:   '#DA291C',  // Man United
+        64:   '#C8102E',  // Liverpool
+        81:   '#004D98',  // Barcelona
+        86:   '#FEBE10',  // Real Madrid
+        5:    '#DC052D',  // Bayern
+        4:    '#FDE100',  // Dortmund
+        108:  '#CB3524',  // Atletico Madrid
+        113:  '#034694',  // Chelsea
+        109:  '#1C1C1C',  // Juventus
+        98:   '#0070B5',  // Inter Milan
+        1903: '#12A0D7',  // Napoli
+        503:  '#E4001B',  // Benfica
+        524:  '#D2122E',  // Ajax
+        516:  '#EF1818',  // PSV
+    };
+
+    function getTeamFarbe(team) {
+        return TEAM_FARBEN[team.id] || '#FFFFFF';
+    }
+
+    function hexToRgba(hex, alpha) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
 
     /**
      * Füllt das Scoreboard mit den Teamdaten.
@@ -1526,6 +1580,12 @@ if (document.querySelector('.spiel-page') !== null) {
         sbGegnerLogo.setAttribute('alt', gast.name);
         sbGegnerKuerz.innerText = gast.tla  || gast.shortName || 'BVB';
         sbGegnerName.innerText  = (gast.shortName || gast.name).toUpperCase();
+
+        // Teamfarben dynamisch anwenden
+        const heimFarbe = getTeamFarbe(heim);
+        const gastFarbe = getTeamFarbe(gast);
+        if (sbSeiteHeim) sbSeiteHeim.style.background = `linear-gradient(to right, ${hexToRgba(heimFarbe, 0.45)}, transparent)`;
+        if (sbSeiteGast) sbSeiteGast.style.background = `linear-gradient(to left,  ${hexToRgba(gastFarbe, 0.30)}, transparent)`;
     }
 
     // ----------------------------------------------------------
@@ -1616,6 +1676,11 @@ if (document.querySelector('.spiel-page') !== null) {
         btn.addEventListener('click', function() {
             antwortKlick(index);
         });
+    });
+
+    // Champion-Button: Neues Turnier starten
+    championBtn.addEventListener('click', function() {
+        window.location.href = 'index.html';
     });
 
     // Abpfiff-Button: Weiter oder Nochmal

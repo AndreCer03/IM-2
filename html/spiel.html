@@ -199,6 +199,55 @@
         <!-- Ende Ergebnis-Karte -->
       </div>
       <!-- Ende Abpfiff Screen -->
+
+      <!-- Champion Screen – erscheint wenn das gesamte Turnier gewonnen wurde -->
+      <div class="champion overlay--versteckt" id="champion">
+
+        <!-- Nav -->
+        <header class="champion__nav">
+          <div class="chrome__inner">
+            <div class="chrome__logo">
+              <span class="chrome__dot"></span>
+              <span class="chrome__title">CHAMPIONS QUIZ</span>
+            </div>
+            <nav class="steps">
+              <span class="steps__item">Setup &gt;</span>
+              <span class="steps__item">Turnierbaum &gt;</span>
+              <span class="steps__item">Vorschau &gt;</span>
+              <span class="steps__item">Spiel &gt;</span>
+              <span class="steps__item steps__item--active">Abpfiff</span>
+            </nav>
+          </div>
+        </header>
+
+        <!-- Konfetti-Streifen oben links + rechts -->
+        <div class="champion__konfetti" aria-hidden="true">
+          <div class="champion__konfetti-strip"></div>
+          <div class="champion__konfetti-strip"></div>
+          <div class="champion__konfetti-strip"></div>
+          <div class="champion__konfetti-strip"></div>
+          <div class="champion__konfetti-strip"></div>
+          <div class="champion__konfetti-strip"></div>
+        </div>
+
+        <!-- Hauptinhalt -->
+        <div class="champion__inhalt">
+          <h1 class="champion__titel">CHAMPION!</h1>
+          <img id="champion-logo" src="" alt="" class="champion__logo" />
+          <p class="champion__text-haupt" id="champion-text-haupt"></p>
+          <p class="champion__text-sub" id="champion-text-sub"></p>
+
+          <!-- Finalergebnis-Streifen -->
+          <div class="champion__finalstrip">
+            <img id="champion-heim-logo" src="" alt="" class="champion__strip-logo" />
+            <p class="champion__strip-score" id="champion-strip-score"></p>
+            <img id="champion-gast-logo" src="" alt="" class="champion__strip-logo" />
+          </div>
+
+          <button class="champion__btn" id="champion-btn">↺ Neues Turnier starten</button>
+        </div>
+      </div>
+      <!-- Ende Champion Screen -->
     </main>
 
     <script src="../js/script.js" type="module"></script>
