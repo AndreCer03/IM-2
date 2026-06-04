@@ -535,12 +535,47 @@ if (aufTurnierbaum) {
         window.location.href = 'vorschau.html';
     });
 
+    // ----------------------------------------------------------
+    // TAB-NAVIGATION (Mobile) – zeigt nur die aktive Runde
+    // ----------------------------------------------------------
+
+    // Mapping: Rundenname → Tab-ID
+    const rundeZuTab = {
+        'Achtelfinale':  'af',
+        'Viertelfinale': 'vf',
+        'Halbfinale':    'hf',
+        'Finale':        'finale'
+    };
+
+    const bracketEl  = document.querySelector('.bracket');
+    const tabButtons = document.querySelectorAll('.bracket-tab');
+
+    function setzeAktivenTab(tab) {
+        // data-Attribut steuert CSS-Sichtbarkeit der Spalten
+        if (bracketEl) bracketEl.setAttribute('data-aktiv-tab', tab);
+        // Aktiven Tab-Button hervorheben
+        tabButtons.forEach(function(btn) {
+            btn.classList.toggle('bracket-tab--aktiv', btn.dataset.tab === tab);
+        });
+    }
+
+    // Klick auf Tab-Button
+    tabButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            setzeAktivenTab(btn.dataset.tab);
+        });
+    });
+
     // Seite geladen
     window.addEventListener('load', function() {
         console.log('Turnierbaum geladen');
         ladeDaten();
         baueSpieiplan();
         zeigeBracket();
+
+        // Standard-Tab = aktuelle Runde (aus localStorage)
+        const aktuelleRundeStr = localStorage.getItem('aktuelleRunde') || 'Achtelfinale';
+        setzeAktivenTab(rundeZuTab[aktuelleRundeStr] || 'af');
     });
 
 } // Ende if (aufTurnierbaum)

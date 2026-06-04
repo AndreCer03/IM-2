@@ -32,6 +32,14 @@
 
     <!-- Turnierbaum Seite  -->
     <main class="turnierbaum-page">
+      <!-- Tab-Navigation (nur auf Mobile sichtbar) -->
+      <div class="bracket-tabs" id="bracket-tabs">
+        <button class="bracket-tab" data-tab="af">AF</button>
+        <button class="bracket-tab" data-tab="vf">VF</button>
+        <button class="bracket-tab" data-tab="hf">HF</button>
+        <button class="bracket-tab" data-tab="finale">Finale</button>
+      </div>
+
       <!-- Achtelfinale, Viertelfinale... -->
       <div class="bracket-header">
         <div class="bracket-header__inner">
@@ -53,7 +61,7 @@
         <!-- linke Seite -->
 
         <!-- Spalte 1: Achtelfinale Links 4 Spiele -->
-        <div class="bracket__col bracket__col--af-links">
+        <div class="bracket__col bracket__col--af-links" data-runde="af">
           <div class="match-card" id="match-af1">
             <div class="match-card__heim">
               <div class="match-card__streifen match-card__streifen--rot"></div>
@@ -124,7 +132,7 @@
         </div>
 
         <!-- Spalte 2 Viertelfinale Links, 2 Spiele -->
-        <div class="bracket__col bracket__col--vf-links">
+        <div class="bracket__col bracket__col--vf-links" data-runde="vf">
           <div class="match-card match-card--platzhalter" id="match-vf1">
             <div class="match-card__heim">
               <div class="match-card__streifen match-card__streifen--rot"></div>
@@ -165,7 +173,7 @@
         </div>
 
         <!--  Halbfinale Links  -->
-        <div class="bracket__col bracket__col--hf-links">
+        <div class="bracket__col bracket__col--hf-links" data-runde="hf">
           <div class="match-card match-card--platzhalter" id="match-hf1">
             <div class="match-card__heim">
               <div class="match-card__streifen match-card__streifen--rot"></div>
@@ -187,7 +195,7 @@
         </div>
 
         <!-- Finale -->
-        <div class="bracket__col bracket__col--finale">
+        <div class="bracket__col bracket__col--finale" data-runde="finale">
           <!-- Champions Banner -->
           <div class="champions-badge">CHAMPIONS</div>
 
@@ -215,7 +223,7 @@
         <!-- rechte Seite-->
 
         <!--  Halbfinale Rechts -->
-        <div class="bracket__col bracket__col--hf-rechts">
+        <div class="bracket__col bracket__col--hf-rechts" data-runde="hf">
           <div class="match-card match-card--platzhalter" id="match-hf2">
             <div class="match-card__heim">
               <div class="match-card__streifen match-card__streifen--rot"></div>
@@ -237,7 +245,7 @@
         </div>
 
         <!-- Viertelfinale Rechts, 2 Spiele -->
-        <div class="bracket__col bracket__col--vf-rechts">
+        <div class="bracket__col bracket__col--vf-rechts" data-runde="vf">
           <div class="match-card match-card--platzhalter" id="match-vf3">
             <div class="match-card__heim">
               <div class="match-card__streifen match-card__streifen--rot"></div>
@@ -278,7 +286,7 @@
         </div>
 
         <!--  Achtelfinale Rechts, 4 Spiele -->
-        <div class="bracket__col bracket__col--af-rechts">
+        <div class="bracket__col bracket__col--af-rechts" data-runde="af">
           <div class="match-card" id="match-af5">
             <div class="match-card__heim">
               <div class="match-card__streifen match-card__streifen--rot"></div>

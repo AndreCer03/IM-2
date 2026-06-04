@@ -340,6 +340,9 @@ body {
 
 /* Turnierbaum */
 
+/* Tab-Bar: auf Desktop ausgeblendet, nur Mobile */
+.bracket-tabs { display: none; }
+
 /* Die ganze Turnierbaum-Seite */
 .turnierbaum-page {
     padding-top: 96px;   
@@ -1402,8 +1405,6 @@ body {
 
 /* ============================================================
    RESPONSIVE – Mobile (≤ 768 px)
-   Desktop bleibt unverändert. Zwischen 768 px und Desktop muss
-   es nicht perfekt aussehen.
    ============================================================ */
 
 @media (max-width: 768px) {
@@ -1452,69 +1453,66 @@ body {
     /* --- MATCH VORSCHAU ------------------------------------ */
 
     .vorschau-page {
-        padding-top: 108px; /* 92px Nav + 16px Luft */
+        padding-top: 120px; /* 92px Nav + 28px Luft */
         padding-left: 24px;
         padding-right: 24px;
-        padding-bottom: 40px;
+        padding-bottom: 48px;
         max-width: 100%;
     }
 
     .vorschau__title {
-        font-size: 34px;
+        font-size: 36px;
         margin-top: 0;
-        margin-bottom: 16px;
+        margin-bottom: 28px;
     }
 
     /*
-     * Grid: linke Karte (1fr) | VS-Spalte (50px) | rechte Karte (1fr)
+     * Grid: linke Karte (1fr) | VS-Spalte (64px) | rechte Karte (1fr)
      * Zeile 1 = Karten + VS
      * Zeile 2 = Anpfiff-Button (spannt alle 3 Spalten)
      * Zeile 3 = Zurück-Button  (spannt alle 3 Spalten)
      */
+    /*
+     * 4-Zeilen-Grid:
+     *   Zeile 1 → Runden-Name (volle Breite, direkt unter dem Titel)
+     *   Zeile 2 → Team-Karten + VS
+     *   Zeile 3 → Anpfiff-Button
+     *   Zeile 4 → Zurück-Button
+     */
     .vorschau__content {
         display: grid;
-        grid-template-columns: 1fr 50px 1fr;
-        grid-template-rows: auto auto auto;
-        gap: 12px 8px;
+        grid-template-columns: 1fr 64px 1fr;
+        grid-template-rows: auto auto auto auto;
+        gap: 24px 8px;
         min-height: unset;
         align-items: start;
     }
 
-    /*
-     * display:contents macht .vorschau__mitte „unsichtbar":
-     * seine direkten Kinder (runden-name, VS, schwierigkeit,
-     * btn-anpfiff, btn-zurueck) werden zu direkten Grid-Kindern
-     * von .vorschau__content und können eigene grid-column/-row
-     * Werte bekommen — inkl. vollbreite Buttons.
-     */
+    /* display:contents macht .vorschau__mitte unsichtbar */
     .vorschau__mitte {
         display: contents;
     }
 
-    /* Runden-Name: oben in der VS-Spalte */
+    /* Runden-Name: Zeile 1, volle Breite → mittig unter dem Titel */
     #runden-name {
-        grid-column: 2;
+        grid-column: 1 / 4;
         grid-row: 1;
-        align-self: start;
+        text-align: center;
         font-family: var(--schrift-text);
-        font-size: 9px;
+        font-size: 12px;
         font-weight: 600;
         letter-spacing: 0.5px;
         color: var(--farbe-gelb);
-        text-align: center;
         white-space: nowrap;
-        overflow: visible;
+        align-self: center;
     }
 
-    /* VS: vertikal zentriert bezogen auf die Karte.
-       margin-top verschiebt es unter den Label-Bereich
-       (~20px Labelh + 8px Gap = 28px). */
+    /* VS: Zeile 2, Mittelspalte, vertikal zentriert */
     .vorschau__vs {
         grid-column: 2;
-        grid-row: 1;
+        grid-row: 2;
         align-self: center;
-        margin-top: 28px;
-        font-size: 32px;
+        font-size: 36px;
         text-align: center;
     }
 
@@ -1523,10 +1521,10 @@ body {
         display: none;
     }
 
-    /* Anpfiff – volle Breite, gelb */
+    /* Anpfiff – Zeile 3, volle Breite, gelb */
     #btn-anpfiff {
         grid-column: 1 / 4;
-        grid-row: 2;
+        grid-row: 3;
         width: 100%;
         height: 50px;
         background-color: var(--farbe-gelb);
@@ -1540,10 +1538,10 @@ body {
         cursor: pointer;
     }
 
-    /* Zurück – volle Breite, dunkelblau */
+    /* Zurück – Zeile 4, volle Breite, dunkelblau */
     #btn-zurueck-vorschau {
         grid-column: 1 / 4;
-        grid-row: 3;
+        grid-row: 4;
         width: 100%;
         height: 50px;
         background-color: var(--farbe-dunkelblau);
@@ -1557,26 +1555,25 @@ body {
         cursor: pointer;
     }
 
-    /* Team-Spalten: kein eigener Hintergrund –
-       Label ist außerhalb, nur .vorschau__karte hat dunkle Box */
+    /* Team-Spalten: Zeile 2 */
     .vorschau__team:first-child {
         grid-column: 1;
-        grid-row: 1;
+        grid-row: 2;
         background-color: transparent;
         border-radius: 0;
         padding: 0;
-        gap: 8px;
+        gap: 12px;
         overflow: visible;
         align-items: center;
     }
 
     .vorschau__team:last-child {
         grid-column: 3;
-        grid-row: 1;
+        grid-row: 2;
         background-color: transparent;
         border-radius: 0;
         padding: 0;
-        gap: 8px;
+        gap: 12px;
         overflow: visible;
         align-items: center;
     }
@@ -1589,28 +1586,28 @@ body {
         background-color: var(--farbe-dunkelblau);
         border-radius: 12px;
         overflow: hidden;
-        padding: 8px 6px 16px;
-        gap: 8px;
+        padding: 12px 6px 20px;
+        gap: 12px;
         width: 100%;
-        min-height: 180px;
+        min-height: 220px;
         justify-content: flex-start;
     }
 
-    /* Kleinere Wappen */
+    /* Wappen */
     .vorschau__logo {
-        width: 108px;
-        height: 108px;
+        width: 120px;
+        height: 120px;
     }
 
-    /* Kleinere Labels (außerhalb der Karte) */
+    /* Labels außerhalb der Karte */
     .vorschau__team-label {
-        font-size: 10px;
-        letter-spacing: 0.5px;
+        font-size: 13px;
+        letter-spacing: 0.8px;
     }
 
-    /* Kleinere Team-Namen (innerhalb der Karte) */
+    /* Team-Namen innerhalb der Karte */
     .vorschau__team-name {
-        font-size: 14px;
+        font-size: 16px;
         line-height: 1.2;
         text-align: center;
     }
@@ -1794,8 +1791,9 @@ body {
 
     /* Abpfiff-Screen */
     .abpfiff {
-        top: 92px;      /* beginnt unter Nav (64px) + Steps-Streifen (28px) */
-        padding: 20px 20px;
+        top: 92px;                 /* beginnt unter Nav + Steps */
+        justify-content: flex-start; /* Inhalt oben ausrichten statt vertikal zentriert */
+        padding: 24px 20px 20px;   /* etwas Luft oben, dann der Inhalt */
     }
 
     .abpfiff__titel {
@@ -1830,13 +1828,35 @@ body {
     }
 
     /* Champion-Screen */
+    /* ─── CHAMPION SCREEN MOBILE ──────────────────────────── */
+
+    /* Nav: 64px Logo-Zeile + 28px Steps-Streifen = 92px */
+    .champion__nav {
+        height: 92px;
+    }
+
+    /* Feier-GIFs: unter der neuen 92px-Nav platzieren */
+    .champion__celebrate {
+        top: 92px;
+    }
+
+    /* GIF 1+2 sichtbar (0–328px), GIF 3 (328–478px) fast off-screen */
+    .champion__celebrate-gif--3,
+    .champion__celebrate-gif--4,
+    .champion__celebrate-gif--5,
+    .champion__celebrate-gif--6 { display: none; }
+
+    /* Party-GIFs überlappen auf Mobile den Inhalt */
+    .champion__party-gif { display: none; }
+
+    /* Inhalt: oben ausrichten, Seitenpadding für 390px */
     .champion__inhalt {
-        padding: 16px 24px 40px;
+        padding: 20px 24px 40px;
         gap: 12px;
     }
 
     .champion__titel {
-        font-size: 64px;
+        font-size: 72px;
     }
 
     .champion__logo {
@@ -1849,23 +1869,13 @@ body {
     }
 
     .champion__text-sub {
-        font-size: 16px;
+        font-size: 15px;
     }
-
-    /* Goal-GIFs auf Mobile ausblenden */
-    .tor-gif { display: none !important; }
-
-    /* Feier-GIFs: rechte 3 sind auf 390 px off-screen → ausblenden */
-    .champion__celebrate-gif--4,
-    .champion__celebrate-gif--5,
-    .champion__celebrate-gif--6 { display: none; }
-
-    /* Party-GIFs überlappen auf Mobile den Inhalt */
-    .champion__party-gif { display: none; }
 
     .champion__finalstrip {
         padding: 14px 20px;
         gap: 12px;
+        width: 100%;
     }
 
     .champion__strip-logo {
@@ -1874,7 +1884,7 @@ body {
     }
 
     .champion__strip-score {
-        font-size: 26px;
+        font-size: 22px;
     }
 
     .champion__btn {
@@ -1882,9 +1892,11 @@ body {
         padding: 0 24px;
     }
 
+    /* Goal-GIFs auf Mobile ausblenden */
+    .tor-gif { display: none !important; }
+
     /* ─── TURNIERBAUM MOBILE ─────────────────────────────────
-       Statt des Brackets werden alle Spiele vertikal
-       nach Runde gruppiert aufgelistet.
+       Tab-Interface: aktive Runde sichtbar, andere per Tab wählbar.
        ──────────────────────────────────────────────────────── */
 
     .turnierbaum-page {
@@ -1900,13 +1912,43 @@ body {
         font-family: var(--schrift-titel);
         font-size: 34px;
         color: var(--farbe-weiss);
-        padding: 8px 24px 16px;
+        padding: 8px 24px 12px;
     }
 
     /* Desktop-Spaltenheader ausblenden */
     .bracket-header { display: none; }
 
-    /* Bracket: vertikale Flex-Spalte statt Grid */
+    /* ── Tab-Bar ── */
+    .bracket-tabs {
+        display: flex;
+        padding: 0 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 16px;
+        gap: 0;
+    }
+
+    .bracket-tab {
+        flex: 1;
+        height: 44px;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        color: rgba(255, 255, 255, 0.4);
+        font-family: var(--schrift-text);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: color 0.15s, border-bottom-color 0.15s;
+    }
+
+    .bracket-tab--aktiv {
+        color: var(--farbe-gelb);
+        border-bottom-color: var(--farbe-gelb);
+    }
+
+    /* Bracket: vertikale Flex-Spalte */
     .bracket {
         display: flex;
         flex-direction: column;
@@ -1916,7 +1958,7 @@ body {
         gap: 8px;
     }
 
-    /* Alle Spalten: volle Breite, untereinander */
+    /* Alle Spalten: volle Breite */
     .bracket__col {
         display: flex;
         flex-direction: column;
@@ -1927,59 +1969,23 @@ body {
         justify-content: flex-start;
     }
 
-    /* Alle bracket-internen margin-top-Abstände zurücksetzen */
+    /* Bracket-internen margin-top-Abstände zurücksetzen */
     .bracket__col .match-card { margin-top: 0 !important; }
 
-    /*
-     * Reihenfolge: alle Achtelfinale → Viertelfinale → Halbfinale → Finale
-     * Die rechten Spalten kommen jeweils direkt nach den linken,
-     * sodass alle 8 AF-Spiele, alle 4 VF-Spiele usw. zusammenstehen.
-     */
-    .bracket__col--af-links  { order: 1; }
-    .bracket__col--af-rechts { order: 2; }
-    .bracket__col--vf-links  { order: 3; }
-    .bracket__col--vf-rechts { order: 4; }
-    .bracket__col--hf-links  { order: 5; }
-    .bracket__col--hf-rechts { order: 6; }
-    .bracket__col--finale    { order: 7; }
+    /* ── Tab-Sichtbarkeit ──────────────────────────────────
+       data-aktiv-tab auf .bracket blendet alle Spalten aus,
+       die NICHT zur aktiven Runde gehören.
+       ──────────────────────────────────────────────────── */
+    .bracket[data-aktiv-tab="af"]     .bracket__col[data-runde]:not([data-runde="af"])     { display: none; }
+    .bracket[data-aktiv-tab="vf"]     .bracket__col[data-runde]:not([data-runde="vf"])     { display: none; }
+    .bracket[data-aktiv-tab="hf"]     .bracket__col[data-runde]:not([data-runde="hf"])     { display: none; }
+    .bracket[data-aktiv-tab="finale"] .bracket__col[data-runde]:not([data-runde="finale"]) { display: none; }
 
-    /* Rundenbezeichnungen als ::before-Pseudo-Elemente */
-    .bracket__col--af-links::before,
-    .bracket__col--vf-links::before,
-    .bracket__col--hf-links::before,
-    .bracket__col--finale::before {
+    /* Champions-Badge im Finale-Tab zeigen */
+    .bracket__col--finale .champions-badge {
         display: block;
-        font-family: var(--schrift-text);
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 1.5px;
-        color: rgba(255, 255, 255, 0.5);
-        padding-bottom: 4px;
+        margin-bottom: 8px;
     }
-
-    .bracket__col--af-links::before { content: "ACHTELFINALE"; }
-
-    .bracket__col--vf-links::before {
-        content: "VIERTELFINALE";
-        padding-top: 12px;
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .bracket__col--hf-links::before {
-        content: "HALBFINALE";
-        padding-top: 12px;
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .bracket__col--finale::before {
-        content: "FINALE";
-        padding-top: 12px;
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    /* Champions-Badge im Finale ausblenden
-       (der ::before-Header übernimmt diese Rolle) */
-    .champions-badge { display: none; }
 
     /* Match-Karten: volle Breite */
     .match-card { width: 100%; }
