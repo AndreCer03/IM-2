@@ -1366,7 +1366,7 @@ if (document.querySelector('.spiel-page') !== null) {
         }
 
         // Bei Tor länger warten damit die GIFs vollständig ausgeblendet sind
-        const wartezeit = 3200;
+        const wartezeit = 2200;
         setTimeout(function() {
             versteckeOverlays();
 
@@ -1388,38 +1388,24 @@ if (document.querySelector('.spiel-page') !== null) {
     }
 
     /**
-     * Spawnt GIFs verteilt um das zentrale Tornetz herum.
-     * Die mittleren Zellen (Spalte 1+2, Zeile 1) werden ausgelassen,
-     * damit keine GIFs über dem Tornetz liegen.
+     * Spawnt GIFs nur im oberen (0–16 %) und unteren (78–96 %) Strip
+     * des Viewports. Das Tornetz ist immer vertikal zentriert und belegt
+     * grob 30–70 % der Höhe, also können GIFs in diesen Streifen nie
+     * über dem Netz erscheinen – egal wie gross der Bildschirm ist.
      */
     function zeigeTorGifs() {
-        const spalten = 4;
-        const zeilen  = 3;
-
-        const zellen = [];
-        for (let z = 0; z < zeilen; z++) {
-            for (let s = 0; s < spalten; s++) {
-                // Mittlere Zellen überspringen (dort liegt das Tornetz)
-                if (z === 1 && (s === 1 || s === 2)) continue;
-                zellen.push({ z: z, s: s });
-            }
-        }
-        zellen.sort(function() { return Math.random() - 0.5; });
-
-        const zelleBreite = 100 / spalten;
-        const zelleHoehe  = 100 / zeilen;
-
-        zellen.forEach(function(zelle) {
+        for (let i = 0; i < 10; i++) {
             const img = document.createElement('img');
             img.src = '../img/tor.gif';
             img.className = 'tor-gif';
 
-            const groesse = 110 + Math.random() * 30;
-            const jitterX = (Math.random() - 0.5) * 6;
-            const jitterY = (Math.random() - 0.5) * 6;
-            const left = zelle.s * zelleBreite + 6 + jitterX;
-            const top  = zelle.z * zelleHoehe  + 6 + jitterY;
-            const rot  = (Math.random() * 50) - 25;
+            const groesse = 100 + Math.random() * 50;   // 100–150 px
+            const left    = 2 + Math.random() * 87;     // 2–89 % (volle Breite)
+            const oben    = Math.random() < 0.5;
+            const top     = oben
+                ? Math.random() * 16          // oben:  0–16 %
+                : 78 + Math.random() * 18;    // unten: 78–96 %
+            const rot     = (Math.random() * 60) - 30;
 
             img.style.left  = left + '%';
             img.style.top   = top  + '%';
@@ -1427,8 +1413,8 @@ if (document.querySelector('.spiel-page') !== null) {
             img.style.setProperty('--tor-rot', rot + 'deg');
 
             document.body.appendChild(img);
-            setTimeout(function() { img.remove(); }, 3300);
-        });
+            setTimeout(function() { img.remove(); }, 2300);
+        }
     }
 
     /**

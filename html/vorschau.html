@@ -29,50 +29,46 @@
     </header>
 
     <main class="vorschau-page">
-      <!-- script.js erkennt, dass die VorschauSeite ist und führt dann aus -->
       <!-- Titel oben links -->
       <h1 class="vorschau__title">MATCH VORSCHAU</h1>
 
-      <!-- Drei-Spalten-Layout: Spieler | VS | Gegner -->
+      <!-- Drei-Spalten-Layout -->
       <div class="vorschau__content">
-        <!-- ---- LINKE SPALTE: Spieler-Team ---- -->
+        <!-- linke Spalte= dein Team-->
         <div class="vorschau__team">
-          <!-- Label oben: "DU SPIELST ALS" -->
+          <!-- Text oben (auf Mobile außerhalb der Karte) -->
           <p class="vorschau__team-label">DU SPIELST ALS</p>
 
-          <!-- Logo: wird per JS befüllt -->
-          <img
-            id="spieler-logo"
-            src=""
-            alt="Dein Vereinswappen"
-            class="vorschau__logo"
-          />
-
-          <!-- Team-Name in GELB: wird per JS gesetzt -->
-          <p
-            id="spieler-name"
-            class="vorschau__team-name vorschau__team-name--gelb"
-          >
-            Laden...
-          </p>
-
-          <!-- Liga-Info: wird per JS gesetzt -->
-          <p id="spieler-liga" class="vorschau__liga">Laden...</p>
+          <!-- Karte: auf Mobile dunkle Box mit Logo + Name -->
+          <div class="vorschau__karte">
+            <img
+              id="spieler-logo"
+              src=""
+              alt="Dein Vereinswappen"
+              class="vorschau__logo"
+            />
+            <p
+              id="spieler-name"
+              class="vorschau__team-name vorschau__team-name--gelb"
+            >
+              Laden...
+            </p>
+            <p id="spieler-liga" class="vorschau__liga"></p>
+          </div>
         </div>
 
-        <!-- ---- MITTLERE SPALTE: VS + Buttons ---- -->
+        <!--  mittlere Spalte = VS + Buttons  -->
         <div class="vorschau__mitte">
           <!-- Runden-Name: "ACHTELFINALE" – wird per JS gesetzt -->
           <p id="runden-name" class="vorschau__runde">ACHTELFINALE</p>
 
-          <!-- Grosses "VS" -->
+          <!-- Text VS -->
           <p class="vorschau__vs">VS</p>
 
-          <!-- Schwierigkeit: 4 Punkte, ausgefüllt je nach Runde -->
+          <!-- Schwierigkeitsgrad mit 4 Punkten je nach Runde-->
           <div class="vorschau__schwierigkeit">
             <p class="vorschau__schwierigkeit-label">Schwierigkeit</p>
             <div class="vorschau__dots">
-              <!--  per JS aktiv oder inaktiv -->
               <span class="vorschau__dot" id="dot-1"></span>
               <span class="vorschau__dot" id="dot-2"></span>
               <span class="vorschau__dot" id="dot-3"></span>
@@ -80,10 +76,10 @@
             </div>
           </div>
 
-          <!-- "Anpfiff →" Button – rot, geht zum quiz / Spiel  -->
+          <!-- "Anpfiff →" Button – rot, geht zum Spiel  -->
           <button class="btn-anpfiff" id="btn-anpfiff">Anpfiff &nbsp;→</button>
 
-          <!-- "← Zurück" Button – zurück zum Turnierbaum -->
+          <!-- "← Zurück" Button geht zurück zum Turnierbaum -->
           <button class="btn-zurueck" id="btn-zurueck-vorschau">
             ← Zurück
           </button>
@@ -91,22 +87,20 @@
 
         <!-- rechts Gegner-Team -->
         <div class="vorschau__team">
-          <!-- Label oben: "GEGNER" -->
+          <!-- Label oben (auf Mobile außerhalb der Karte) -->
           <p class="vorschau__team-label">GEGNER</p>
 
-          <!-- Wappen: wird per JS befüllt -->
-          <img
-            id="gegner-logo"
-            src=""
-            alt="Gegner Vereinswappen"
-            class="vorschau__logo"
-          />
-
-          <!-- Team-Name in weiss wird per JS gesetzt -->
-          <p id="gegner-name" class="vorschau__team-name">Laden...</p>
-
-          <!-- Liga-Info wird per JS gesetzt -->
-          <p id="gegner-liga" class="vorschau__liga">Laden...</p>
+          <!-- Karte: auf Mobile dunkle Box mit Logo + Name -->
+          <div class="vorschau__karte">
+            <img
+              id="gegner-logo"
+              src=""
+              alt="Gegner Vereinswappen"
+              class="vorschau__logo"
+            />
+            <p id="gegner-name" class="vorschau__team-name">Laden...</p>
+            <p id="gegner-liga" class="vorschau__liga"></p>
+          </div>
         </div>
       </div>
     </main>

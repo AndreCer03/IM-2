@@ -12,8 +12,9 @@
 }
 
 /* RESET & BASIS */
+
 *, *::before, *::after {
-    box-sizing: border-box; /* Padding/Border werden zum Element gezählt */
+    box-sizing: border-box; /* Padding und Border werden zum Element gezählt */
     margin: 0;
     padding: 0;
 }
@@ -25,12 +26,12 @@ body {
     min-height: 100vh;
 }
 
-/* CHROME / NAVIGATIONSLEISte */
+/*  Navigationsleiste (dort wo der Fortschritt angezeigt wird */
 .chrome {
     background-color: var(--farbe-dunkelblau);
     border-bottom: 1px solid var(--farbe-rand);
     height: 64px;
-    position: fixed;  /* bleibt beim Scrollen oben */
+    position: fixed;  /* bleibt oben */
     top: 0;
     left: 0;
     right: 0;
@@ -48,7 +49,7 @@ body {
     gap: 48px;
 }
 
-/* Logo-Bereich: Punkt + "CHAMPIONS QUIZ" */
+/* Quiz Name + Fette Punkt */
 .chrome__logo {
     display: flex;
     align-items: center;
@@ -56,7 +57,7 @@ body {
     flex-shrink: 0; /* Schrift Logo darf nicht kleiner werden */
 }
 
-/* Der kleine gelbe Punkt vor dem "Logo" */
+/* Der kleine gelbe Punkt vor dem Champions Quiz*/
 .chrome__dot {
     width: 8px;
     height: 8px;
@@ -72,8 +73,7 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Schritt Navigation
-   "Setup > Turnierbaum > Vorschau > Spiel > Abpfiff"*/
+/* Schritte Navigation */
 .steps {
     display: flex;
     gap: 16px;
@@ -94,8 +94,11 @@ body {
     font-weight: 600;
 }
 
+
+/* Landing Page */
 /* Hautinhalt: zweispaltig
-   Links = Hero, Rechts = Setup-Karte */
+   Links = Hero Text , Rechts = Karte */
+
 .landing {
     max-width: 1512px;
     margin: 0 auto;
@@ -106,7 +109,7 @@ body {
     align-items: stretch;
 }
 
-/* HERO (linke Seite) */
+/* Links Hero */
 .hero {
     display: flex;
     flex-direction: column;
@@ -128,7 +131,7 @@ body {
     line-height: 1;
     letter-spacing: -1.5px;
     color: var(--farbe-weiss);
-    font-weight: 400; /* Anton hat kein bold, deshalb 400 */
+    font-weight: 400; 
 }
 
 /* "TITEL." in gelb */
@@ -159,7 +162,6 @@ body {
     gap: 6px;
 }
 
-/* Grosse gelbe Zahlen */
 .stats__number {
     font-family: var(--schrift-titel);
     font-size: 48px;
@@ -186,7 +188,7 @@ body {
     gap: 16px;
 }
 
-/* Labels: "Dein Name" / "Dein Verein" */
+/* Eingeben: "Dein Name" / "Dein Verein" */
 .setup-card__label {
     font-size: 16px;
     font-weight: 600;
@@ -210,15 +212,15 @@ body {
     letter-spacing: 1.2px;
     color: var(--farbe-weiss);
     outline: none; 
-    transition: border-color 0.2s; /* weicher Übergang  */
+    transition: border-color 0.2s; 
 }
 
 /* Input-Feld: Platzhalter-Farbe */
 .setup-card__input::placeholder {
-    color: #3d5a99; /* blaue Platzhalterfarbe aus Figma */
+    color: #3d5a99; 
 }
 
-/* Input-Feld: beim Klick wird der Rand heller */
+/* Input-Feld: beim Klick wird der Rand gelb */
 .setup-card__input:focus {
     border-color: var(--farbe-gelb);
     border-width: 3px;
@@ -259,7 +261,7 @@ body {
     align-items: center;
     gap: 16px;
     flex: 1;
-    cursor: pointer; /* zeigt dem User, dass er klicken kann */
+    cursor: pointer; 
 }
 
 /* Grüner Rahmen wenn ein Verein ausgewählt wurde */
@@ -286,7 +288,6 @@ body {
 }
 
 /* Turnier starten Button */
-
 .btn-start {
     width: 100%;
     height: 50px;
@@ -309,10 +310,10 @@ body {
 
 .btn-start--active:hover {
     opacity: 0.9;
-    transform: translateY(-1px); /* kleiner Hover-Effekt */
+    transform: translateY(-1px); 
 }
 
-/* Inaktiver Button (disabled): grau/transparent, kein Klick möglich */
+/* Inaktiver Button: grau/transparent, kein Klick möglich, wenn noch kein Name & Verein eingegeben wurden */
 .btn-start--disabled {
     background-color: rgba(245, 200, 66, 0.3); /* gedimmtes Gelb */
     color: rgba(255, 255, 255, 0.4);
@@ -337,18 +338,16 @@ body {
     }
 }
 
-/* ============================================================
-   TURNIERBAUM – Neue Klassen für turnierbaum.html
-   ============================================================ */
+/* Turnierbaum */
 
 /* Die ganze Turnierbaum-Seite */
 .turnierbaum-page {
-    padding-top: 96px;   /* 64px Navbar + 32px Abstand */
+    padding-top: 96px;   
     padding-bottom: 8px;
     overflow-x: auto;    /* bei kleinen Screens scrollbar */
 }
 
-/* SPALTEN-BESCHRIFTUNGEN oben ("ACHTELFINALE" etc.) */
+/* Spalten Beschriftung  */
 .bracket-header {
     max-width: 1512px;
     margin: 0 auto;
@@ -357,7 +356,6 @@ body {
 
 .bracket-header__inner {
     display: grid;
-    /* 7 Inhalts-Spalten (168px) + 6 Lücken (16px) = 13 Grid-Spalten total */
     grid-template-columns: 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px;
     padding-bottom: 8px;
 }
@@ -372,20 +370,19 @@ body {
 .bracket-header__inner span:nth-child(6) { grid-column: 11; } /* VIERTELFINALE rechts */
 .bracket-header__inner span:nth-child(7) { grid-column: 13; } /* ACHTELFINALE rechts */
 
-/* Weisse Trennlinie unter den Labels */
+/* Weisse Trennlinie */
 .bracket-header__line {
     height: 1px;
     background-color: rgba(255, 255, 255, 0.4);
     margin-top: 8px;
 }
 
-/* DER BRACKET – 7-spaltiges Grid */
+/* Turnierbaum mit 7-spaltiges Grid */
 .bracket {
     max-width: 1512px;
     margin: 0 auto;
     padding: 0 128px;
     display: grid;
-    /* 7 Inhalts-Spalten (168px) mit 16px Lücken als eigene Spalten */
     grid-template-columns: 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px 16px 168px;
     min-height: 640px;
 }
@@ -471,10 +468,9 @@ body {
 /* Abgeschlossene Spieler-Runde: gedimmt mit grünem Hauch */
 .match-card--gespielt { border: 2px solid rgba(0, 255, 136, 0.3); opacity: 0.55; }
 
-/* Platzhalter (zukünftige Runden): leicht durchsichtig */
+/* Platzhalter: leicht durchsichtig */
 .match-card--platzhalter { opacity: 0.7; }
 
-/* Heim-Reihe (oben) */
 .match-card__heim {
     height: 28px;
     background-color: rgba(255, 255, 255, 0.08);
@@ -482,7 +478,6 @@ body {
     align-items: center;
 }
 
-/* Gast-Reihe (unten) */
 .match-card__gast {
     height: 28px;
     display: flex;
@@ -505,7 +500,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-/* Gast-Name leicht gedimmt (blau-grau) */
+/* Gast-Name leicht gedimmt */
 .match-card__teamname--gast { color: #8892b0; }
 
 /* CHAMPIONS BADGE – goldener Text in der Mitte */
@@ -522,7 +517,7 @@ body {
     text-align: center;
 }
 
-/* BOTTOM BUTTONS */
+/* BUTTONS unter dem Turnierbaum */
 .bracket-buttons {
     max-width: 1512px;
     margin: 28px auto 0;
@@ -532,7 +527,7 @@ body {
     align-items: center;
 }
 
-/* "← Zurück" */
+/* "← Zurück" Button */
 .btn-zurueck {
     height: 44px;
     width: 140px;
@@ -549,7 +544,7 @@ body {
 }
 .btn-zurueck:hover { opacity: 0.7; }
 
-/* "Zum nächsten Spiel →" */
+/* "Zum nächsten Spiel →" Button*/
 .btn-weiter {
     height: 44px;
     padding: 0 20px;
@@ -567,9 +562,7 @@ body {
 .btn-weiter:hover { opacity: 0.9; transform: translateY(-1px); }
 
 
-/* ============================================================
-   MATCH VORSCHAU – Neue Klassen für vorschau.html
-   ============================================================ */
+/* Match Vorschau */
 
 /* Seiten-Container */
 .vorschau-page {
@@ -582,7 +575,7 @@ body {
     padding-right: 128px;
 }
 
-/* "MATCH VORSCHAU" – Titel oben links */
+/* Titel oben links */
 .vorschau__title {
     font-family: var(--schrift-titel);
     font-size: 48px;
@@ -595,13 +588,13 @@ body {
 /* Drei-Spalten-Layout: Spieler | VS-Bereich | Gegner */
 .vorschau__content {
     display: grid;
-    grid-template-columns: 1fr 300px 1fr;  /* aussen gleich, Mitte fix */
+    grid-template-columns: 1fr 300px 1fr; 
     gap: 40px;
     align-items: start;
     min-height: 500px;
 }
 
-/* Jede Team-Spalte: zentriert, vertikal gestapelt */
+/* Jede Team-Spalte: zentriert */
 .vorschau__team {
     display: flex;
     flex-direction: column;
@@ -618,14 +611,14 @@ body {
     color: var(--farbe-weiss);
 }
 
-/* Team-Logo: gross, quadratisch, nicht verzerrt */
+/* Team Wappen: gross, nicht verzerrt */
 .vorschau__logo {
     width: 280px;
     height: 280px;
     object-fit: contain;
 }
 
-/* Team-Name in Anton-Font */
+/* Team-Name */
 .vorschau__team-name {
     font-family: var(--schrift-titel);
     font-size: 40px;
@@ -690,14 +683,14 @@ body {
     color: var(--farbe-weiss);
 }
 
-/* Die 3 Punkte nebeneinander */
+/* Die 4 Punkte nebeneinander */
 .vorschau__dots {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-/* Einzelner Punkt: standardmässig leer/grau */
+/* Einzelner Punkt: standardmässig leer */
 .vorschau__dot {
     width: 12px;
     height: 12px;
@@ -711,11 +704,11 @@ body {
     background-color: var(--farbe-gelb);
 }
 
-/* "Anpfiff →" Button – roter Hintergrund aus Figma (#ff4e6a) */
+/* "Anpfiff →" Button */
 .btn-anpfiff {
     height: 56px;
     width: 220px;
-    background-color: #ff4e6a;  /* Farbe direkt aus Figma */
+    background-color: #ff4e6a;  
     border: none;
     border-radius: 3px;
     color: var(--farbe-weiss);
@@ -732,22 +725,24 @@ body {
     transform: translateY(-1px);
 }
 
+/* Karte-Wrapper: auf Desktop transparent (Kinder fließen direkt
+   in den Flex-Container von .vorschau__team ein) */
+.vorschau__karte {
+    display: contents;
+}
 
-/* ============================================================
-   SPIEL – Neue Klassen für spiel.html
-   Basierend auf Figma: Match 1/2 Screens + Abpfiff Screens
-   ============================================================ */
 
-/* Seiten-Container – beginnt direkt unter der Navbar */
+/* SPIEL */
+
+/* Seiten-Container */
 .spiel-page {
-    padding-top: 64px;  /* Exakt die Navbar-Höhe */
+    padding-top: 64px;
     min-height: 100vh;
 }
 
-/* ============================================================
-   SCOREBOARD (aus Figma "Component 2 / Scoreboard")
-   Breite Leiste direkt unter der Navbar
-   ============================================================ */
+/* SCOREBOARD
+   Breite Leiste direkt unter der Navbar */
+
 .scoreboard {
     display: flex;
     align-items: center;
@@ -757,22 +752,21 @@ body {
     margin: 24px 128px 0;
     height: 105px;
     position: relative;
-    overflow: hidden;  /* damit Farbverläufe nicht aus der Box laufen */
+    overflow: hidden;  
 }
 
-/* Linke Spieler-Seite: roter Gradient (aus Figma) */
+/* Linke Spieler-Seite: */
 .scoreboard__seite--heim {
     flex: 1;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 0 24px;
-    /* Roter Farbverlauf: links stark, rechts transparent */
     background: linear-gradient(to right, rgba(220, 5, 45, 0.45), rgba(220, 5, 45, 0));
     height: 100%;
 }
 
-/* Rechte Gegner-Seite: gelber Gradient (aus Figma) */
+/* Rechte Gegner-Seite */
 .scoreboard__seite--gast {
     flex: 1;
     display: flex;
@@ -785,7 +779,7 @@ body {
     height: 100%;
 }
 
-/* Team-Logo im Scoreboard (kleiner als auf Vorschau) */
+/* Team-Logo im Scoreboard */
 .scoreboard__logo {
     width: 65px;
     height: 65px;
@@ -804,7 +798,7 @@ body {
     text-align: right;
 }
 
-/* Team-Kürzel: "FCB" gross in Anton */
+/* Team-Kürzel: "FCB" */
 .scoreboard__kuerzel {
     font-family: var(--schrift-titel);
     font-size: 32px;
@@ -812,7 +806,7 @@ body {
     line-height: 1;
 }
 
-/* Team-Name klein: "BAYERN" */
+/* Team-Name klein */
 .scoreboard__teamname-klein {
     font-size: 14px;
     font-weight: 600;
@@ -830,7 +824,7 @@ body {
     min-width: 140px;
 }
 
-/* Spielzeit: "32:18" in Montserrat */
+/* Spielzeit */
 .scoreboard__zeit {
     font-size: 16px;
     font-weight: 600;
@@ -838,7 +832,7 @@ body {
     color: var(--farbe-weiss);
 }
 
-/* Score: "2 : 1" gross in Anton */
+/* Score */
 .scoreboard__score {
     font-family: var(--schrift-titel);
     font-size: 38px;
@@ -846,9 +840,7 @@ body {
     line-height: 1;
 }
 
-/* ============================================================
-   FRAGE-KARTE (aus Figma "Question Card")
-   ============================================================ */
+/* FRAGE */
 .question-card {
     background-color: var(--farbe-dunkelblau);
     border: 1px solid rgba(255, 255, 255, 1);
@@ -859,14 +851,14 @@ body {
     min-height: 580px;
 }
 
-/* Grüner Balken ganz oben auf der Karte (4px, aus Figma) */
+/* Grüner Balken ganz oben auf der Karte */
 .question-card__balken {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 4px;
-    background-color: #00ff88;  /* Figma: #0f8 = #00ff88 */
+    background-color: #00ff88;  
     border-radius: 6px 6px 0 0;
 }
 
@@ -889,14 +881,14 @@ body {
     margin-bottom: 16px;
 }
 
-/* Das Vereinswappen / Bild in der Frage */
+/* Das Vereinswappen */
 .question-card__bild {
     max-height: 200px;
     max-width: 220px;
     object-fit: contain;
 }
 
-/* Frage-Text in Anton (48px aus Figma) */
+/* Frage-Text in Anton */
 .question-card__frage {
     font-family: var(--schrift-titel);
     font-size: 40px;
@@ -909,7 +901,7 @@ body {
 /* 2×2 Raster für die Antwort-Buttons */
 .antworten-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;  /* zwei gleich breite Spalten */
+    grid-template-columns: 1fr 1fr;  
     gap: 16px;
 }
 
@@ -974,7 +966,6 @@ body {
     opacity: 0.6;
 }
 
-/* logoWahl-Fragen (Finale): Wappen-Bild im Antwort-Button */
 .antwort-btn__crest {
     height: 48px;
     width: 48px;
@@ -982,9 +973,7 @@ body {
     display: block;
 }
 
-/* ============================================================
-   OVERLAYS: TOR! und GEGENTOR!
-   ============================================================ */
+/* TOR! und GEGENTOR Animationen */
 
 /* Basis-Overlay: deckt die ganze Seite ab */
 .tor-overlay {
@@ -996,13 +985,13 @@ body {
     justify-content: center;
 }
 
-/* TOR! – grünes Overlay (Figma: Toor Screen) */
+/* TOR! grünes Overlay */
 .tor-overlay--gruen {
     background-color: #1a7c3c;
     animation: torOverlayEin 0.2s ease-out both;
 }
 
-/* Tornetz-Rahmen (einfache Linien wie im Figma) */
+/* Tornetz-Rahmen */
 .tor-goal-frame {
     position: relative;
     width: min(600px, 85vw);
@@ -1012,14 +1001,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* Netz: vertikale Linien alle 70px, horizontale alle 40px */
     background-image:
         repeating-linear-gradient(90deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 1px, transparent 1px, transparent 70px),
         repeating-linear-gradient(0deg,  rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 1px, transparent 1px, transparent 40px);
     animation: torFrameEin 0.3s ease-out both;
 }
 
-/* "TOR!" – wächst von klein nach gross mit leichtem Bounce */
+/* "TOR!" */
 .tor-goal-text {
     font-family: var(--schrift-titel);
     font-size: clamp(56px, 9vw, 96px);
@@ -1032,7 +1020,7 @@ body {
     animation: torTextWaechst 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
 }
 
-/* "RICHTIGE ANTWORT — Bayern trifft!" */
+/* "RICHTIGE ANTWORT — Mannschaft trifft!" */
 .tor-goal-subtitle {
     font-family: var(--schrift-text);
     font-size: 14px;
@@ -1045,7 +1033,7 @@ body {
     animation: torTextWaechst 0.5s ease-out 0.35s both;
 }
 
-/* GEGENTOR! – roter Hintergrund (Figma: Gegentor Screen) */
+/* GEGENTOR! – roter Hintergrund */
 .tor-overlay--rot {
     background-color: #9b0b35;
     animation: torOverlayEin 0.2s ease-out both;
@@ -1058,7 +1046,7 @@ body {
         repeating-linear-gradient(0deg,  rgba(255,255,255,0.12) 0, rgba(255,255,255,0.12) 1px, transparent 1px, transparent 40px);
 }
 
-/* "GEGENTOR!" – leuchtendes Rot */
+/* "GEGENTOR!" */
 .tor-goal-text--rot {
     color: #ff3355;
     text-shadow:
@@ -1091,19 +1079,11 @@ body {
     100% { transform: scale(1); }
 }
 
-/* ============================================================
-   OVERLAY SICHTBARKEIT (Cheatsheet 05: classList)
-   .overlay--versteckt macht ein Element unsichtbar.
-   Per JS: element.classList.remove('overlay--versteckt') = zeigen
-           element.classList.add('overlay--versteckt')    = verstecken
-   ============================================================ */
 .overlay--versteckt {
     display: none !important;
 }
 
-/* ============================================================
-   ABPFIFF SCREEN (aus Figma "Abpfiff Sieg / Niederlage")
-   ============================================================ */
+/* ABPFIFF SCREEN  */
 .abpfiff {
     position: fixed;
     inset: 0;
@@ -1116,7 +1096,7 @@ body {
     padding: 64px 128px;
 }
 
-/* "ABPFIFF 90:00" grosser Titel oben */
+/* "ABPFIFF 90:00"  */
 .abpfiff__titel {
     font-family: var(--schrift-titel);
     font-size: 64px;
@@ -1155,7 +1135,7 @@ body {
     color: rgba(220, 5, 45, 0.9);
 }
 
-/* Logo + Score + Logo nebeneinander */
+/* Logo + Score  */
 .abpfiff__logos {
     display: flex;
     align-items: center;
@@ -1168,7 +1148,7 @@ body {
     object-fit: contain;
 }
 
-/* Endstand: "5 : 3" */
+/* Endstand */
 .abpfiff__score {
     font-family: var(--schrift-titel);
     font-size: 56px;
@@ -1233,7 +1213,6 @@ body {
     max-width: 600px;
 }
 
-/* CTA Button im Abpfiff */
 .abpfiff__btn {
     height: 56px;
     padding: 0 32px;
@@ -1258,9 +1237,8 @@ body {
     color: var(--farbe-weiss);
 }
 
-/* ============================================================
-   CHAMPION SCREEN
-   ============================================================ */
+/* CHAMPION SCREEN */
+
 .champion {
     position: fixed;
     inset: 0;
@@ -1312,7 +1290,7 @@ body {
     object-fit: contain;
 }
 
-/* "[Team] gewinnt den Champions Quiz!" */
+/* "... gewinnt den Champions Quiz!" */
 .champion__text-haupt {
     font-family: var(--schrift-titel);
     font-size: 32px;
@@ -1320,7 +1298,7 @@ body {
     font-weight: 400;
 }
 
-/* "[Spieler] führt seine Mannschaft zum Titel..." */
+/* "... führt seine Mannschaft zum Titel..." */
 .champion__text-sub {
     font-size: 20px;
     font-weight: 400;
@@ -1355,7 +1333,6 @@ body {
     white-space: nowrap;
 }
 
-/* CTA-Button */
 .champion__btn {
     height: 56px;
     padding: 0 40px;
@@ -1374,7 +1351,7 @@ body {
 
 .champion__btn:hover { opacity: 0.9; }
 
-/* Celebrate GIFs: direkt unter der Navigation (gleiche x-Positionen wie Konfetti) */
+/* Celebrate GIFs */
 .champion__celebrate {
     position: absolute;
     top: 64px;
@@ -1410,17 +1387,614 @@ body {
 .champion__party-gif--links  { left: 21%; top: 33%; }
 .champion__party-gif--rechts { left: 72%; top: 23%; }
 
-/* TOR-GIF CELEBRATION */
 .tor-gif {
     position: fixed;
     z-index: 9998;
     pointer-events: none;
-    animation: torGifFade 3s ease-out forwards;
+    animation: torGifFade 2s ease-out forwards;
 }
 
 @keyframes torGifFade {
     0%   { opacity: 1;   transform: scale(1)    rotate(var(--tor-rot)); }
     75%  { opacity: 1; }
     100% { opacity: 0;   transform: scale(1.05) rotate(var(--tor-rot)); }
+}
+
+/* ============================================================
+   RESPONSIVE – Mobile (≤ 768 px)
+   Desktop bleibt unverändert. Zwischen 768 px und Desktop muss
+   es nicht perfekt aussehen.
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* --- NAV: Logo-Zeile (64 px) + Steps-Streifen (28 px) ---  */
+    .chrome {
+        height: 92px;
+    }
+
+    .chrome__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 24px;
+        gap: 0;
+        height: 92px;
+    }
+
+    .chrome__logo {
+        height: 56px;   /* -8px gegenüber 64px → gibt Platz an Steps */
+        display: flex;
+        align-items: center;
+    }
+
+    /* Steps-Streifen: 8px mehr Höhe, deutlich grössere Schrift */
+    .steps {
+        height: 36px;   /* war 28px */
+        width: 100%;
+        padding: 0;
+        gap: 6px;
+        align-items: center;
+        overflow-x: auto;       /* scrollbar wenn Text zu lang */
+        overflow-y: hidden;
+        scrollbar-width: none;  /* Firefox */
+        flex-shrink: 0;
+    }
+
+    .steps::-webkit-scrollbar { display: none; }  /* Chrome/Safari */
+
+    .steps__item {
+        font-size: 13px;        /* war 9px */
+        letter-spacing: 0.4px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* --- MATCH VORSCHAU ------------------------------------ */
+
+    .vorschau-page {
+        padding-top: 108px; /* 92px Nav + 16px Luft */
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-bottom: 40px;
+        max-width: 100%;
+    }
+
+    .vorschau__title {
+        font-size: 34px;
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+
+    /*
+     * Grid: linke Karte (1fr) | VS-Spalte (50px) | rechte Karte (1fr)
+     * Zeile 1 = Karten + VS
+     * Zeile 2 = Anpfiff-Button (spannt alle 3 Spalten)
+     * Zeile 3 = Zurück-Button  (spannt alle 3 Spalten)
+     */
+    .vorschau__content {
+        display: grid;
+        grid-template-columns: 1fr 50px 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 12px 8px;
+        min-height: unset;
+        align-items: start;
+    }
+
+    /*
+     * display:contents macht .vorschau__mitte „unsichtbar":
+     * seine direkten Kinder (runden-name, VS, schwierigkeit,
+     * btn-anpfiff, btn-zurueck) werden zu direkten Grid-Kindern
+     * von .vorschau__content und können eigene grid-column/-row
+     * Werte bekommen — inkl. vollbreite Buttons.
+     */
+    .vorschau__mitte {
+        display: contents;
+    }
+
+    /* Runden-Name: oben in der VS-Spalte */
+    #runden-name {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: start;
+        font-family: var(--schrift-text);
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--farbe-gelb);
+        text-align: center;
+        white-space: nowrap;
+        overflow: visible;
+    }
+
+    /* VS: vertikal zentriert bezogen auf die Karte.
+       margin-top verschiebt es unter den Label-Bereich
+       (~20px Labelh + 8px Gap = 28px). */
+    .vorschau__vs {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: center;
+        margin-top: 28px;
+        font-size: 32px;
+        text-align: center;
+    }
+
+    /* Schwierigkeit ausblenden */
+    .vorschau__schwierigkeit {
+        display: none;
+    }
+
+    /* Anpfiff – volle Breite, gelb */
+    #btn-anpfiff {
+        grid-column: 1 / 4;
+        grid-row: 2;
+        width: 100%;
+        height: 50px;
+        background-color: var(--farbe-gelb);
+        color: var(--farbe-dunkelblau);
+        font-family: var(--schrift-text);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    /* Zurück – volle Breite, dunkelblau */
+    #btn-zurueck-vorschau {
+        grid-column: 1 / 4;
+        grid-row: 3;
+        width: 100%;
+        height: 50px;
+        background-color: var(--farbe-dunkelblau);
+        color: var(--farbe-weiss);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 6px;
+        font-family: var(--schrift-text);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        cursor: pointer;
+    }
+
+    /* Team-Spalten: kein eigener Hintergrund –
+       Label ist außerhalb, nur .vorschau__karte hat dunkle Box */
+    .vorschau__team:first-child {
+        grid-column: 1;
+        grid-row: 1;
+        background-color: transparent;
+        border-radius: 0;
+        padding: 0;
+        gap: 8px;
+        overflow: visible;
+        align-items: center;
+    }
+
+    .vorschau__team:last-child {
+        grid-column: 3;
+        grid-row: 1;
+        background-color: transparent;
+        border-radius: 0;
+        padding: 0;
+        gap: 8px;
+        overflow: visible;
+        align-items: center;
+    }
+
+    /* Dunkle Karte: nur Logo + Teamname (wie im Figma) */
+    .vorschau__karte {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: var(--farbe-dunkelblau);
+        border-radius: 12px;
+        overflow: hidden;
+        padding: 8px 6px 16px;
+        gap: 8px;
+        width: 100%;
+        min-height: 180px;
+        justify-content: flex-start;
+    }
+
+    /* Kleinere Wappen */
+    .vorschau__logo {
+        width: 108px;
+        height: 108px;
+    }
+
+    /* Kleinere Labels (außerhalb der Karte) */
+    .vorschau__team-label {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+
+    /* Kleinere Team-Namen (innerhalb der Karte) */
+    .vorschau__team-name {
+        font-size: 14px;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    /* Liga-Info auf Mobile ausblenden */
+    .vorschau__liga {
+        display: none;
+    }
+
+    /* ─── LANDING PAGE MOBILE ───────────────────────────────
+       Die 1024px-Query macht schon Single-Column.
+       Hier nur noch Mobile-Feinabstimmungen (≤ 768 px).
+       ──────────────────────────────────────────────────────── */
+
+    .landing {
+        padding-top: 116px;   /* 92 px Nav + 24 px Luft */
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-bottom: 48px;
+        gap: 32px;
+    }
+
+    /* Hero */
+    .hero {
+        gap: 20px;
+    }
+
+    .hero__label {
+        font-size: 13px;
+    }
+
+    .hero__title {
+        font-size: 52px;
+        letter-spacing: -0.5px;
+    }
+
+    .hero__description {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-top: 0;         /* kein auto-spacing auf Mobile */
+        max-width: 100%;
+    }
+
+    .stats {
+        gap: 32px;
+        margin-top: 0;
+    }
+
+    .stats__number {
+        font-size: 36px;
+    }
+
+    /* Setup-Karte */
+    .setup-card {
+        padding: 24px 16px;
+        gap: 14px;
+    }
+
+    .team-selector {
+        min-height: 240px;
+        padding: 16px 12px;
+    }
+
+    .team-selector__logo {
+        width: 120px;
+        height: 120px;
+    }
+
+    .btn-start {
+        height: 50px;
+        font-size: 15px;
+        letter-spacing: 1px;
+    }
+
+    /* ─── SPIEL / QUIZ MOBILE ───────────────────────────────
+       Scoreboard, Fragekarte, Buttons, Abpfiff, Champion
+       ──────────────────────────────────────────────────────── */
+
+    .spiel-page {
+        padding-top: 92px; /* 64px Nav + 28px Steps */
+    }
+
+    /* Scoreboard */
+    .scoreboard {
+        margin: 12px 16px 0;
+        height: 72px;
+    }
+
+    .scoreboard__seite--heim,
+    .scoreboard__seite--gast {
+        padding: 0 10px;
+        gap: 8px;
+    }
+
+    .scoreboard__logo {
+        width: 44px;
+        height: 44px;
+    }
+
+    .scoreboard__kuerzel {
+        font-size: 22px;
+    }
+
+    .scoreboard__teamname-klein {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+
+    .scoreboard__mitte {
+        min-width: 80px;
+        gap: 2px;
+    }
+
+    .scoreboard__zeit {
+        font-size: 11px;
+        letter-spacing: 0.8px;
+    }
+
+    .scoreboard__score {
+        font-size: 28px;
+    }
+
+    /* Fragekarte */
+    .question-card {
+        margin: 10px 16px 16px;
+        padding: 14px 16px 20px;
+        min-height: unset;
+    }
+
+    .question-card__label {
+        font-size: 12px;
+        margin-top: 4px;
+        margin-bottom: 8px;
+    }
+
+    .question-card__bild-wrapper {
+        height: 150px;
+        margin-bottom: 8px;
+    }
+
+    .question-card__bild {
+        max-height: 130px;
+        max-width: 150px;
+    }
+
+    .question-card__frage {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    /* Antwort-Buttons: 2×2-Grid bleibt, aber kompakter */
+    .antworten-grid {
+        gap: 10px;
+    }
+
+    .antwort-btn {
+        height: auto;
+        min-height: 52px;
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .antwort-btn__badge {
+        width: 24px;
+        height: 24px;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    .antwort-btn__text {
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        white-space: normal;
+        line-height: 1.3;
+    }
+
+    .antwort-btn__crest {
+        height: 40px;
+        width: 40px;
+    }
+
+    /* Abpfiff-Screen */
+    .abpfiff {
+        top: 92px;      /* beginnt unter Nav (64px) + Steps-Streifen (28px) */
+        padding: 20px 20px;
+    }
+
+    .abpfiff__titel {
+        font-size: 36px;
+        margin-bottom: 16px;
+    }
+
+    .abpfiff__karte {
+        padding: 20px 20px;
+        gap: 12px;
+    }
+
+    .abpfiff__ergebnis {
+        font-size: 52px;
+    }
+
+    .abpfiff__logo {
+        width: 72px;
+        height: 72px;
+    }
+
+    .abpfiff__score {
+        font-size: 36px;
+    }
+
+    .abpfiff__stats {
+        gap: 20px;
+    }
+
+    .abpfiff__btn {
+        width: 100%;
+    }
+
+    /* Champion-Screen */
+    .champion__inhalt {
+        padding: 16px 24px 40px;
+        gap: 12px;
+    }
+
+    .champion__titel {
+        font-size: 64px;
+    }
+
+    .champion__logo {
+        width: 160px;
+        height: 160px;
+    }
+
+    .champion__text-haupt {
+        font-size: 20px;
+    }
+
+    .champion__text-sub {
+        font-size: 16px;
+    }
+
+    /* Goal-GIFs auf Mobile ausblenden */
+    .tor-gif { display: none !important; }
+
+    /* Feier-GIFs: rechte 3 sind auf 390 px off-screen → ausblenden */
+    .champion__celebrate-gif--4,
+    .champion__celebrate-gif--5,
+    .champion__celebrate-gif--6 { display: none; }
+
+    /* Party-GIFs überlappen auf Mobile den Inhalt */
+    .champion__party-gif { display: none; }
+
+    .champion__finalstrip {
+        padding: 14px 20px;
+        gap: 12px;
+    }
+
+    .champion__strip-logo {
+        width: 52px;
+        height: 52px;
+    }
+
+    .champion__strip-score {
+        font-size: 26px;
+    }
+
+    .champion__btn {
+        width: 100%;
+        padding: 0 24px;
+    }
+
+    /* ─── TURNIERBAUM MOBILE ─────────────────────────────────
+       Statt des Brackets werden alle Spiele vertikal
+       nach Runde gruppiert aufgelistet.
+       ──────────────────────────────────────────────────────── */
+
+    .turnierbaum-page {
+        padding-top: 108px;
+        overflow-x: hidden;
+        padding-bottom: 24px;
+    }
+
+    /* Seitentitel */
+    .turnierbaum-page::before {
+        content: "TURNIERBAUM";
+        display: block;
+        font-family: var(--schrift-titel);
+        font-size: 34px;
+        color: var(--farbe-weiss);
+        padding: 8px 24px 16px;
+    }
+
+    /* Desktop-Spaltenheader ausblenden */
+    .bracket-header { display: none; }
+
+    /* Bracket: vertikale Flex-Spalte statt Grid */
+    .bracket {
+        display: flex;
+        flex-direction: column;
+        padding: 0 24px;
+        min-height: unset;
+        max-width: 100%;
+        gap: 8px;
+    }
+
+    /* Alle Spalten: volle Breite, untereinander */
+    .bracket__col {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        padding-top: 0;
+        align-items: stretch;
+        justify-content: flex-start;
+    }
+
+    /* Alle bracket-internen margin-top-Abstände zurücksetzen */
+    .bracket__col .match-card { margin-top: 0 !important; }
+
+    /*
+     * Reihenfolge: alle Achtelfinale → Viertelfinale → Halbfinale → Finale
+     * Die rechten Spalten kommen jeweils direkt nach den linken,
+     * sodass alle 8 AF-Spiele, alle 4 VF-Spiele usw. zusammenstehen.
+     */
+    .bracket__col--af-links  { order: 1; }
+    .bracket__col--af-rechts { order: 2; }
+    .bracket__col--vf-links  { order: 3; }
+    .bracket__col--vf-rechts { order: 4; }
+    .bracket__col--hf-links  { order: 5; }
+    .bracket__col--hf-rechts { order: 6; }
+    .bracket__col--finale    { order: 7; }
+
+    /* Rundenbezeichnungen als ::before-Pseudo-Elemente */
+    .bracket__col--af-links::before,
+    .bracket__col--vf-links::before,
+    .bracket__col--hf-links::before,
+    .bracket__col--finale::before {
+        display: block;
+        font-family: var(--schrift-text);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.5);
+        padding-bottom: 4px;
+    }
+
+    .bracket__col--af-links::before { content: "ACHTELFINALE"; }
+
+    .bracket__col--vf-links::before {
+        content: "VIERTELFINALE";
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .bracket__col--hf-links::before {
+        content: "HALBFINALE";
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .bracket__col--finale::before {
+        content: "FINALE";
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    /* Champions-Badge im Finale ausblenden
+       (der ::before-Header übernimmt diese Rolle) */
+    .champions-badge { display: none; }
+
+    /* Match-Karten: volle Breite */
+    .match-card { width: 100%; }
+
+    /* Buttons: gestapelt, volle Breite */
+    .bracket-buttons {
+        flex-direction: column;
+        padding: 16px 24px;
+        gap: 10px;
+        margin-top: 4px;
+        max-width: 100%;
+    }
+
+    /* Primär-Aktion oben, Zurück unten */
+    #btn-weiter  { order: 1; width: 100%; padding: 0; }
+    #btn-zurueck { order: 2; width: 100%; }
 }
 

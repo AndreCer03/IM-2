@@ -32,7 +32,7 @@
 
     <!-- Turnierbaum Seite  -->
     <main class="turnierbaum-page">
-      <!-- Achtelfinale, Viertelfinale etc. -->
+      <!-- Achtelfinale, Viertelfinale... -->
       <div class="bracket-header">
         <div class="bracket-header__inner">
           <span>ACHTELFINALE</span>
@@ -43,18 +43,17 @@
           <span>VIERTELFINALE</span>
           <span>ACHTELFINALE</span>
         </div>
-        <!-- Trennlinie unter den Labels (weisse Linie aus dem Figma) -->
+        <!-- Trennlinie unter den Labels, weisse Linie -->
         <div class="bracket-header__line"></div>
       </div>
 
-      <!--  BRACKET (Turnierbaum) -->
+      <!--  Turnierbaum mit Mannschaften -->
 
       <div class="bracket">
         <!-- linke Seite -->
 
         <!-- Spalte 1: Achtelfinale Links 4 Spiele -->
         <div class="bracket__col bracket__col--af-links">
-          <!-- Diese 4 Match-Karten werden per JS befüllt (turnierbaum.js) -->
           <div class="match-card" id="match-af1">
             <div class="match-card__heim">
               <div class="match-card__streifen match-card__streifen--rot"></div>
@@ -124,7 +123,7 @@
           </div>
         </div>
 
-        <!-- Spalte 2 Viertelfinale Links -->
+        <!-- Spalte 2 Viertelfinale Links, 2 Spiele -->
         <div class="bracket__col bracket__col--vf-links">
           <div class="match-card match-card--platzhalter" id="match-vf1">
             <div class="match-card__heim">
@@ -189,10 +188,10 @@
 
         <!-- Finale -->
         <div class="bracket__col bracket__col--finale">
-          <!-- Champions Badge oben -->
-          <div class="champions-badge">★ CHAMPIONS ★</div>
+          <!-- Champions Banner -->
+          <div class="champions-badge">CHAMPIONS</div>
 
-          <!-- Finale-Karte -->
+          <!-- Finale Karte -->
           <div class="match-card match-card--platzhalter" id="match-finale">
             <div class="match-card__heim">
               <div class="match-card__streifen match-card__streifen--rot"></div>
@@ -237,7 +236,7 @@
           </div>
         </div>
 
-        <!-- Viertelfinale Rechts -->
+        <!-- Viertelfinale Rechts, 2 Spiele -->
         <div class="bracket__col bracket__col--vf-rechts">
           <div class="match-card match-card--platzhalter" id="match-vf3">
             <div class="match-card__heim">
@@ -278,7 +277,7 @@
           </div>
         </div>
 
-        <!--  Achtelfinale Rechts -->
+        <!--  Achtelfinale Rechts, 4 Spiele -->
         <div class="bracket__col bracket__col--af-rechts">
           <div class="match-card" id="match-af5">
             <div class="match-card__heim">
@@ -349,11 +348,11 @@
           </div>
         </div>
       </div>
-      <!-- Ende bracket -->
+      <!-- Ende Turnierbaum -->
 
       <!-- Buttons unten -->
       <div class="bracket-buttons">
-        <!-- Zurück zu index.html -->
+        <!-- Zurück zu Mannschaftenwählen oder Abpfiff -->
         <button class="btn-zurueck" id="btn-zurueck">← Zurück</button>
 
         <!-- Weiter zum nächsten Spiel Vorschau -->

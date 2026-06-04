@@ -12,7 +12,7 @@
   </head>
   <body>
     <!-- Navigation-->
-    <!-- "Spiel >" ist jetzt gelb = aktiver Schritt -->
+    <!-- "Spiel >" ist jetzt gelb weil aktiver Schritt -->
     <header class="chrome">
       <div class="chrome__inner">
         <div class="chrome__logo">
@@ -89,7 +89,7 @@
         </div>
         <p class="question-card__frage" id="frage-text">Laden...</p>
 
-        <!-- 4 Antwort-Buttons im 2x2-Raster -->
+        <!-- 4 Antwort-Buttons -->
         <div class="antworten-grid">
           <!-- Antwort A -->
           <button class="antwort-btn" id="antwort-a">
@@ -119,11 +119,16 @@
       </div>
       <!-- Ende Frage-Karte -->
 
-      <!-- Wenn Tor passiert (Figma: Toor Screen) -->
-      <div class="tor-overlay tor-overlay--gruen overlay--versteckt" id="tor-overlay">
+      <!-- Wenn Tor -->
+      <div
+        class="tor-overlay tor-overlay--gruen overlay--versteckt"
+        id="tor-overlay"
+      >
         <div class="tor-goal-frame">
           <p class="tor-goal-text">TOR!</p>
-          <p class="tor-goal-subtitle">RICHTIGE ANTWORT — <span id="tor-team-name">Bayern</span> trifft!</p>
+          <p class="tor-goal-subtitle">
+            RICHTIGE ANTWORT — <span id="tor-team-name">Bayern</span> trifft!
+          </p>
         </div>
       </div>
 
@@ -134,7 +139,10 @@
       >
         <div class="tor-goal-frame tor-goal-frame--rot">
           <p class="tor-goal-text tor-goal-text--rot">GEGENTOR!</p>
-          <p class="tor-goal-subtitle tor-goal-subtitle--rot">FALSCHE ANTWORT — <span id="gegentor-team-name">Gegner</span> trifft!</p>
+          <p class="tor-goal-subtitle tor-goal-subtitle--rot">
+            FALSCHE ANTWORT —
+            <span id="gegentor-team-name">Gegner</span> trifft!
+          </p>
         </div>
       </div>
 
@@ -155,12 +163,12 @@
               alt=""
               class="abpfiff__logo"
             />
-            <!-- Endstand in der Mitte der Logos -->
+            <!-- Endstand zwischen den Logos -->
             <p class="abpfiff__score" id="abpfiff-score">5 : 2</p>
             <img id="abpfiff-gegner-logo" src="" alt="" class="abpfiff__logo" />
           </div>
 
-          <!-- Team-Namen unter den Logos -->
+          <!-- Team Namen unter den Logos -->
           <div class="abpfiff__namen">
             <p id="abpfiff-spieler-name" class="abpfiff__name">Bayern</p>
             <p id="abpfiff-gegner-name" class="abpfiff__name">Dortmund</p>
@@ -193,13 +201,12 @@
             Weiter zum Viertelfinale →
           </button>
         </div>
-        <!-- Ende Ergebnis-Karte -->
+        <!-- Ende Ergebnis Karte -->
       </div>
       <!-- Ende Abpfiff Screen -->
 
-      <!-- Champion Screen – erscheint wenn das gesamte Turnier gewonnen wurde -->
+      <!-- Champion Screen erscheint wenn das gesamte Turnier gewonnen wurde -->
       <div class="champion overlay--versteckt" id="champion">
-
         <!-- Nav -->
         <header class="champion__nav">
           <div class="chrome__inner">
@@ -217,20 +224,53 @@
           </div>
         </header>
 
-        <!-- Celebrate GIFs: 3× links + 3× rechts, direkt unter der Navigation -->
+        <!-- GIFs: 3× links + 3× rechts, direkt unter der Navigation -->
         <div class="champion__celebrate" aria-hidden="true">
-          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--1" />
-          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--2" />
-          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--3" />
-          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--4" />
-          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--5" />
-          <img src="../img/celebrate.gif" alt="" class="champion__celebrate-gif champion__celebrate-gif--6" />
+          <img
+            src="../img/celebrate.gif"
+            alt=""
+            class="champion__celebrate-gif champion__celebrate-gif--1"
+          />
+          <img
+            src="../img/celebrate.gif"
+            alt=""
+            class="champion__celebrate-gif champion__celebrate-gif--2"
+          />
+          <img
+            src="../img/celebrate.gif"
+            alt=""
+            class="champion__celebrate-gif champion__celebrate-gif--3"
+          />
+          <img
+            src="../img/celebrate.gif"
+            alt=""
+            class="champion__celebrate-gif champion__celebrate-gif--4"
+          />
+          <img
+            src="../img/celebrate.gif"
+            alt=""
+            class="champion__celebrate-gif champion__celebrate-gif--5"
+          />
+          <img
+            src="../img/celebrate.gif"
+            alt=""
+            class="champion__celebrate-gif champion__celebrate-gif--6"
+          />
         </div>
 
-        <!-- Party GIFs: links und rechts vom Champion-Logo -->
-        <img src="../img/party.gif" alt="" class="champion__party-gif champion__party-gif--links" aria-hidden="true" />
-        <img src="../img/party.gif" alt="" class="champion__party-gif champion__party-gif--rechts" aria-hidden="true" />
-
+        <!-- GIFs: links und rechts vom Gewinner Wappen -->
+        <img
+          src="../img/party.gif"
+          alt=""
+          class="champion__party-gif champion__party-gif--links"
+          aria-hidden="true"
+        />
+        <img
+          src="../img/party.gif"
+          alt=""
+          class="champion__party-gif champion__party-gif--rechts"
+          aria-hidden="true"
+        />
 
         <!-- Hauptinhalt -->
         <div class="champion__inhalt">
@@ -239,14 +279,26 @@
           <p class="champion__text-haupt" id="champion-text-haupt"></p>
           <p class="champion__text-sub" id="champion-text-sub"></p>
 
-          <!-- Finalergebnis-Streifen -->
+          <!-- Finalergebnis Streifen -->
           <div class="champion__finalstrip">
-            <img id="champion-heim-logo" src="" alt="" class="champion__strip-logo" />
+            <img
+              id="champion-heim-logo"
+              src=""
+              alt=""
+              class="champion__strip-logo"
+            />
             <p class="champion__strip-score" id="champion-strip-score"></p>
-            <img id="champion-gast-logo" src="" alt="" class="champion__strip-logo" />
+            <img
+              id="champion-gast-logo"
+              src=""
+              alt=""
+              class="champion__strip-logo"
+            />
           </div>
 
-          <button class="champion__btn" id="champion-btn">↺ Neues Turnier starten</button>
+          <button class="champion__btn" id="champion-btn">
+            ↺ Neues Turnier starten
+          </button>
         </div>
       </div>
       <!-- Ende Champion Screen -->
