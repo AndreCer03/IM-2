@@ -3,13 +3,7 @@
 
 
 
-// API-Schlüssel von football-data.org
-const apiSchluessel = '25d1021df1ca4a8cafe6c9b9e3088f24';
-
-// CORS-Proxy: Browser blockieren direkte externe Anfragen.
-// Dieser Proxy leitet die Anfrage weiter.
-const corsProxy = 'https://corsproxy.io/?url=';
-const apiAdresse = `${corsProxy}https://api.football-data.org/v4/competitions/CL/teams`;
+const apiAdresse = '../api/teams.php';
 
 // Die 16 Verein-IDs die wir im Bracket sein sollen
 const vereinsIds = [57, 65, 66, 64, 81, 86, 5, 4, 108, 113, 109, 98, 1903, 503, 524, 516];
@@ -142,9 +136,7 @@ if (aufIndexSeite) {
      */
     async function ladeVereine() {
         try {
-            const antwort = await fetch(apiAdresse, {
-                headers: { 'X-Auth-Token': apiSchluessel }
-            });
+            const antwort = await fetch(apiAdresse);
 
             const daten = await antwort.json();
 
