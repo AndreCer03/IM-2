@@ -320,26 +320,7 @@ body {
     cursor: not-allowed;
 }
 
-/* ----------------------------------------------------------
-   RESPONSIVE: Tablet/Mobile
-   ---------------------------------------------------------- */
-@media (max-width: 1024px) {
-    .landing {
-        grid-template-columns: 1fr; /* eine Spalte */
-        padding: 100px 32px 80px;
-    }
-
-    .hero__title {
-        font-size: 56px;
-    }
-
-    .chrome__inner {
-        padding: 0 32px;
-    }
-}
-
 /* Turnierbaum */
-
 /* Tab-Bar: auf Desktop ausgeblendet, nur Mobile */
 .bracket-tabs { display: none; }
 
@@ -801,7 +782,7 @@ body {
     text-align: right;
 }
 
-/* Team-Kürzel: "FCB" */
+/* Team-Kürzel*/
 .scoreboard__kuerzel {
     font-family: var(--schrift-titel);
     font-size: 32px;
@@ -1372,14 +1353,17 @@ body {
     object-fit: cover;
 }
 
-.champion__celebrate-gif--1 { left: 28px;   }
-.champion__celebrate-gif--2 { left: 178px;  }
-.champion__celebrate-gif--3 { left: 328px;  }
-.champion__celebrate-gif--4 { left: 1032px; }
-.champion__celebrate-gif--5 { left: 1182px; }
-.champion__celebrate-gif--6 { left: 1343px; }
+/* Linke 3: gleichmässig links vom Titel */
+.champion__celebrate-gif--1 { left: 2%;  }
+.champion__celebrate-gif--2 { left: 11%; }
+.champion__celebrate-gif--3 { left: 20%; }
 
-/* Party GIFs: links und rechts vom Champion-Logo */
+/* Rechte 3: gespiegelt mit 'right' – funktioniert auf jeder Bildschirmbreite */
+.champion__celebrate-gif--4 { left: auto; right: 20%; }
+.champion__celebrate-gif--5 { left: auto; right: 11%; }
+.champion__celebrate-gif--6 { left: auto; right: 2%;  }
+
+/* Party GIFs: direkt links und rechts vom Wappen (Wappen = 240px, Radius 120px, zentriert) */
 .champion__party-gif {
     position: absolute;
     width: 268px;
@@ -1387,8 +1371,11 @@ body {
     z-index: 2;
 }
 
-.champion__party-gif--links  { left: 21%; top: 33%; }
-.champion__party-gif--rechts { left: 72%; top: 23%; }
+/* Rechte Kante des linken GIFs liegt am linken Rand des Wappens */
+.champion__party-gif--links  { left: auto; right: calc(50% + 120px); top: 33%; }
+
+/* Linke Kante des rechten GIFs liegt am rechten Rand des Wappens */
+.champion__party-gif--rechts { left: calc(50% + 120px); top: 25%; }
 
 .tor-gif {
     position: fixed;
@@ -1404,12 +1391,29 @@ body {
 }
 
 /* ============================================================
-   RESPONSIVE – Mobile (≤ 768 px)
+   RESPONSIVE STYLES
+   Alle Breakpoints zusammen — nach dem Desktop-Code
    ============================================================ */
 
+/* ── Tablet (≤ 1024 px) ──────────────────────────────────── */
+@media (max-width: 1024px) {
+    .landing {
+        grid-template-columns: 1fr;
+        padding: 100px 32px 80px;
+    }
+
+    .hero__title {
+        font-size: 56px;
+    }
+
+    .chrome__inner {
+        padding: 0 32px;
+    }
+}
+
+/* ── Mobile (≤ 768 px) ───────────────────────────────────── */
 @media (max-width: 768px) {
 
-    /* --- NAV: Logo-Zeile (64 px) + Steps-Streifen (28 px) ---  */
     .chrome {
         height: 92px;
     }
@@ -1423,37 +1427,37 @@ body {
     }
 
     .chrome__logo {
-        height: 56px;   /* -8px gegenüber 64px → gibt Platz an Steps */
+        height: 56px;   
         display: flex;
         align-items: center;
     }
 
-    /* Steps-Streifen: 8px mehr Höhe, deutlich grössere Schrift */
+  
     .steps {
-        height: 36px;   /* war 28px */
+        height: 36px;   
         width: 100%;
         padding: 0;
         gap: 6px;
         align-items: center;
         overflow-x: auto;       /* scrollbar wenn Text zu lang */
         overflow-y: hidden;
-        scrollbar-width: none;  /* Firefox */
+        scrollbar-width: none;  
         flex-shrink: 0;
     }
 
-    .steps::-webkit-scrollbar { display: none; }  /* Chrome/Safari */
+    .steps::-webkit-scrollbar { display: none; } 
 
     .steps__item {
-        font-size: 13px;        /* war 9px */
+        font-size: 13px;        
         letter-spacing: 0.4px;
         white-space: nowrap;
         flex-shrink: 0;
     }
 
-    /* --- MATCH VORSCHAU ------------------------------------ */
+    /*  MATCH VORSCHAU  */
 
     .vorschau-page {
-        padding-top: 120px; /* 92px Nav + 28px Luft */
+        padding-top: 120px; 
         padding-left: 24px;
         padding-right: 24px;
         padding-bottom: 48px;
@@ -1578,7 +1582,7 @@ body {
         align-items: center;
     }
 
-    /* Dunkle Karte: nur Logo + Teamname (wie im Figma) */
+    /* Dunkle Karte: nur Logo + Teamname */
     .vorschau__karte {
         display: flex;
         flex-direction: column;
@@ -1619,11 +1623,10 @@ body {
 
     /* ─── LANDING PAGE MOBILE ───────────────────────────────
        Die 1024px-Query macht schon Single-Column.
-       Hier nur noch Mobile-Feinabstimmungen (≤ 768 px).
        ──────────────────────────────────────────────────────── */
 
     .landing {
-        padding-top: 116px;   /* 92 px Nav + 24 px Luft */
+        padding-top: 116px;   
         padding-left: 24px;
         padding-right: 24px;
         padding-bottom: 48px;
@@ -1647,7 +1650,7 @@ body {
     .hero__description {
         font-size: 16px;
         line-height: 1.6;
-        margin-top: 0;         /* kein auto-spacing auf Mobile */
+        margin-top: 0;         
         max-width: 100%;
     }
 
@@ -1758,7 +1761,7 @@ body {
         margin-bottom: 20px;
     }
 
-    /* Antwort-Buttons: 2×2-Grid bleibt, aber kompakter */
+
     .antworten-grid {
         gap: 10px;
     }
@@ -1793,7 +1796,7 @@ body {
     .abpfiff {
         top: 92px;                 /* beginnt unter Nav + Steps */
         justify-content: flex-start; /* Inhalt oben ausrichten statt vertikal zentriert */
-        padding: 24px 20px 20px;   /* etwas Luft oben, dann der Inhalt */
+        padding: 24px 20px 20px;   
     }
 
     .abpfiff__titel {
@@ -1828,7 +1831,7 @@ body {
     }
 
     /* Champion-Screen */
-    /* ─── CHAMPION SCREEN MOBILE ──────────────────────────── */
+    /* CHAMPION SCREEN MOBILE */
 
     /* Nav: 64px Logo-Zeile + 28px Steps-Streifen = 92px */
     .champion__nav {
@@ -1895,9 +1898,8 @@ body {
     /* Goal-GIFs auf Mobile ausblenden */
     .tor-gif { display: none !important; }
 
-    /* ─── TURNIERBAUM MOBILE ─────────────────────────────────
-       Tab-Interface: aktive Runde sichtbar, andere per Tab wählbar.
-       ──────────────────────────────────────────────────────── */
+    /* TURNIERBAUM MOBILE 
+       Tab-Interface: aktive Runde sichtbar, andere per Tab wählbar. */
 
     .turnierbaum-page {
         padding-top: 108px;
@@ -1972,10 +1974,7 @@ body {
     /* Bracket-internen margin-top-Abstände zurücksetzen */
     .bracket__col .match-card { margin-top: 0 !important; }
 
-    /* ── Tab-Sichtbarkeit ──────────────────────────────────
-       data-aktiv-tab auf .bracket blendet alle Spalten aus,
-       die NICHT zur aktiven Runde gehören.
-       ──────────────────────────────────────────────────── */
+    /* ── Tab-Sichtbarkeit */
     .bracket[data-aktiv-tab="af"]     .bracket__col[data-runde]:not([data-runde="af"])     { display: none; }
     .bracket[data-aktiv-tab="vf"]     .bracket__col[data-runde]:not([data-runde="vf"])     { display: none; }
     .bracket[data-aktiv-tab="hf"]     .bracket__col[data-runde]:not([data-runde="hf"])     { display: none; }
@@ -2003,4 +2002,3 @@ body {
     #btn-weiter  { order: 1; width: 100%; padding: 0; }
     #btn-zurueck { order: 2; width: 100%; }
 }
-

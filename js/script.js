@@ -8,26 +8,22 @@ const apiSchluessel = '25d1021df1ca4a8cafe6c9b9e3088f24';
 
 // CORS-Proxy: Browser blockieren direkte externe Anfragen.
 // Dieser Proxy leitet die Anfrage weiter.
-// ⚠️ NICHT im Cheatsheet: CORS (Cross-Origin Resource Sharing)
 const corsProxy = 'https://corsproxy.io/?url=';
 const apiAdresse = `${corsProxy}https://api.football-data.org/v4/competitions/CL/teams`;
 
-// Die 16 Verein-IDs die wir im Bracket haben wollen
+// Die 16 Verein-IDs die wir im Bracket sein sollen
 const vereinsIds = [57, 65, 66, 64, 81, 86, 5, 4, 108, 113, 109, 98, 1903, 503, 524, 516];
 
-// Index des aktuell angezeigten Vereins (index.html)
-// let weil sich der Wert ändert (Cheatsheet 01)
+
 let aktuellerVereinsIndex = 0;
 
 // Alle geladenen Vereine aus der API
 let vereine = [];
 
 
-// ============================================================
-// SEITEN-ERKENNUNG (Cheatsheet 05 – DOM)
+
+// SEITEN-ERKENNUNG 
 // querySelector gibt NULL zurück wenn ein Element nicht existiert.
-// So wissen wir welche Seite gerade geladen ist.
-// ============================================================
 
 // Jede Seite hat ein einzigartiges Element mit einer bestimmten Klasse:
 // index.html       → hat <main class="landing">
@@ -41,16 +37,14 @@ const aufVorschauSeite = document.querySelector('.vorschau-page')   !== null;
 console.log('Aktuelle Seite:', aufIndexSeite ? 'index' : aufTurnierbaum ? 'turnierbaum' : aufVorschauSeite ? 'vorschau' : 'unbekannt');
 
 
-// ============================================================
-//  SEITE 1: INDEX.HTML (Setup-Seite)
-// ============================================================
+
+//  Landing Page: INDEX.HTML 
 
 if (aufIndexSeite) {
 
-    // ----------------------------------------------------------
-    // DOM-Elemente (Cheatsheet 05)
+    // DOM-Elemente 
     // Nur laden wenn wir auf der Index-Seite sind!
-    // ----------------------------------------------------------
+
     const nameEingabe    = document.querySelector('#player-name');
     const vereinsLogo    = document.querySelector('#team-logo');
     const vereinsName    = document.querySelector('#team-name');
@@ -60,34 +54,28 @@ if (aufIndexSeite) {
     const knopfWeiter    = document.querySelector('#btn-next');
     const startKnopf     = document.querySelector('#btn-start');
 
-    // ----------------------------------------------------------
-    // FUNKTIONEN (Cheatsheet 03)
-    // ----------------------------------------------------------
+    // FUNKTIONEN 
+
 
     /**
      * Zeigt den aktuell ausgewählten Verein im Team-Selector an.
-     * ✅ BUG-FIX: Die Funktion war in der alten Version unvollständig!
-     *    Die schliessende Klammer und der else-Teil fehlten.
-     *
-     * Cheatsheet 05: setAttribute, innerText
-     * Cheatsheet 11: Objekt-Properties (verein.crest, verein.name)
      */
     function zeigeAktuellenVerein() {
         // Sicherheits-Check: Wurden Vereine schon geladen?
         if (vereine.length === 0) {
             // Noch keine Daten: Lade-Text anzeigen
             vereinsName.innerText = 'Laden...';
-            return; // Funktion hier beenden
+            return; 
         }
 
-        // Cheatsheet 11: Objekt aus Array lesen
+        // Objekt aus Array lesen
         const verein = vereine[aktuellerVereinsIndex];
 
-        // Cheatsheet 05: setAttribute – Bild-Quelle setzen
+        // setAttribute – Bild-Quelle setzen
         vereinsLogo.setAttribute('src', verein.crest);
         vereinsLogo.setAttribute('alt', verein.name);
 
-        // Cheatsheet 05: innerText – Text im Element ändern
+        // innerText – Text im Element ändern
         // shortName = Kurzname (z.B. "Bayern"), name = Vollname
         vereinsName.innerText = verein.shortName || verein.name;
     }
@@ -95,17 +83,12 @@ if (aufIndexSeite) {
     /**
      * Aktiviert/deaktiviert den Start-Button.
      * Bedingung: Name eingegeben UND Vereine geladen.
-     *
-     * Cheatsheet 04: if/else
-     * Cheatsheet 05: classList.add, classList.remove
      */
     function aktualisiereStartKnopf() {
-        // .trim() entfernt Leerzeichen am Anfang/Ende (⚠️ nicht im Cheatsheet)
         const nameEingegeben = nameEingabe.value.trim().length > 0;
         const vereineGeladen = vereine.length > 0;
 
         if (nameEingegeben && vereineGeladen) {
-            // Cheatsheet 05: classList
             startKnopf.classList.remove('btn-start--disabled');
             startKnopf.classList.add('btn-start--active');
             startKnopf.disabled = false;
@@ -117,9 +100,7 @@ if (aufIndexSeite) {
     }
 
     /**
-     * Speichert den aktuellen Spielernamen und Verein in localStorage.
-     * Cheatsheet 08: localStorage.setItem / removeItem
-     */
+     * Speichert den aktuellen Spielernamen und Verein in localStorage.*/
     function speichereAuswahl() {
         localStorage.setItem('spielerName', nameEingabe.value.trim());
 
@@ -127,30 +108,26 @@ if (aufIndexSeite) {
             const neuesTeam = vereine[aktuellerVereinsIndex];
 
             // Prüfen ob das Team gewechselt hat
-            // Cheatsheet 08: localStorage.getItem
             const altesTeamJson = localStorage.getItem('ausgewaehlterVerein');
             if (altesTeamJson) {
-                // ⚠️ JSON.parse nicht im Cheatsheet
                 const altesTeam = JSON.parse(altesTeamJson);
 
-                // Cheatsheet 04: if-Bedingung
+                //  if-Bedingung
                 if (altesTeam.id !== neuesTeam.id) {
-                    // Team hat sich geändert → alten Spielplan löschen
-                    // ⚠️ localStorage.removeItem nicht im Cheatsheet
+                    // Team hat sich geändert = alten Spielplan löschen
                     localStorage.removeItem('spielplan');
                     localStorage.removeItem('spielplanTeamId');
                     console.log('Team gewechselt – Spielplan wird beim nächsten Turnierbaum neu gebaut');
                 }
             }
 
-            // ⚠️ JSON.stringify nicht im Cheatsheet – wandelt Objekt → Text
+            // wandelt Objekt zu Text
             localStorage.setItem('ausgewaehlterVerein', JSON.stringify(neuesTeam));
         }
     }
 
     /**
      * Lädt den gespeicherten Namen beim Seitenstart.
-     * Cheatsheet 08: localStorage.getItem
      */
     function ladeGespeicherteAuswahl() {
         const gespeicherterName = localStorage.getItem('spielerName');
@@ -161,21 +138,17 @@ if (aufIndexSeite) {
 
     /**
      * Lädt die 16 Champions League Vereine von der API.
-     * Cheatsheet 13: async function, await, fetch, try/catch
-     *
-     * ⚠️ NICHT im Cheatsheet:
-     *    fetch() mit { headers: {...} } – zweites Argument mit API-Key
+     * async function, await, fetch, try/catch
      */
     async function ladeVereine() {
         try {
-            // ⚠️ headers-Option nicht im Cheatsheet 13
             const antwort = await fetch(apiAdresse, {
                 headers: { 'X-Auth-Token': apiSchluessel }
             });
 
             const daten = await antwort.json();
 
-            // ⚠️ .filter() nicht im Cheatsheet – filtert das Array
+            //  filtert das Array
             // Erst bevorzugte Vereine (aus vereinsIds) holen
             const bevorzugte = daten.teams.filter(function(verein) {
                 return vereinsIds.includes(verein.id);
@@ -185,8 +158,7 @@ if (aufIndexSeite) {
                 // Genug bevorzugte Vereine → ersten 16 nehmen
                 vereine = bevorzugte.slice(0, 16);
             } else {
-                // Zu wenige (manche nicht mehr in der CL diese Saison)
-                // → mit anderen echten CL-Teams auffüllen bis wir 16 haben
+                //  mit anderen echten CL-Teams auffüllen bis wir 16 haben
                 const restliche = daten.teams.filter(function(verein) {
                     return !vereinsIds.includes(verein.id);
                 });
@@ -195,10 +167,8 @@ if (aufIndexSeite) {
 
             console.log(`${vereine.length} Vereine geladen`);
 
-            // ✅ NEU: Alle Vereine in localStorage speichern
+   
             // turnierbaum.html braucht diese Liste für den Bracket
-            // Cheatsheet 08: localStorage.setItem
-            // ⚠️ JSON.stringify nicht im Cheatsheet
             localStorage.setItem('alleVereine', JSON.stringify(vereine));
 
             // Ersten Verein anzeigen
@@ -206,7 +176,6 @@ if (aufIndexSeite) {
             aktualisiereStartKnopf();
 
         } catch (fehler) {
-            // Fehler-Behandlung (Cheatsheet 13: catch)
             console.error('Vereine konnten nicht geladen werden:', fehler);
             vereinsName.innerText = 'Fehler beim Laden';
         }
@@ -237,13 +206,12 @@ if (aufIndexSeite) {
         speichereAuswahl();
     });
 
-    // Klick auf Verein in der Mitte → grüner Rahmen als Bestätigung
+    // Klick auf Verein in der Mitte = grüner Rahmen als Bestätigung
     vereinsAnzeige.addEventListener('click', function() {
         vereinsSelector.classList.add('team-selector--ausgewaehlt');
     });
 
     // Eingabe im Name-Feld
-    // Cheatsheet 06: 'input' Event
     nameEingabe.addEventListener('input', function() {
         aktualisiereStartKnopf();
         speichereAuswahl();
@@ -253,19 +221,16 @@ if (aufIndexSeite) {
     startKnopf.addEventListener('click', function() {
         if (startKnopf.disabled) return;
         speichereAuswahl();
-        // ⚠️ window.location.href nicht im Cheatsheet – navigiert zur nächsten Seite
         window.location.href = 'turnierbaum.html';
     });
 
     // Seite geladen → alles starten
-    // Cheatsheet 06: window.addEventListener('load', ...)
     window.addEventListener('load', async function() {
         console.log('Index-Seite geladen');
 
         // Spielstand zurücksetzen: jedes Mal wenn die Setup-Seite geöffnet wird,
         // beginnt das Turnier von vorne. Fortschritt bleibt nur erhalten wenn
         // man direkt auf spiel.html oder turnierbaum.html neu lädt.
-        // Cheatsheet 08: localStorage.removeItem
         localStorage.removeItem('spielplan');
         localStorage.removeItem('spielplanTeamId');
         localStorage.removeItem('aktuellesSpiel');
@@ -281,34 +246,24 @@ if (aufIndexSeite) {
 
 } // Ende if (aufIndexSeite)
 
-
-// ============================================================
 //  SEITE 2: TURNIERBAUM.HTML
-// ============================================================
 
 if (aufTurnierbaum) {
 
-    // ----------------------------------------------------------
-    // VARIABLEN (Cheatsheet 01)
-    // ----------------------------------------------------------
+    // VARIABLEN
     let alleTeams    = [];  // Alle 16 Vereine aus localStorage
     let spielerTeam  = null;
     let spielplan    = [];  // Array mit 8 Match-Objekten
 
-    // ----------------------------------------------------------
-    // DOM-ELEMENTE (Cheatsheet 05)
-    // ----------------------------------------------------------
+    // DOM-ELEMENTE 
     const btnZurueck = document.querySelector('#btn-zurueck');
     const btnWeiter  = document.querySelector('#btn-weiter');
 
-    // ----------------------------------------------------------
     // FUNKTIONEN (Cheatsheet 03)
-    // ----------------------------------------------------------
+
 
     /**
      * Lädt alle gespeicherten Daten aus localStorage.
-     * Cheatsheet 08: localStorage.getItem
-     * ⚠️ JSON.parse nicht im Cheatsheet – Text → Objekt
      */
     function ladeDaten() {
         const vereinJson = localStorage.getItem('ausgewaehlterVerein');
@@ -318,7 +273,6 @@ if (aufTurnierbaum) {
         if (alleJson)   alleTeams   = JSON.parse(alleJson);
 
         // Falls keine Daten: zurück zur Startseite
-        // Cheatsheet 04: if-Bedingung
         if (!spielerTeam || alleTeams.length === 0) {
             console.log('Keine Daten – zurück zur Startseite');
             window.location.href = 'index.html';
@@ -327,47 +281,37 @@ if (aufTurnierbaum) {
 
     /**
      * Baut den Spielplan: 8 Spiele, Spieler immer in Spiel 1.
-     *
      * Wichtig: Der Spielplan wird NUR neu gebaut wenn sich das Team geändert hat.
      * Sonst wird der gespeicherte Plan aus localStorage geladen.
      * So bleiben die Paarungen gleich wenn man von der Vorschau zurückkommt.
-     *
-     * Cheatsheet 08: localStorage.getItem / setItem
-     * ⚠️ NICHT im Cheatsheet:
-     *    array.filter() → filtert Elemente heraus
-     *    array.sort(fn) + Math.random() → Array zufällig mischen
      */
     function baueSpieiplan() {
         // Prüfen ob schon ein gespeicherter Plan für dieses Team existiert
-        // Cheatsheet 08: localStorage.getItem
         const gespeicherterPlan   = localStorage.getItem('spielplan');
         const gespeichertesTeamId = localStorage.getItem('spielplanTeamId');
 
-        // Cheatsheet 04: if-Bedingung
-        // Wenn ein Plan existiert UND er für dasselbe Team gebaut wurde → wiederverwenden
+        // Wenn ein Plan existiert UND er für dasselbe Team gebaut wurde = wiederverwenden
         if (gespeicherterPlan && gespeichertesTeamId === String(spielerTeam.id)) {
-            // ⚠️ JSON.parse nicht im Cheatsheet – Text → Objekt
+            
             spielplan = JSON.parse(gespeicherterPlan);
             console.log('Gespeicherten Spielplan geladen – Paarungen bleiben gleich');
-            return; // Funktion hier beenden, nichts neu bauen
+            return; 
         }
 
         // Kein gespeicherter Plan oder anderes Team gewählt → neu bauen
         console.log('Neuen Spielplan bauen – Team hat sich geändert oder erster Aufruf');
 
         // Alle Teams AUSSER dem Spieler-Team
-        // ⚠️ .filter() nicht im Cheatsheet
         let andereTeams = alleTeams.filter(function(team) {
             return team.id !== spielerTeam.id;
         });
 
-        // Zufällige Reihenfolge (Cheatsheet-Trick für Mischen)
-        // ⚠️ .sort() + Math.random() nicht im Cheatsheet
+        // Zufällige Reihenfolge 
         andereTeams.sort(function() {
             return Math.random() - 0.5;
         });
 
-        // 8 Spiele aufbauen (Cheatsheet 11: Objekte, Cheatsheet 09: Arrays)
+        // 8 Spiele aufbauen 
         spielplan = [
             { id: 'af1', heim: spielerTeam,   gast: andereTeams[0],  istSpielerSpiel: true  },
             { id: 'af2', heim: andereTeams[1], gast: andereTeams[2],  istSpielerSpiel: false },
@@ -380,19 +324,15 @@ if (aufTurnierbaum) {
         ];
 
         // Spielplan UND Team-ID zusammen speichern
-        // Cheatsheet 08: localStorage.setItem
-        // → beim nächsten Laden wissen wir: dieser Plan gehört zu diesem Team
         localStorage.setItem('spielplan',      JSON.stringify(spielplan));
         localStorage.setItem('spielplanTeamId', String(spielerTeam.id));
         localStorage.setItem('aktuellesSpiel', JSON.stringify(spielplan[0]));
         localStorage.setItem('aktuelleRunde',  'Achtelfinale');
-        // Gegner-Liste zurücksetzen (wird nach jedem Sieg erweitert)
         localStorage.setItem('gegnerGespielt', JSON.stringify([]));
     }
 
     /**
      * Füllt eine Match-Karte mit den Team-Namen.
-     * Cheatsheet 05: querySelector, innerText
      */
     function befuelleKarte(spielId, spiel) {
         // Template Literal für die ID (Cheatsheet 01: Template Literals)
@@ -400,7 +340,6 @@ if (aufTurnierbaum) {
         const gastElement = document.querySelector(`#${spielId}-gast`);
 
         if (heimElement && gastElement) {
-            // Cheatsheet 11: Objekt-Property lesen
             // Null-Check: verhindert Fehler wenn ein Team fehlt
             heimElement.innerText = spiel.heim ? (spiel.heim.shortName || spiel.heim.name) : '---';
             gastElement.innerText = spiel.gast ? (spiel.gast.shortName || spiel.gast.name) : '---';
@@ -413,9 +352,6 @@ if (aufTurnierbaum) {
      * Viertelfinale: af1 gespielt (gedimmt), vf1 aktiv
      * Halbfinale:    af1+vf1 gespielt, hf1 aktiv
      * Finale:        af1+vf1+hf1 gespielt, finale aktiv
-     *
-     * Cheatsheet 04: if/else
-     * Cheatsheet 05: classList, querySelector
      */
     function zeigeBracket() {
         const aktuelleRunde    = localStorage.getItem('aktuelleRunde') || 'Achtelfinale';
@@ -451,14 +387,13 @@ if (aufTurnierbaum) {
         const aktSpielJson     = localStorage.getItem('aktuellesSpiel');
         const aktSpiel         = aktSpielJson ? JSON.parse(aktSpielJson) : (spielplan[0] || null);
 
-        // Runden-Reihenfolge zum Berechnen des Fortschritts
         const rundenReihenfolge = ['Achtelfinale', 'Viertelfinale', 'Halbfinale', 'Finale'];
         const aktuellerIndex    = rundenReihenfolge.indexOf(aktuelleRunde);
 
-        // Match-Karten-IDs auf dem Spielerpfad (immer links: af1 → vf1 → hf1 → finale)
+        // Match-Karten-IDs auf dem Spielerpfad 
         const spielerKartenIds  = ['af1', 'vf1', 'hf1', 'finale'];
 
-        // 1. Alle AF-Karten mit Spielplan-Daten befüllen (Cheatsheet 10: forEach)
+        // 1. Alle AF-Karten mit Spielplan-Daten befüllen
         spielplan.forEach(function(spiel) {
             befuelleKarte(spiel.id, spiel);
         });
@@ -500,7 +435,7 @@ if (aufTurnierbaum) {
             }
         }
 
-        // 3. Vergangene Spieler-Runden als "gespielt" markieren (Cheatsheet 10: for)
+        // 3. Vergangene Spieler-Runden als "gespielt" markieren 
         const geSchlagen = JSON.parse(localStorage.getItem('gegnerGeschlagen') || '[]');
         const rundenNamen = ['Achtelfinale', 'Viertelfinale', 'Halbfinale', 'Finale'];
         for (let i = 0; i < aktuellerIndex; i++) {
@@ -521,9 +456,7 @@ if (aufTurnierbaum) {
         }
     }
 
-    // ----------------------------------------------------------
-    // EVENT-LISTENER (Cheatsheet 06)
-    // ----------------------------------------------------------
+    // EVENT-LISTENER 
 
     // "← Zurück" → zurück zur Startseite
     btnZurueck.addEventListener('click', function() {
@@ -535,11 +468,8 @@ if (aufTurnierbaum) {
         window.location.href = 'vorschau.html';
     });
 
-    // ----------------------------------------------------------
     // TAB-NAVIGATION (Mobile) – zeigt nur die aktive Runde
-    // ----------------------------------------------------------
-
-    // Mapping: Rundenname → Tab-ID
+   
     const rundeZuTab = {
         'Achtelfinale':  'af',
         'Viertelfinale': 'vf',
@@ -573,7 +503,7 @@ if (aufTurnierbaum) {
         baueSpieiplan();
         zeigeBracket();
 
-        // Standard-Tab = aktuelle Runde (aus localStorage)
+        // Standard-Tab = aktuelle Runde 
         const aktuelleRundeStr = localStorage.getItem('aktuelleRunde') || 'Achtelfinale';
         setzeAktivenTab(rundeZuTab[aktuelleRundeStr] || 'af');
     });
@@ -581,21 +511,17 @@ if (aufTurnierbaum) {
 } // Ende if (aufTurnierbaum)
 
 
-// ============================================================
 //  SEITE 3: VORSCHAU.HTML (Match-Vorschau)
-// ============================================================
 
 if (aufVorschauSeite) {
 
-    // ----------------------------------------------------------
-    // VARIABLEN (Cheatsheet 01)
-    // ----------------------------------------------------------
+    // VARIABLEN 
     let aktuellesSpiel = null;  // Das aktuelle Match-Objekt
     let aktuelleRunde  = '';    // z.B. "Achtelfinale"
 
-    // ----------------------------------------------------------
-    // DOM-ELEMENTE (Cheatsheet 05)
-    // ----------------------------------------------------------
+  
+    // DOM-ELEMENTE 
+    
     const spielerLogo  = document.querySelector('#spieler-logo');
     const spielerName  = document.querySelector('#spieler-name');
     const spielerLiga  = document.querySelector('#spieler-liga');
@@ -616,9 +542,7 @@ if (aufVorschauSeite) {
     const btnAnpfiff   = document.querySelector('#btn-anpfiff');
     const btnZurueck   = document.querySelector('#btn-zurueck-vorschau');
 
-    // ----------------------------------------------------------
     // FUNKTIONEN (Cheatsheet 03)
-    // ----------------------------------------------------------
 
     /**
      * Lädt das aktuelle Spiel aus localStorage
@@ -627,42 +551,35 @@ if (aufVorschauSeite) {
         const spielJson  = localStorage.getItem('aktuellesSpiel');
         const rundeText  = localStorage.getItem('aktuelleRunde');
 
-        // Cheatsheet 04: if-Bedingung
         if (!spielJson) {
             console.log('Kein Spiel gefunden – zurück zum Turnierbaum');
             window.location.href = 'turnierbaum.html';
             return;
         }
 
-        // ⚠️ JSON.parse nicht im Cheatsheet – Text → Objekt
         aktuellesSpiel = JSON.parse(spielJson);
         aktuelleRunde  = rundeText || 'Achtelfinale';
     }
 
     /**
      * Zeigt die Spieler-Team-Informationen an.
-     * Cheatsheet 05: setAttribute, innerText
-     * Cheatsheet 11: Objekt-Properties
      */
     function zeigeSpielerdaten() {
         const heim = aktuellesSpiel.heim; // Spieler-Team (Heim)
 
-        // Logo setzen (Cheatsheet 05: setAttribute)
+        // Logo setzen 
         spielerLogo.setAttribute('src', heim.crest);
         spielerLogo.setAttribute('alt', heim.name);
 
-        // Namen setzen (Cheatsheet 05: innerText)
+        // Namen setzen 
         spielerName.innerText = heim.name;
 
-        // Liga-Info: area.name kommt von der API (Cheatsheet 11: verschachteltes Objekt)
-        // Cheatsheet 04: ternary (kurzform von if/else)
-        // ⚠️ Ternary-Operator ist NICHT explizit im Cheatsheet
+        // Liga-Info: area.name kommt von der API 
         spielerLiga.innerText = heim.area ? heim.area.name : '';
     }
 
     /**
      * Zeigt den Gegner an.
-     * Cheatsheet 05: setAttribute, innerText
      */
     function zeigeGegnerdaten() {
         const gast = aktuellesSpiel.gast; // Gegner-Team (Gast)
@@ -675,23 +592,17 @@ if (aufVorschauSeite) {
 
     /**
      * Zeigt den Runden-Namen und die Schwierigkeitspunkte.
-     *
      * Schwierigkeit steigt mit jeder Runde:
      *   Achtelfinale  → 1 Punkt aktiv
      *   Viertelfinale → 2 Punkte aktiv
      *   Halbfinale    → 3 Punkte aktiv
      *   Finale        → 4 Punkte aktiv
-     *
-     * Cheatsheet 04: if/else (Bedingungen)
-     * Cheatsheet 05: innerText, classList
      */
     function zeigeRundenInfo() {
         // Runden-Name in Grossbuchstaben anzeigen
-        // ⚠️ .toUpperCase() nicht im Cheatsheet – wandelt Text in Grossbuchstaben
         rundenLabel.innerText = aktuelleRunde.toUpperCase();
 
         // Schwierigkeitspunkte aktivieren je nach Runde
-        // Cheatsheet 04: if/else Bedingungen
         if (aktuelleRunde === 'Achtelfinale') {
             dot1.classList.add('vorschau__dot--aktiv');      // 1 Punkt gelb
         } else if (aktuelleRunde === 'Viertelfinale') {
@@ -709,12 +620,9 @@ if (aufVorschauSeite) {
         }
     }
 
-    // ----------------------------------------------------------
     // EVENT-LISTENER (Cheatsheet 06)
-    // ----------------------------------------------------------
 
     // "Anpfiff →" → zum Quiz/Spiel
-    // (spiel.html kommt in der nächsten Iteration)
     btnAnpfiff.addEventListener('click', function() {
         window.location.href = 'spiel.html';
     });
@@ -725,14 +633,13 @@ if (aufVorschauSeite) {
     });
 
     // Seite geladen → alles aufbauen
-    // Cheatsheet 06: window.addEventListener('load', ...)
     window.addEventListener('load', function() {
         console.log('Vorschau-Seite geladen');
 
         // 1. Spiel-Daten aus localStorage laden
         ladeAktuellesSpiel();
 
-        // 2. Nur anzeigen wenn Daten vorhanden (ladeAktuellesSpiel macht Redirect falls nicht)
+        // 2. Nur anzeigen wenn Daten vorhanden
         if (aktuellesSpiel) {
             zeigeSpielerdaten();
             zeigeGegnerdaten();
@@ -743,20 +650,16 @@ if (aufVorschauSeite) {
 } // Ende if (aufVorschauSeite)
 
 
-// ============================================================
 //  SEITE 4: SPIEL.HTML (Das Quiz-Spiel)
-// ============================================================
 
 if (document.querySelector('.spiel-page') !== null) {
 
-    // ----------------------------------------------------------
     // VARIABLEN (Cheatsheet 01)
-    // ----------------------------------------------------------
 
     // Spielstand
     let spielerTore  = 0;    // Richtige Antworten = Tore des Spielers
     let gegnerTore   = 0;    // Falsche Antworten = Gegentore
-    let frageNummer  = 0;    // Welche Frage ist aktuell? (0 = erste)
+    let frageNummer  = 0;    // Welche Frage ist aktuell? 
     let spielZeit    = 60;   // Echte Sekunden (60 Sek = 90 Spielminuten)
     let spielLaeuft  = true; // false wenn Spiel beendet
     let richtigeAntworten = 0; // Für die Abpfiff-Stats
@@ -770,13 +673,9 @@ if (document.querySelector('.spiel-page') !== null) {
     let fragen = [];
 
     // Der Interval-Timer
-    // ⚠️ NICHT im Cheatsheet: setInterval() – wiederholt eine Funktion jede X Millisekunden
     let timerInterval = null;
 
-    // ----------------------------------------------------------
-    // DOM-ELEMENTE (Cheatsheet 05)
-    // ----------------------------------------------------------
-
+    // DOM-ELEMENTE 
     // Scoreboard
     const sbSpielerLogo  = document.querySelector('#sb-spieler-logo');
     const sbSpielerKuerz = document.querySelector('#sb-spieler-kuerzel');
@@ -834,12 +733,11 @@ if (document.querySelector('.spiel-page') !== null) {
     const championGastLogo   = document.querySelector('#champion-gast-logo');
     const championBtn        = document.querySelector('#champion-btn');
 
-    // ----------------------------------------------------------
-    // FRAGEN-GENERIERUNG (Cheatsheet 09, 10, 11)
-    // Fragen werden aus den API-Daten der Teams generiert
-    // ----------------------------------------------------------
 
-    // Hilfsfunktion: prüft ob ein Teamname einen Schlüsselbegriff enthält (accent-tolerant)
+    // FRAGEN-GENERIERUNG 
+    // Fragen werden aus den API-Daten der Teams generiert
+   
+    // Hilfsfunktion: prüft ob ein Teamname einen Schlüsselbegriff enthält 
     function matchTeamName(teamName, vereinKey) {
         const clean = function(s) {
             return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -847,7 +745,7 @@ if (document.querySelector('.spiel-page') !== null) {
         return clean(teamName).includes(clean(vereinKey));
     }
 
-    // Bekannte Spieler mit ihrem aktuellen Verein (Schlüsselwort für matchTeamName)
+    // Bekannte Spieler mit ihrem aktuellen Verein 
     const SPIELER_FRAGEN = [
         { spieler: 'Kylian Mbappé',       vereinKey: 'real madrid' },
         { spieler: 'Erling Haaland',       vereinKey: 'manchester city' },
@@ -898,8 +796,6 @@ if (document.querySelector('.spiel-page') !== null) {
      * Gibt den Fragetyp je nach Runde zurück.
      * Achtelfinale → einfache Typen
      * Finale → alle Typen gemischt
-     *
-     * Cheatsheet 04: if/else
      */
     function getFrageTypen() {
         if (aktuelleRunde === 'Achtelfinale') {
@@ -919,20 +815,13 @@ if (document.querySelector('.spiel-page') !== null) {
 
     /**
      * Erstellt ein Frage-Objekt für ein bestimmtes Team und einen Typ.
-     *
-     * Cheatsheet 11: Objekte erstellen und lesen
-     * Cheatsheet 01: Template Literals
-     *
-     * ⚠️ NICHT im Cheatsheet: .slice(), Array-Destrukturierung
      */
     function erstelleFrage(richtigesTeam, typ) {
         // 3 andere Teams für falsche Antworten wählen
-        // ⚠️ .filter() und .sort() nicht im Cheatsheet
         let andereTeams = alleTeams.filter(function(t) {
             return t.id !== richtigesTeam.id;
         });
         andereTeams.sort(function() { return Math.random() - 0.5; });
-        // ⚠️ .slice() nicht im Cheatsheet – gibt Teil eines Arrays zurück
         let falsche3 = andereTeams.slice(0, 3);
 
         let frage = {
@@ -945,7 +834,7 @@ if (document.querySelector('.spiel-page') !== null) {
             optionenCrests: null,  // nur für logoWahl: Wappen-URLs der Optionen
         };
 
-        // Frage je nach Typ befüllen (Cheatsheet 04: if/else)
+        // Frage je nach Typ befüllen 
         if (typ === 'wappen') {
             // WAPPEN-FRAGE: Zeige Wappen, frage nach Vereinsname
             frage.bild = richtigesTeam.crest;
@@ -953,7 +842,6 @@ if (document.querySelector('.spiel-page') !== null) {
             frage.richtigeAntwort = richtigesTeam.name;
 
             // 4 Optionen: Richtiger Name + 3 falsche Namen
-            // ⚠️ Spread-Operator ... nicht im Cheatsheet
             let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
             alleOptionen.sort(function() { return Math.random() - 0.5; });
             frage.optionen = alleOptionen;
@@ -964,7 +852,6 @@ if (document.querySelector('.spiel-page') !== null) {
             frage.richtigeAntwort = richtigesTeam.area.name;
 
             // Nur Teams mit ANDEREM Land wählen – verhindert doppelte Ländernamen als Optionen
-            // (z.B. Bayern + Dortmund wären beide "Germany" → würde doppelt erscheinen)
             let laenderGesehen = new Set([richtigesTeam.area.name]);
             let falscheLandTeams = [];
             for (let t of andereTeams) {
@@ -976,7 +863,6 @@ if (document.querySelector('.spiel-page') !== null) {
             }
 
             if (falscheLandTeams.length < 3) {
-                // Fallback: zu wenige verschiedene Länder → Wappen-Frage stellen
                 frage.frageText = 'Welchem Verein gehört dieses Wappen?';
                 frage.richtigeAntwort = richtigesTeam.name;
                 let alleOptionen = [richtigesTeam.name, falsche3[0].name, falsche3[1].name, falsche3[2].name];
@@ -994,7 +880,6 @@ if (document.querySelector('.spiel-page') !== null) {
             }
 
         } else if (typ === 'kuerzel') {
-            // TheSportsDB-Teams haben kein TLA → sofort Wappen-Frage
             if (!richtigesTeam.tla) {
                 frage.bild = richtigesTeam.crest;
                 frage.frageText = 'Welchem Verein gehört dieses Wappen?';
@@ -1007,7 +892,6 @@ if (document.querySelector('.spiel-page') !== null) {
                 frage.frageText = `Was ist die offizielle Abkürzung von ${richtigesTeam.name}?`;
                 frage.richtigeAntwort = richtigesTeam.tla;
 
-                // Eindeutige TLAs sicherstellen – kein Kürzel darf doppelt vorkommen
                 let tlaGesehen = new Set([richtigesTeam.tla]);
                 let falscheTlaTeams = [];
                 for (let t of andereTeams) {
@@ -1102,7 +986,6 @@ if (document.querySelector('.spiel-page') !== null) {
                 frage.frageText = `In welchem Jahr wurde ${richtigesTeam.shortName || richtigesTeam.name} gegründet?`;
                 frage.richtigeAntwort = String(richtigesJahr);
 
-                // Andere Teams mit anderem Gründungsjahr als falsche Antworten
                 let jahreGesehen = new Set([richtigesJahr]);
                 let falscheJahrTeams = [];
                 for (let t of andereTeams) {
@@ -1133,7 +1016,7 @@ if (document.querySelector('.spiel-page') !== null) {
             }
 
         } else if (typ === 'logoWahl') {
-            // LOGO-WAHL-FRAGE (umgekehrt / Finale): Team-Name zeigen – richtiges Wappen wählen
+            // LOGO-WAHL-FRAGE 
             // Kein Wappen in der Fragekarte – der Spieler muss das Logo aus 4 Optionen erkennen
             frage.bild = '';
             frage.frageText = `Welches Wappen gehört zu ${richtigesTeam.shortName || richtigesTeam.name}?`;
@@ -1147,7 +1030,6 @@ if (document.querySelector('.spiel-page') !== null) {
 
         } else if (typ === 'spieler') {
             // SPIELER-FRAGE: Spieler nennen – in welchem Verein spielt er?
-            // Zufälligen Spieler wählen, dann dessen Team in alleTeams suchen
             let gemischteEintraege = [...SPIELER_FRAGEN].sort(function() { return Math.random() - 0.5; });
             let gewaehlterEintrag = null;
             let spielerTeam = null;
@@ -1163,7 +1045,6 @@ if (document.querySelector('.spiel-page') !== null) {
             }
 
             if (!gewaehlterEintrag || !spielerTeam) {
-                // Fallback: Wappen-Frage wenn kein passender Verein geladen
                 frage.bild = richtigesTeam.crest;
                 frage.frageText = 'Welchem Verein gehört dieses Wappen?';
                 frage.richtigeAntwort = richtigesTeam.name;
@@ -1200,7 +1081,6 @@ if (document.querySelector('.spiel-page') !== null) {
             });
 
             if (!trainerEintrag) {
-                // Fallback: Wappen-Frage wenn kein Trainer-Eintrag vorhanden
                 frage.bild = richtigesTeam.crest;
                 frage.frageText = 'Welchem Verein gehört dieses Wappen?';
                 frage.richtigeAntwort = richtigesTeam.name;
@@ -1239,8 +1119,6 @@ if (document.querySelector('.spiel-page') !== null) {
 
     /**
      * Generiert 10 Fragen für das Spiel.
-     * Cheatsheet 10: for-Schleife
-     * Cheatsheet 09: .push() – Element zum Array hinzufügen
      */
     function generiereFragen() {
         fragen = [];
@@ -1248,28 +1126,21 @@ if (document.querySelector('.spiel-page') !== null) {
         let typen = getFrageTypen();
 
         // Teams mischen: so kommt jedes Team nur einmal vor bevor es sich wiederholt
-        // ⚠️ Spread-Operator + .sort() nicht im Cheatsheet
         let gemischteTeams = [...alleTeams].sort(function() { return Math.random() - 0.5; });
 
         // 20 Fragen generieren – mehr als genug für 5+5-Abbruch
-        // Cheatsheet 10: for-Schleife
+        
         for (let i = 0; i < 20; i++) {
-            // Modulo: nach einem Durchlauf aller Teams wieder von vorne (Cheatsheet ⚠️ %)
             let team = gemischteTeams[i % gemischteTeams.length];
             let typ = typen[i % typen.length];
             fragen.push(erstelleFrage(team, typ));
         }
     }
 
-    // ----------------------------------------------------------
     // ANZEIGE-FUNKTIONEN (Cheatsheet 05)
-    // ----------------------------------------------------------
 
     /**
      * Zeigt die aktuelle Frage an.
-     * Cheatsheet 05: innerText, setAttribute, classList
-     * Cheatsheet 09: Array-Zugriff per Index
-     * Cheatsheet 11: Objekt-Properties lesen
      */
     function zeigeFrage() {
         // Sicherheits-Check: Gibt es noch Fragen?
@@ -1279,13 +1150,13 @@ if (document.querySelector('.spiel-page') !== null) {
             return;
         }
 
-        // Aktuelle Frage aus dem Array laden (Cheatsheet 09)
+        // Aktuelle Frage aus dem Array laden 
         let frage = fragen[frageNummer];
 
-        // Frage-Label aktualisieren (Cheatsheet 01: Template Literal)
+        // Frage-Label aktualisieren 
         frageLabel.innerText = `Frage ${frageNummer + 1} · ${aktuelleRunde}`;
 
-        // Wappen anzeigen oder verstecken (logoWahl hat kein Wappen in der Fragekarte)
+        // Wappen anzeigen oder verstecken 
         if (frage.bild) {
             frageBild.setAttribute('src', frage.bild);
             frageBild.setAttribute('alt', 'Vereinswappen');
@@ -1294,13 +1165,12 @@ if (document.querySelector('.spiel-page') !== null) {
             frageBild.parentElement.style.display = 'none';
         }
 
-        // Frage-Text setzen (Cheatsheet 05: innerText)
+        // Frage-Text setzen 
         frageText.innerText = frage.frageText;
 
-        // Antwort-Buttons befüllen (Cheatsheet 10: forEach)
+        // Antwort-Buttons befüllen 
         const buchstaben = ['A', 'B', 'C', 'D'];
         antwortBtns.forEach(function(btn, index) {
-            // logoWahl: Wappen-Bild im Button zeigen statt Text
             if (frage.typ === 'logoWahl' && frage.optionenCrests) {
                 antwortTexte[index].innerHTML = '';
                 const img = document.createElement('img');
@@ -1312,7 +1182,7 @@ if (document.querySelector('.spiel-page') !== null) {
                 antwortTexte[index].innerText = frage.optionen[index];
             }
 
-            // Klassen zurücksetzen (Cheatsheet 05: classList)
+            // Klassen zurücksetzen 
             btn.classList.remove('antwort-btn--richtig', 'antwort-btn--falsch', 'antwort-btn--deaktiviert');
             btn.disabled = false;
 
@@ -1324,62 +1194,47 @@ if (document.querySelector('.spiel-page') !== null) {
     /**
      * Zeigt die aktuelle Spielzeit formatiert an.
      * 60 echte Sekunden = 90 Spielminuten
-     *
-     * ⚠️ NICHT im Cheatsheet: Math.floor(), String.padStart()
      */
     function zeigeZeit() {
         // Vergangene echte Zeit in Spielminuten umrechnen
-        // 60 Sek real → 90 Spielminuten → 1 Sek real = 1.5 Spielminuten
-        const vergangen = 60 - spielZeit;  // Wie viele echte Sekunden sind vergangen?
+        const vergangen = 60 - spielZeit;  
         const spielMinuten = Math.floor(vergangen * 1.5);
         const spielSekundenRest = Math.floor((vergangen * 1.5 - spielMinuten) * 60);
 
-        // Mit führenden Nullen formatieren (z.B. "04:08")
-        // ⚠️ .padStart() nicht im Cheatsheet – fügt Nullen vorne ein
+        // Mit führenden Nullen formatieren 
         const minStr = String(spielMinuten).padStart(2, '0');
         const sekStr = String(spielSekundenRest).padStart(2, '0');
 
-        // Cheatsheet 05: innerText + Cheatsheet 01: Template Literal
         spielZeitEl.innerText = `${minStr}:${sekStr}`;
     }
 
     /**
      * Aktualisiert den Spielstand im Scoreboard.
-     * Cheatsheet 05: innerText
-     * Cheatsheet 01: Template Literal
      */
     function zeigeScore() {
         spielScoreEl.innerText = `${spielerTore} : ${gegnerTore}`;
     }
 
-    // ----------------------------------------------------------
     // SPIEL-LOGIK
-    // ----------------------------------------------------------
 
     /**
      * Wird aufgerufen wenn ein Antwort-Button geklickt wird.
-     * Cheatsheet 04: if/else
-     * Cheatsheet 05: classList
      *
      * @param {number} index - 0=A, 1=B, 2=C, 3=D
      */
     function antwortKlick(index) {
-        // Nur reagieren wenn Spiel läuft (Cheatsheet 04)
         if (!spielLaeuft) return;
 
         let frage = fragen[frageNummer];
         let gewaehlteAntwort = frage.optionen[index];
 
-        // ALLE Buttons deaktivieren (damit nicht nochmal geklickt werden kann)
-        // Cheatsheet 10: forEach
+        // ALLE Buttons deaktivieren 
         antwortBtns.forEach(function(btn) {
             btn.classList.add('antwort-btn--deaktiviert');
             btn.disabled = true;
         });
 
         // Richtige Antwort grün markieren
-        // Cheatsheet 09: indexOf – findet Position im Array
-        // ⚠️ .indexOf() nicht im Cheatsheet
         let richtigePosition = frage.optionen.indexOf(frage.richtigeAntwort);
         antwortBtns[richtigePosition].classList.add('antwort-btn--richtig');
 
@@ -1400,7 +1255,7 @@ if (document.querySelector('.spiel-page') !== null) {
             zeigeTorOverlay(false);
         }
 
-        // Bei Tor länger warten damit die GIFs vollständig ausgeblendet sind
+
         const wartezeit = 2200;
         setTimeout(function() {
             versteckeOverlays();
@@ -1423,38 +1278,46 @@ if (document.querySelector('.spiel-page') !== null) {
     }
 
     /**
-     * Spawnt GIFs nur im oberen (0–16 %) und unteren (78–96 %) Strip
+     * Spawnt GIFs nur im oberen und unteren Strip
      * des Viewports. Das Tornetz ist immer vertikal zentriert und belegt
-     * grob 30–70 % der Höhe, also können GIFs in diesen Streifen nie
      * über dem Netz erscheinen – egal wie gross der Bildschirm ist.
      */
     function zeigeTorGifs() {
-        for (let i = 0; i < 10; i++) {
-            const img = document.createElement('img');
-            img.src = '../img/tor.gif';
-            img.className = 'tor-gif';
+        // 5 gleichmässige X-Positionen über die volle Breite.
+        // Abstand: ~19 % → bei 1512px ≈ 290px Lücke zwischen GIF-Kanten (max 140px breit).
+        // Das verhindert Überlappungen auf allen gängigen Desktop-Screens.
+        const xPositionen = [3, 22, 41, 60, 79];
 
-            const groesse = 100 + Math.random() * 50;   // 100–150 px
-            const left    = 2 + Math.random() * 87;     // 2–89 % (volle Breite)
-            const oben    = Math.random() < 0.5;
-            const top     = oben
-                ? Math.random() * 16          // oben:  0–16 %
-                : 78 + Math.random() * 18;    // unten: 78–96 %
-            const rot     = (Math.random() * 60) - 30;
+        // Oben (0–13%) und unten (77–90%), damit das Tornetz (ca. 30–70% Höhe) frei bleibt.
+        const streifen = [
+            { topMin: 2,  topMax: 13 },
+            { topMin: 77, topMax: 88 },
+        ];
 
-            img.style.left  = left + '%';
-            img.style.top   = top  + '%';
-            img.style.width = groesse + 'px';
-            img.style.setProperty('--tor-rot', rot + 'deg');
+        streifen.forEach(function(s) {
+            xPositionen.forEach(function(xBasis) {
+                const img = document.createElement('img');
+                img.src = '../img/tor.gif';
+                img.className = 'tor-gif';
 
-            document.body.appendChild(img);
-            setTimeout(function() { img.remove(); }, 2300);
-        }
+                const groesse = 100 + Math.random() * 40;              // 100–140 px
+                const left    = xBasis + (Math.random() - 0.5) * 3;   // ±1.5 % Jitter
+                const top     = s.topMin + Math.random() * (s.topMax - s.topMin);
+                const rot     = (Math.random() * 60) - 30;
+
+                img.style.left  = left + '%';
+                img.style.top   = top  + '%';
+                img.style.width = groesse + 'px';
+                img.style.setProperty('--tor-rot', rot + 'deg');
+
+                document.body.appendChild(img);
+                setTimeout(function() { img.remove(); }, 2300);
+            });
+        });
     }
 
     /**
      * Zeigt TOR! oder GEGENTOR! Overlay für 1.5 Sekunden.
-     * Cheatsheet 05: classList.remove (Overlay zeigen)
      */
     function zeigeTorOverlay(istTor) {
         if (istTor) {
@@ -1476,7 +1339,6 @@ if (document.querySelector('.spiel-page') !== null) {
 
     /**
      * Versteckt beide Overlays.
-     * Cheatsheet 05: classList.add
      */
     function versteckeOverlays() {
         // Cheatsheet 05: classList.add = Element wieder verstecken
@@ -1486,43 +1348,40 @@ if (document.querySelector('.spiel-page') !== null) {
 
     /**
      * Beendet das Spiel und zeigt den Abpfiff-Screen.
-     * Cheatsheet 04: if/else (Sieg oder Niederlage)
-     * Cheatsheet 08: localStorage (Spielstand speichern)
      */
     function spielEnde() {
         spielLaeuft = false;
 
         // Timer stoppen
-        // ⚠️ clearInterval nicht im Cheatsheet – stoppt einen setInterval
         clearInterval(timerInterval);
 
-        // Sieg oder Niederlage? (Cheatsheet 04: Bedingungen)
-        // Sieg wenn: mehr Spielertore ODER genau 5 Spielertore (auch bei Gleichstand gewinnt Spieler)
+        // Sieg oder Niederlage? 
+        // Sieg wenn: mehr Spielertore ODER genau 5 Spielertore
         const istSieg = spielerTore > gegnerTore || spielerTore >= 5;
 
-        // Nächste Runde bestimmen (Cheatsheet 04: if/else)
+        // Nächste Runde bestimmen 
         let naechsteRunde = '';
         if (aktuelleRunde === 'Achtelfinale')  naechsteRunde = 'Viertelfinale';
         if (aktuelleRunde === 'Viertelfinale') naechsteRunde = 'Halbfinale';
         if (aktuelleRunde === 'Halbfinale')    naechsteRunde = 'Finale';
         if (aktuelleRunde === 'Finale')        naechsteRunde = 'Champion!';
 
-        // Abpfiff-Screen befüllen (Cheatsheet 05: innerText, setAttribute)
+        // Abpfiff-Screen befüllen
         abpfiffErgebnis.innerText   = istSieg ? 'SIEG!' : 'NIEDERLAGE';
         abpfiffScore.innerText      = `${spielerTore} : ${gegnerTore}`;
         abpfiffRunde.innerText      = aktuelleRunde;
         abpfiffRichtig.innerText    = `${richtigeAntworten} / ${frageNummer + 1}`;
         abpfiffWeiter.innerText     = istSieg ? naechsteRunde : '-';
 
-        // Logos (Cheatsheet 05: setAttribute)
+        // Logos 
         abpfiffSpielerLogo.setAttribute('src', aktuellesSpiel.heim.crest);
         abpfiffGegnerLogo.setAttribute('src',  aktuellesSpiel.gast.crest);
 
-        // Team-Namen (Cheatsheet 05: innerText)
+        // Team-Namen 
         abpfiffSpielerName.innerText = aktuellesSpiel.heim.shortName || aktuellesSpiel.heim.name;
         abpfiffGegnerName.innerText  = aktuellesSpiel.gast.shortName || aktuellesSpiel.gast.name;
 
-        // Glückwunsch-Meldung (Cheatsheet 01: Template Literal)
+        // Glückwunsch-Meldung 
         const spielerName = localStorage.getItem('spielerName') || 'Spieler';
         const vereinName  = aktuellesSpiel.heim.shortName || aktuellesSpiel.heim.name;
         if (istSieg) {
@@ -1543,7 +1402,6 @@ if (document.querySelector('.spiel-page') !== null) {
         }
 
         // Niederlage → roter Text und Button
-        // Cheatsheet 05: classList
         if (!istSieg) {
             abpfiffErgebnis.classList.add('abpfiff__ergebnis--niederlage');
             abpfiffBtn.classList.add('abpfiff__btn--niederlage');
@@ -1555,8 +1413,7 @@ if (document.querySelector('.spiel-page') !== null) {
             abpfiffBtn.innerText = `Weiter zum ${naechsteRunde} →`;
         }
 
-        // Nächste Runde in localStorage speichern (für den nächsten Spielzug)
-        // Cheatsheet 08: localStorage.setItem
+        // Nächste Runde in localStorage speichern 
         if (istSieg) {
             // Geschlagenen Gegner für Turnierbaum-Anzeige speichern
             const geSchlagen = JSON.parse(localStorage.getItem('gegnerGeschlagen') || '[]');
@@ -1565,7 +1422,7 @@ if (document.querySelector('.spiel-page') !== null) {
 
             localStorage.setItem('aktuelleRunde', naechsteRunde);
 
-            // Nächsten Gegner aus dem Bracket bestimmen (nicht zufällig)
+            // Nächsten Gegner aus dem Bracket bestimmen
             if (naechsteRunde !== 'Champion!') {
                 const simData = JSON.parse(localStorage.getItem('simMatches') || '{}');
                 let neuerGegner = null;
@@ -1605,18 +1462,16 @@ if (document.querySelector('.spiel-page') !== null) {
         }
     }
 
-    // ----------------------------------------------------------
-    // SCOREBOARD BEFÜLLEN (Cheatsheet 05)
-    // ----------------------------------------------------------
+    // SCOREBOARD BEFÜLLEN 
 
-    // Hauptfarben der CL-Teams (ID → Hex)
+    // Hauptfarben der CL-Teams 
     const TEAM_FARBEN = {
         57:   '#DB0007',  // Arsenal
         65:   '#6CABDD',  // Man City
         66:   '#DA291C',  // Man United
         64:   '#C8102E',  // Liverpool
         81:   '#004D98',  // Barcelona
-        86:   '#FEBE10',  // Real Madrid
+        86:   '#efece5',  // Real Madrid
         5:    '#DC052D',  // Bayern
         4:    '#FDE100',  // Dortmund
         108:  '#CB3524',  // Atletico Madrid
@@ -1642,8 +1497,6 @@ if (document.querySelector('.spiel-page') !== null) {
 
     /**
      * Füllt das Scoreboard mit den Teamdaten.
-     * Cheatsheet 05: setAttribute, innerText
-     * Cheatsheet 11: Objekt-Properties lesen
      */
     function zeigeScoreboard() {
         const heim = aktuellesSpiel.heim;
@@ -1668,17 +1521,10 @@ if (document.querySelector('.spiel-page') !== null) {
         if (sbSeiteGast) sbSeiteGast.style.background = `linear-gradient(to left,  ${hexToRgba(gastFarbe, 0.30)}, transparent)`;
     }
 
-    // ----------------------------------------------------------
-    // TIMER (Cheatsheet 06: window.addEventListener für load)
-    // ⚠️ setInterval NICHT im Cheatsheet
-    // ----------------------------------------------------------
-
     /**
      * Startet den Spieltimer.
-     * ⚠️ setInterval() nicht im Cheatsheet – ruft Funktion jede Sekunde auf.
      */
     function starteTimer() {
-        // ⚠️ NICHT im Cheatsheet: setInterval(funktion, millisekunden)
         timerInterval = setInterval(function() {
             spielZeit = spielZeit - 1;  // Eine Sekunde weniger
             zeigeZeit();               // Anzeige aktualisieren
@@ -1690,11 +1536,7 @@ if (document.querySelector('.spiel-page') !== null) {
         }, 1000); // 1000ms = 1 Sekunde
     }
 
-    // ----------------------------------------------------------
-    // ERWEITERTE TEAMDATENBANK – TheSportsDB (kein API-Key nötig)
-    // Lädt ~80 zusätzliche europäische Teams damit Fragen schwerer werden.
-    // TheSportsDB-Felder werden auf das football-data.org Format gemappt.
-    // ----------------------------------------------------------
+
 
     const TSDB_LIGEN = [
         'English Premier League',
@@ -1745,14 +1587,10 @@ if (document.querySelector('.spiel-page') !== null) {
             .map(normalisiereTheSportsDBTeam);
     }
 
-    // ----------------------------------------------------------
-    // EVENT-LISTENER für Antwort-Buttons (Cheatsheet 06)
-    // ----------------------------------------------------------
+    // EVENT-LISTENER für Antwort-Buttons 
 
     // Für jeden der 4 Buttons einen Click-Listener setzen
-    // Cheatsheet 10: forEach
     antwortBtns.forEach(function(btn, index) {
-        // Cheatsheet 06: addEventListener('click', function)
         btn.addEventListener('click', function() {
             antwortKlick(index);
         });
@@ -1782,26 +1620,23 @@ if (document.querySelector('.spiel-page') !== null) {
         }
     });
 
-    // ----------------------------------------------------------
-    // SEITE STARTEN (Cheatsheet 06: window.addEventListener)
-    // ----------------------------------------------------------
+    // SEITE STARTEN 
 
     window.addEventListener('load', async function() {
         console.log('Spiel-Seite geladen');
 
-        // Daten aus localStorage laden (Cheatsheet 08)
+        // Daten aus localStorage laden 
         const spielJson  = localStorage.getItem('aktuellesSpiel');
         const rundeText  = localStorage.getItem('aktuelleRunde');
         const teamsJson  = localStorage.getItem('alleVereine');
 
-        // Falls keine Daten: zurück zur Startseite (Cheatsheet 04)
+        // Falls keine Daten: zurück zur Startseite 
         if (!spielJson || !teamsJson) {
             console.log('Keine Spieldaten – zurück zur Startseite');
             window.location.href = 'index.html';
             return;
         }
 
-        // ⚠️ JSON.parse nicht im Cheatsheet
         aktuellesSpiel = JSON.parse(spielJson);
         aktuelleRunde  = rundeText || 'Achtelfinale';
         alleTeams      = JSON.parse(teamsJson);
@@ -1817,10 +1652,10 @@ if (document.querySelector('.spiel-page') !== null) {
         frageBild.removeAttribute('src');
         antwortBtns.forEach(function(btn) { btn.disabled = true; });
 
-        // Zusätzliche Teams von TheSportsDB laden (Cheatsheet 13: async/await)
+        // Zusätzliche Teams von TheSportsDB laden 
         const zusatzTeams = await ladeZusatzteams();
 
-        // CL-Teams und europäische Teams zusammenführen – Duplikate nach Name entfernen
+        // CL-Teams und europäische Teams zusammenführen 
         const clNamen = new Set(alleTeams.map(function(t) { return t.name.toLowerCase(); }));
         const neueTeams = zusatzTeams.filter(function(t) { return !clNamen.has(t.name.toLowerCase()); });
         alleTeams = alleTeams.concat(neueTeams);
