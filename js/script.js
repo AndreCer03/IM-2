@@ -3,7 +3,7 @@
 
 
 
-const apiAdresse = '../api/teams.php';
+const apiAdresse = 'teams.php';
 
 // Die 16 Verein-IDs die wir im Bracket sein sollen
 const vereinsIds = [57, 65, 66, 64, 81, 86, 5, 4, 108, 113, 109, 98, 1903, 503, 524, 516];
