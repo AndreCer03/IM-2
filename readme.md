@@ -1,6 +1,6 @@
 Champions Quiz
 
-Ein interaktives Champions-League-Turnierspiel im Browser. Der Spieler wählt einen Verein, tritt in einem simulierten Turnierformat gegen 15 weitere "Champions-League"-Teams an und kämpft sich durch 4 Runden zum Titel.
+Ein interaktives Fussballquiz-Turnierspiel im Browser. Der Spieler wählt einen Verein, tritt in einem simulierten Turnierformat gegen 15 weitere "Champions-League"-Teams an und kämpft sich durch 4 Runden zum Titel. Es kommen verschiedene Fragen zu Vereine. Vereine am Wappen erkennen, Wo spielt der Spieler oder welches Gründungsjahr. Das Quiz wird von Runde zu Runde schwieriger. Die Wappen und Fragen werden von der API abgeleitet und herabgerufen. 
 
 Link Webseite
 
